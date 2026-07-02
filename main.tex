@@ -1,0 +1,70 @@
+\documentclass[a4paper,oneside,11pt]{report}
+\usepackage[a4paper, top=2.54cm, bottom=2.54cm, left=2.54cm, right=2.54cm]{geometry}
+\usepackage{graphicx}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{english}
+\setotherlanguages{polish}
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont{TeX Gyre Termes}
+\linespread{1.25}
+\usepackage{enumitem}
+\usepackage{calc}
+\usepackage[hidelinks]{hyperref}
+\usepackage{natbib}
+\usepackage{bibentry}
+\usepackage[draft]{pdfpages} % TODO: change to final
+\let\CheckCommand\providecommand
+\usepackage{microtype}
+
+\title{Learning Where to Look:\\Towards Efficient Embodied Vision}
+\author{Adam Pardyl}
+\date{2026}
+\makeatletter
+
+\begin{document}
+
+\bibliographystyle{abbrv}
+\nobibliography*
+
+\input{parts/00_title}
+\input{parts/01_dedication}
+\input{parts/02_abstract_pl}
+\input{parts/03_abstract_en}
+
+\tableofcontents \newpage
+
+\input{parts/10_intro}
+
+\input{parts/40_other}
+
+\input{parts/50_conclusion}
+
+\addcontentsline{toc}{chapter}{Bibliography}
+
+\bibliography{main}
+
+
+\appendix
+\chapter{Full texts of the Publications}
+This chapter contains the publications described in the main thesis text, including all written appendices. Any additional supplementary materials (such as interactive content) are provided via links in the corresponding sections of the publications.
+
+\begin{enumerate}
+    \item \hyperref[paper:ave]{\bibentry{pardyl2023active}}
+    \item \hyperref[paper:beyond]{\bibentry{pardyl2023grids}}
+    \item \hyperref[paper:adaglimpse]{\bibentry{pardyl2024adaglimpse}}
+    \item \hyperref[paper:flysearch]{\bibentry{pardyl2025flysearch}}
+\end{enumerate}
+
+\includepdf[pages=-,addtotoc={1,section,2,Active Visual Exploration Based on Attention-Map Entropy,paper:ave}]{papers/ave_comp.pdf}
+\includepdf[pages=-]{papers/ave_supp_comp.pdf}
+
+\includepdf[pages=-,addtotoc={1,section,2,Beyond Grids: Exploring Elastic Input Sampling for Vision Transformers,paper:beyond}]{papers/Elastic_ViT_comp.pdf}
+\includepdf[pages=-]{papers/Elastic_ViT_supp_comp.pdf}
+
+\includepdf[pages=-,addtotoc={1,section,2,AdaGlimpse: Active Visual Exploration with Arbitrary Glimpse Position and Scale,paper:adaglimpse}]{papers/AdaGlimpse_comp.pdf}
+\includepdf[pages=-]{papers/AdaGlimpse_supp_comp.pdf}
+
+\includepdf[pages=-,addtotoc={1,section,2,FlySearch: Exploring how vision-language models explore,paper:flysearch}]{papers/FlySearch_comp.pdf}
+
+\end{document}
