@@ -1,0 +1,58 @@
+# LaTeX auxiliary and build files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex.gz
+*.synctex(busy)
+*.toc
+*.vrb
+*.xdv
+
+# LaTeX intermediate formats
+*.dvi
+*.ps
+
+# Bibliography tools
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.ist
+
+# Beamer
+*.nav
+*.snm
+
+# minted / pygments
+_minted*
+*.pyg
+
+# latexindent
+*.bak[0-9]*
+
+# Generated PDF (uncomment if you want to track main.pdf)
+*.pdf
+
+# Editor / OS
+.DS_Store
+*.swp
+*~
+
+# Python (scripts/)
+__pycache__/
+*.py[cod]
+.Python
+.venv/
+venv/
