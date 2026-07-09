@@ -11,7 +11,7 @@ the idea of building mechanical creatures has been a recurring theme in our hist
 Following the development of modern electronics and digital computers, this dream seemed within reach.
 Throughout the mid-20th century, Isaac Asimov's tales of positronic-brain-powered robots~\cite{asimov1950irobot}
 presented a vision of highly intelligent anthropomorphic machines that reason based on logical rules and hardcoded ethics to guide their actions. 
-Stanisław Lem's stories~\cite{lem1965cyberiada} went a step further, giving them personalties, flaws, and desires,
+Stanisław Lem's stories~\cite{lem1965cyberiada} went a step further, giving them personalities, flaws, and desires,
 showcasing the complexity of artificial civilisations and their potential ethical dilemmas.
 Movies such as Forbidden Planet (1956)~\cite{wilcox1956forbidden} and Star Wars (1977)~\cite{lucas1977starwars}
 presented robots as beings with almost human psychology and thinking capabilities, albeit somewhat more clumsy and limited in their actions, bringing the idea to the mainstream.
@@ -21,7 +21,7 @@ At the time the founders of artificial intelligence confidently predicted that
 human-level perception and reasoning were only a few years away~\cite{mccarthy1955proposal}.
 
 Reality proved to be quite different and more humbling. Tasks that were regarded as the pinnacle of human intellect, such as playing chess~\cite{campbell2002deep} 
-or proving mathematical theorems~\cite{davis1960computing,de2008z3}, turned out to be relatively easy for machines to master at a level surpassing most humans.
+or proving mathematical theorems~\cite{davis1960computing,de2008z3}, turned out to be relatively easy for machines to master at a level surpassing even the best human experts.
 At the same time, everyday competences such as finding a path in a cluttered room, locating and moving objects from one place to another, or even just looking for a familiar face in a crowd, turned out to be surprisingly
 hard to reproduce even at the animal level. This inversion, known as Moravec's paradox~\cite{moravec1988mind}, has a compelling explanation in evolutionary
 terms. Those abilities are a product of hundreds of millions of years of natural selection. The sudden emergence of eyes is even
@@ -55,56 +55,57 @@ still unsolved, and introduces the research direction pursued across the four pu
 
 \section{From hand-crafted features to foundation models}
 
-Computer vision is almost as old as computing itself, with the first works on machine perception dating back to the 1960s~\cite{roberts1963machine}.
-First attempts to apply machine vision to real-world robotics problems appeared in the 1980s, with the Stanford Cart~\cite{moravec1980obstacle}
-and the Shakey project~\cite{nilsson1984shakey}. These early systems were built on hand-crafted geometry and operated in carefully perpared evaluation environments.
- Their brittleness outside such controlled settings exposed how hard vision really is. Marr's influential computational theory of vision
+Computer vision is almost as old as computing itself, with the first works on machine perception dating back to the 1960s~\cite{roberts1963machine},
+epitomized by the so-called ``blocks world'' of simple polyhedral scenes. First attempts to apply machine vision to real-world robotics problems followed
+soon after, with the SRI Shakey project~\cite{nilsson1984shakey}, developed already in the late 1960s and early 1970s, and, roughly a decade later, with
+Moravec's stereo-vision-guided Stanford Cart~\cite{moravec1980obstacle}. These early systems were built on hand-crafted geometry and operated in carefully prepared evaluation environments.
+Their brittleness outside such controlled settings exposed how hard vision really is. Marr's influential computational theory of vision
 \cite{marr1982vision} reframed the problem as one of recovering explicit representations of the world through successive stages of processing, and set an
 agenda that would occupy the field for decades.
 
 For the next two decades, progress was incremental at best and heavily reliant on hand-crafted feature representations.
-The turning point came with the resurgence of neural networks~\cite{lecun1998gradient},
-availability of large annotated datasets~\cite{deng2009imagenet} and development of more powerful hardware. Convolutional networks, pioneered for
-digit recognition, were scaled up and decisively outperformed hand-crafted pipelines~\cite{krizhevsky2012imagenet}. Deeper and more trainable
+The turning point came with the resurgence of neural networks, driven by the
+availability of large annotated datasets~\cite{deng2009imagenet} and the development of more powerful hardware. Convolutional networks, pioneered for
+digit recognition~\cite{lecun1998gradient}, were scaled up and decisively outperformed hand-crafted pipelines~\cite{krizhevsky2012imagenet}. Deeper and more trainable
 architectures such as residual networks~\cite{he2016deep} followed, and learned representations rapidly became the default across tasks such as classification, detection, and
 segmentation~\cite{lecun2015deep}. Computer vision had become, first and foremost, a problem of representation learning.
 
 The next wave of progress came from the field of natural language processing, with the invention of attention-based transformer models~\cite{vaswani2017attention}.
 The transformer architecture proved equally powerful for visual data, quickly surpassing convolutional networks in accuracy~\cite{dosovitskiy2021image}.
-Moreover, transformers were able to learn rich feature representations with self-supervised learning~\cite{radford2021learning,caron2021emerging,he2022masked},
-enabling training of models on vast amounts of unlabelled data from the web to produce models with broad, general-purpose visual competence.
+Moreover, transformers were able to learn rich feature representations with self-supervised and weakly-supervised learning~\cite{radford2021learning,caron2021emerging,he2022masked},
+enabling training of models on vast amounts of unlabelled or loosely labelled data from the web to produce models with broad, general-purpose visual competence.
 Those so-called vision foundation models in turn not only proved to be highly accurate backbones for standard vision tasks,
-but also enabled the development of vision-language models~\cite{achiam2023gpt,team2023gemini}, for the first time enabling machines to transcribe images into text and vice versa.
+but also enabled the development of vision-language models~\cite{achiam2023gpt,team2023gemini}, which generalized and scaled up the ability of machines to transcribe images into text and vice versa to an unprecedented degree.
 
-The trajectory from 1960s' blocks world to today's foundation models is, by any measure, a triumph. Yet nearly all of these
+The trajectory from the 1960s' blocks world to today's foundation models is, by any measure, a triumph. Yet nearly all of these
 advances share a quiet assumption: that the model is handed all needed visual information in advance, in a complete, static, sufficiently high-resolution image.
 
 \section{The passive-perception assumption}
 
 Standard computer vision solutions assume complete and unobstructed access to input data~\cite{girdhar2022omnivore}. This is an entirely reasonable simplification for most studied tasks,
 such as image classification or segmentation, and even most recent vision-language benchmarks~\cite{chen2024we,yue2025mmmu} follow this pattern.
-However, this assumption falls apart when the model is place inside an \emph{embodied} agent, such as a robot or an unmanned aerial vehicle (UAV), operating in the real world.
-Such an agent perceives the world through sensors with a restricted field of view and resolution, must move physically to acquire new observations taking obstacles into account, and
+However, this assumption falls apart when the model is placed inside an \emph{embodied} agent, such as a robot or an unmanned aerial vehicle (UAV), operating in the real world.
+Such an agent perceives the world through sensors with a restricted field of view and resolution, must move physically to acquire new observations, taking obstacles into account, and
 operates under tight constraints on time, energy, and computation power~\cite{wenzel2021four}. Capturing and processing every part of a large environment at maximum resolution is not merely wasteful but often infeasible, especially in open-world settings.
 
 Under these conditions, the decisive question is no longer only \emph{what it is that we see}, but rather \emph{what we should observe} in the first
-place. An agent that can choose its observations wisely, can achieve strong performance at a fraction of the sensing and computational cost of one that
+place. An agent that can choose its observations wisely can achieve strong performance at a fraction of the sensing and computational cost of one that
 processes everything indiscriminately. Moving this decision of \emph{where to look next} inside the model is precisely the shift from passive to active perception.
 
 \section{Active embodied vision}
 
 The idea that perception systems should be active has been around since the early days of embodied computer vision.
 The active perception~\cite{bajcsy1988active}, active vision~\cite{aloimonos1988active}, and animate vision~\cite{ballard1991animate} proponents argued decades ago that a perceiver
-which controls its own sensing can turn otherwise ill-posed problems into tractable ones. and this perspective has been revisited in the modern learning
+which controls its own sensing can turn otherwise ill-posed problems into tractable ones, and this perspective has been revisited in the modern learning
 era \cite{bajcsy2018revisiting}. The inspiration is deeply biological -- human vision is highly foveated, concentrating acuity at the centre of gaze, and we
 explore scenes through rapid saccadic eye movements that direct this fovea to informative regions~\cite{yarbus1967eye,hayhoe2005eye}.
 
-Machine learning approches to active vision followed the broader deep learning progress.
+Machine learning approaches to active vision followed the broader deep learning progress.
 Recurrent models of visual attention~\cite{mnih2014recurrent} learned to select a sequence of glimpses for recognition,
 drawing on the reinforcement learning methods~\cite{sutton2018reinforcement} that had begun to master control
 problems from raw pixels~\cite{mnih2015human}. In parallel, the robotics and embodied-AI communities studied exploration in the context of simultaneous
-localization and mapping (SLAM)~\cite{cadena2016past}, where an agents must build and explicit map of the environment.
-More recently, the task of embodied visual exploration~\cite{ramakrishnan2021exploration} provided a different approach of building the understanding of an unfamiliar space as a neural network-based 3D reconstruction problem.
+localization and mapping (SLAM)~\cite{cadena2016past}, where an agent must build an explicit map of the environment.
+More recently, the task of embodied visual exploration~\cite{ramakrishnan2021exploration} studied how an agent should build an internal model of an unfamiliar space to support downstream tasks such as reconstruction, localization, and navigation.
  Another recent line of work on active visual exploration specifically studies how a model equipped with a
 limited field of view should select successive glimpses to reconstruct,
 classify, or segment a scene \cite{seifi2021glimpse}. These threads share a common conviction: that intelligent sensing is a decision problem.
