@@ -1,6 +1,11 @@
 \documentclass[a4paper,oneside,11pt]{report}
 \usepackage[a4paper, top=2.54cm, bottom=2.54cm, left=2.54cm, right=2.54cm]{geometry}
 \usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{float}
 \usepackage{fontspec}
 \usepackage{polyglossia}
 \setdefaultlanguage{english}
@@ -37,9 +42,17 @@
 
 \input{parts/10_intro}
 
-\input{parts/40_other}
+\input{parts/20_uncertainty}
+\input{parts/21_ame}
+\input{parts/30_adaptive}
+\input{parts/31_beyond}
+\input{parts/32_adaglimpse}
+\input{parts/40_openworld}
+\input{parts/41_flysearch}
 
-\input{parts/50_conclusion}
+\input{parts/50_other}
+
+\input{parts/60_conclusion}
 
 \addcontentsline{toc}{chapter}{Bibliography}
 

@@ -1,0 +1,38 @@
+\chapter{Exploration as uncertainty reduction}
+\label{chap:uncertainty}
+
+\section{Research scope}
+\label{sec:uncertainty-scope}
+
+As established in the introduction, an embodied agent operating with a restricted field of view cannot rely on the passive-perception assumption that underlies most of modern computer vision~\cite{girdhar2022omnivore}. It must instead decide, step by step, where to direct its sensor in order to build a sufficient understanding of a scene from as few observations as possible. This chapter studies this problem at what we earlier called the \emph{local scale}: the agent is already positioned in front of a single bounded scene (an image, a panorama, or a room) and must choose a sequence of \emph{glimpses} -- small regions of that scene it is allowed to observe one at a time, so as to reconstruct, classify, or segment the scene as accurately as possible within a limited budget of observations.
+
+Prior work on this problem, reviewed in more detail in Section~\ref{sec:motivation-ame}, converged on a common architectural pattern: a neural network performs the target task (e.g. reconstruction) from the glimpses observed so far, while a second, separately trained component, typically a dedicated decision head with an auxiliary loss, or a reinforcement-learning policy, decides where the next glimpse should be taken. This pattern doubles the number of objectives the network must satisfy and, with it, the complexity, memory footprint, and fragility of the training procedure.
+
+The central research question of this chapter is whether such a dual-objective design is in fact necessary, or whether a network trained for the target task alone already contains, inside its own internal representations, sufficient information about where it is most uncertain, and therefore where it should look next. If so, active exploration could be reduced to a form of \emph{uncertainty reduction}: at every step, the agent samples the observation about which the model currently knows the least, without ever training a separate mechanism to make that choice. This idea is explored through the publication summarised in this chapter, ``Active Visual Exploration Based on Attention-Map Entropy''~\cite{pardyl2023active}, which identifies such a signal directly in the attention maps of a transformer-based model and shows that it can replace a dedicated decision module without loss, and, in fact, with a substantial gain in performance.
+
+\section{Preliminaries}
+\label{sec:uncertainty-preliminaries}
+
+Before describing the publication summarised in this chapter, to make this thesis self-contained, we introduce three background concepts required to understand it: the transformer-based masked autoencoder architecture on which it is built, the notion of entropy as a measure of predictive uncertainty, and the glimpse-based exploration protocol used throughout the chapter.
+
+\subsection{Vision transformers and masked autoencoders}
+\label{sec:prelim-vit-mae}
+
+The Vision Transformer (ViT)~\cite{dosovitskiy2021image} adapts the transformer architecture~\cite{vaswani2017attention} originally developed for language to images. An input image is divided into a regular grid of non-overlapping square patches, each of which is linearly projected into an embedding vector and augmented with a positional embedding encoding its location in the grid. The resulting sequence of tokens is processed by a stack of self-attention blocks, each of which lets every token gather information from every other token in the sequence, weighted by a learned compatibility score. Because a ViT operates on a variable-length sequence of tokens rather than on a fixed-size pixel grid, it is naturally suited to inputs where only a subset of patches is available at any given time.
+
+Masked Autoencoders (MAE)~\cite{he2022masked} exploit this property for self-supervised representation learning. During training, a large fraction of the input patches (e.g. 75\%) is removed. An encoder processes only the small set of remaining, visible patches, and a lightweight decoder is tasked with reconstructing the missing patches from the encoder's output, together with positional information about where the missing patches were located. Because the encoder never has to process masked tokens, this design is both computationally efficient and, crucially for active exploration, directly compatible with an agent that only ever observes a partial view of a scene.
+
+\subsection{Entropy as a measure of uncertainty}
+\label{sec:prelim-entropy}
+
+Given a discrete probability distribution $p = (p_1, \dots, p_n)$, its Shannon entropy is defined as
+\begin{equation}
+    H(p) = -\sum_{i=1}^n p_i \log p_i .
+    \label{eq:shannon-entropy}
+\end{equation}
+Entropy is maximised when $p$ is uniform, i.e. when all outcomes are equally likely, and minimised, reaching zero, when $p$ places all of its probability mass on a single outcome. In machine learning, the entropy of a model's output distribution is a standard proxy for the model's uncertainty: a confident prediction concentrates its probability mass on one or few outcomes and has low entropy, while an uncertain prediction spreads its probability mass broadly and has high entropy.
+
+\subsection{The glimpse-based exploration protocol}
+\label{sec:prelim-glimpse-protocol}
+
+Throughout this chapter, an image is partitioned into a fixed grid of $N$ candidate patches, or small groups of patches referred to as \emph{glimpses}. An agent is given a fixed budget of $T \ll N$ steps. At step $t$, it has already observed $t$ glimpses and must select the position of the $(t+1)$-th glimpse from among the $N - t$ still-unseen positions; once the glimpse is revealed, the model performing the target task (reconstruction, classification, or segmentation) is run again, conditioned on all $t+1$ known glimpses. This process repeats until the budget $T$ is exhausted, at which point the final prediction is produced. The publication summarised in this chapter additionally evaluates a \emph{retina-like} glimpse variant, in which each rectangular glimpse is deliberately degraded in resolution away from its centre, mimicking the foveated sampling of a biological retina~\cite{sandini2003retina}, in contrast to a uniform-resolution glimpse of the same size.

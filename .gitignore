@@ -56,3 +56,5 @@ __pycache__/
 .Python
 .venv/
 venv/
+papers_src/
+papers/*.md
