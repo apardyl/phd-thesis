@@ -1,0 +1,20 @@
+\begin{table}[t]
+\caption{\textbf{Importance of state components}: The RL state consists of the sequence $(\widehat{G}_t, \widehat{C}_t, \widehat{I_t}, \widehat{H_t})$ as described in~\cref{sec:state}. For this study, we replaced each element with its mean value (averaged over the entire dataset) to see how important it is for the model. As a result, we observe that the transformer latent is the most informative part of the state, followed by glimpse coordinates.}
+\vspace{-.2cm}
+\label{tab:state_ablation}
+\begin{center}
+\begin{small}
+\begin{tabular}{c@{\hskip12pt}c@{\hskip12pt}c@{\hskip12pt}c@{\hskip12pt}r}
+\toprule
+patches $\widehat{G}_t$ & coordinates $\widehat{C}_t$ & importance $\widehat{I}_t$ & latent $\widehat{H}_t$ & Accuracy \% \\
+\midrule
+\cmarkg & \cmarkg & \cmarkg & \cmarkg & 77.54 \\
+\xmark & \cmarkg & \cmarkg & \cmarkg & 76.99 \\
+\cmarkg & \xmark & \cmarkg & \cmarkg & 68.25 \\
+\cmarkg & \cmarkg & \xmark & \cmarkg & 77.36 \\
+\cmarkg & \cmarkg & \cmarkg & \xmark & 61.82 \\
+\bottomrule
+\end{tabular}
+\end{small}
+\end{center}
+\end{table}

@@ -1,0 +1,62 @@
+\begin{figure}[t]
+\begin{center}
+\begin{small}
+\begin{sc}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    title={Missing data},
+    xlabel={Patches dropped (\%)},
+    ylabel={Accuracy (\%)},
+    xtick={1,3,5,7,9},
+    xticklabels={0, 20, 40, 60, 80},
+    xmin=1,
+    xmax=9,
+    ymin=58,
+    ymajorgrids=true,
+    grid style=dashed,
+    scale only axis,
+    height=3.5cm,
+    width=.8\linewidth,
+    legend pos=south west,
+    legend cell align={left}
+]
+    \addplot[color=red]
+    coordinates {
+    (1,83.800)(2,83.316)(3,82.740)(4,81.852)(5,80.752)(6,79.042)(7,75.826)(8,70.154)(9,58.416)
+    };
+    \addlegendentry{ViT}
+    
+    \addplot[color=darkorange25512714]
+    coordinates {
+    (1,83.6380022329712)(2,83.3940022570801)(3,83.1200022940064)(4,82.5400023422241)(5,81.744002392273)(6,80.3920023129273)(7,78.2200022744751)(8,74.3040023487854)(9,66.8620021594238)
+    };
+    \addlegendentry{MAE}
+
+    \addplot[color=forestgreen4416044]
+    coordinates {
+    (1,83.7920022860718)(2,82.6960022814942)(3,80.8140022793579)(4,78.5000023495483)(5,75.2080023130798)(6,70.9740022155762)(7,65.4080021047974)(8,58.7620018357849)(9,50.0320015971375)
+    };
+    \addlegendentry{PVT}
+
+    \addplot[color=gray]
+    coordinates {
+    (1,83.4820023419189)(2,83.0380022857666)(3,82.3420022689819)(4,81.5560022836304)(5,80.2200023428345)(6,78.194002281189)(7,75.6340022589111)(8,71.0440022796631)(9,62.3500020339966)
+    };
+    \addlegendentry{Swin}
+    
+    \addplot[color=blue]
+    coordinates {
+    (1,82.036)(2,81.65)(3,81.276)(4,80.738)(5,80.046)(6,78.904)(7,77.328)(8,74.620)(9,68.582)
+    };
+    \addlegendentry{\ours{} (ours)}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\end{sc}
+\end{small}
+\end{center}
+\afterplot
+\caption{\textbf{Missing data:} The effect of random patch dropout on the accuracy. \ours{} is more resilient to significant patch dropout than the other models and even outperforms the image reconstruction model (MAE) at the end of the measured spectrum.}
+\label{fig:dropout-sample}
+\end{figure}

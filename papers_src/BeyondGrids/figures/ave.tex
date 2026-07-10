@@ -1,0 +1,18 @@
+\begin{table}[t]
+\caption{\textbf{Active visual exploration results:} We evaluate the performance of ElasticViT with MAE-like decoder head compared to standard MAE in active visual exploration scene reconstruction task performed by the AME algorithm. The metric is root mean squared error (RMSE; lower is better) and the dataset is ImageNet-1k. Our method outperforms competitive solutions.}
+\label{tab:ame}
+\begin{center}
+\begin{small}
+\vspace{-.2cm}
+\begin{tabular}{l@{\hskip20pt}l}
+\toprule
+Method & RMSE \\
+\midrule
+MAE + AME & 30.5  \\
+\textbf{ElasticMAE + AME (dual resolution)} & 25.95 \\
+\textbf{ElasticMAE + AME (quad tree)} & \textbf{23.2}  \\
+\bottomrule
+\end{tabular}
+\end{small}
+\end{center}
+\end{table}

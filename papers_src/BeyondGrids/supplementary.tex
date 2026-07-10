@@ -1,0 +1,262 @@
+\pdfoutput=1
+
+% WACV 2025 Paper Template
+% based on the WACV 2024 template, which is
+% based on the CVPR 2023 template (https://media.icml.cc/Conferences/CVPR2023/cvpr2023-author_kit-v1_1-1.zip) with 2-track changes from the WACV 2023 template (https://github.com/wacv-pcs/WACV-2023-Author-Kit)
+% based on the CVPR template provided by Ming-Ming Cheng (https://github.com/MCG-NKU/CVPR_Template)
+% modified and extended by Stefan Roth (stefan.roth@NOSPAMtu-darmstadt.de)
+
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+%%%%%%%%% PAPER TYPE  - PLEASE UPDATE FOR FINAL VERSION
+% \usepackage[review,algorithms]{wacv}      % To produce the REVIEW version for the algorithms track
+%\usepackage[review,applications]{wacv}      % To produce the REVIEW version for the applications track
+\usepackage{wacv}              % To produce the CAMERA-READY version
+%\usepackage[pagenumbers]{wacv} % To force page numbers, e.g. for an arXiv version
+
+% Include other packages here, before hyperref.
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+
+
+% It is strongly recommended to use hyperref, especially for the review version.
+% hyperref with option pagebackref eases the reviewers' job.
+% Please disable hyperref *only* if you encounter grave issues, e.g. with the
+% file validation for the camera-ready version.
+%
+% If you comment hyperref and then uncomment it, you should delete
+% ReviewTempalte.aux before re-running LaTeX.
+% (Or just hit 'q' on the first LaTeX run, let it finish, and you
+%  should be clear).
+\usepackage[pagebackref,breaklinks,colorlinks]{hyperref}
+
+
+% Support for easy cross-referencing
+\usepackage[capitalize]{cleveref}
+\crefname{section}{Sec.}{Secs.}
+\Crefname{section}{Section}{Sections}
+\Crefname{table}{Table}{Tables}
+\crefname{table}{Tab.}{Tabs.}
+
+
+%%%%%%%%% PAPER ID  - PLEASE UPDATE
+\def\wacvPaperID{650} % *** Enter the WACV Paper ID here
+\def\confName{WACV}
+\def\confYear{2025}
+
+
+
+\usepackage{xspace}
+\usepackage{svg}
+\usepackage[inline]{enumitem}
+\usepackage{caption}
+% \usepackage{subcaption}
+\usepackage{makecell}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{shapes.geometric,shapes.multipart,arrows,positioning,calc,shapes.arrows,arrows.meta,pgfplots.statistics,backgrounds,fit}
+\usepgfplotslibrary{groupplots}
+\tikzset{fit margins/.style={/tikz/afit/.cd,#1,
+    /tikz/.cd,
+    inner xsep=\pgfkeysvalueof{/tikz/afit/left}+\pgfkeysvalueof{/tikz/afit/right},
+    inner ysep=\pgfkeysvalueof{/tikz/afit/top}+\pgfkeysvalueof{/tikz/afit/bottom},
+    xshift=-\pgfkeysvalueof{/tikz/afit/left}+\pgfkeysvalueof{/tikz/afit/right},
+    yshift=-\pgfkeysvalueof{/tikz/afit/bottom}+\pgfkeysvalueof{/tikz/afit/top}},
+    afit/.cd,left/.initial=2pt,right/.initial=2pt,bottom/.initial=2pt,top/.initial=2pt}
+\pgfplotsset{compat=1.18}
+
+\newcommand{\ours}[0]{ElasticViT\xspace}
+\newcommand{\dmodel}{d_{\text{model}}}
+\newcommand{\afterplot}{\vspace{-.1in}} %\vspace{-.15in}}
+
+% \newcommand{\todo}[1]{\textcolor{red}{[#1]}}
+% \newcommand{\old}[1]{\textcolor{gray}{[#1]}}
+
+% \newcommand{\janek}[2]{\textcolor{red}{#1} \textcolor{blue}{[janek: #2]}}
+
+\DeclareMathOperator{\pred}{pred}
+\DeclareMathOperator{\E}{E}
+\DeclareMathOperator{\miss}{miss}
+\DeclareMathOperator{\scale}{scale}
+\DeclareMathOperator{\pos}{pos}
+\DeclareMathOperator{\PE}{PE}
+
+\definecolor{crimson2143940}{RGB}{214,39,40}
+\definecolor{darkgray176}{RGB}{176,176,176}
+\definecolor{darkorange25512714}{RGB}{255,127,14}
+\definecolor{forestgreen4416044}{RGB}{44,160,44}
+\definecolor{gray}{RGB}{128,128,128}
+\definecolor{mediumpurple148103189}{RGB}{148,103,189}
+\definecolor{steelblue31119180}{RGB}{31,119,180}
+
+
+\begin{document}
+
+
+%\setcounter{chapter}{2} % If you are doing your chapter as chapter one,
+%\setcounter{section}{3} % comment these two lines out.
+
+\title{Supplementary material for\\Beyond Grids: Exploring Elastic Input Sampling for Vision Transformers}
+
+\author{Adam Pardyl$^{1,2,3}$ \qquad Grzegorz Kurzejamski$^{1}$ \qquad Jan Olszewski$^{1,4}$ \\
+Tomasz Trzciński$^{1,5,6}$ \qquad Bartosz Zieliński$^{1,2}$ \\
+$^1$IDEAS NCBR \\
+$^2$Jagiellonian University, Faculty of Mathematics and Computer Science \\
+$^3$ Jagiellonian University, Doctoral School of Exact and Natural
+Sciences \\
+$^4$ University of Warsaw \qquad $^5$ Warsaw University of Technology \qquad $^6$ Tooploox
+% Institution1\\
+% Institution1 address\\
+% {\tt\small firstauthor@i1.org}
+% % For a paper whose authors are all at the same institution,
+% % omit the following lines up until the closing ``}''.
+% % Additional authors and addresses can be added with ``\and'',
+% % just like the second author.
+% % To save space, use either the email address or home page, not both
+% \and
+% Second Author\\
+% Institution2\\
+% First line of institution2 address\\
+% {\tt\small secondauthor@i2.org}
+}
+
+\maketitle
+
+\section{Additional experiments}
+
+\subsection{PatchMix ablation}
+
+\input{figures/patchmix/fig}
+
+To evaluate the effectiveness of PatchMix (see Fig.~\ref{fig:patchmix} for visualization) we perform an ablation study, training the model with the regime presented in Sec. 4 of the main paper, but without the PatchMix augmentation applied. The results are presented in Tab.~\ref{tab:patchmix_ablation}. The PatchMix augmentation improves the accuracy of ElasticViT by over 1.5\% on ImageNet-1k.
+
+\begin{table}[t]
+    \centering
+    \begin{tabular}{rl}
+    \toprule
+        ElasticViT & Accuracy \\
+        \midrule
+        without PatchMix & 80.67\% \\
+        with PatchMix & 82.04\% \\
+        \bottomrule
+    \end{tabular}
+    \caption{\textbf{PatchMix ablation study:} The effectiveness of the PatchMix augmentation evaluated on the Imagnet-1k dataset. The test was performed without any introduced perturbations. We observe that PachMix provides over 1.5\% gain in accuracy.}
+    \label{tab:patchmix_ablation}
+\end{table}
+
+\subsection{Grid density}
+
+
+
+Continuing on scale elasticity experiments presented in Sec.~5.1, we decided to investigate the resistance of ViT architectures to change of grid density. In real-world scenarios, scale changes are quite common. However, when conducting synthetic experiments with ViT, the typical approach is to maintain a consistent input image resolution and grid layout density.
+
+\input{figures/zoomscale/fig_zoom_density}
+
+In this setup, we adjust the grid density, thereby altering the number of patches while using the same input image. This modification process is illustrated in Fig.~\ref{fig:gridscalezoom} as \textit{Grid density} and compared to the \textit{Grid zoom} perturbation shown in Sec.~5.1. The outcomes for standard ViT, MAE and \ours{} are presented in Fig.~\ref{fig:grid-sample}. PVT and Swin models were omitted in this evaluation, as changing the grid density in those models is not trivial due their internal structure. We observe, that all models perform similarly well when decreasing the density of the grid, while only \ours{} can utilize denser sampling to its advantage.
+
+
+\subsection{Is it better to down-scale input or dropout patches?}
+
+The results from our previous experiments naturally lead to an important question: When faced with computational constraints, is it more beneficial to remove an entire patch from the input or to rescale neighboring patches in order to maintain complete image coverage, even at the cost of changing the token scale? To investigate this, we conduct experiments where we iteratively select a random $2\times2$ patch block from the uniform $14\times14$ patch grid and modify it in two ways. The first is to replace a $2\times2$ block of patches with a single larger patch, preserving the same coverage. In the second, we remove three out of four patches within the block. In both cases, these operations reduced the input token set by three, either through a dropout operation or by changing the scale of the patches.
+
+ \input{figures/gridscale}
+
+The results of these experiments are depicted in Fig.~\ref{fig:drop-vs-rescale-sample}. Surprisingly, ElasticViT exhibits almost no discernible difference in performance between the dropout and rescale operations, with dropout slightly outperforming rescaling at the extremes. Again, This would suggest a potential overfit with results better when having only 25\% of the image covered by patches than having 100\% coverage but with two times lower sampling resolution. In contrast, for the original ViT model, there is a visible distinction in performance between the two methods of limiting token counts, with the rescaling option proving to be a much more effective solution at the extremes.
+
+\input{figures/rescaledropouttradeoff}
+
+\subsection{Transfer learning (continued)}
+
+\subsubsection{Pascal VOC dataset}
+
+In this section we show additional results for transfer learning elasticity, evaluated on the Pascal VOC dataset. We follow the same training and evaluation setup as in Sec.~5.7 of the main paper. Results of the experiments are presented in Fig.~\ref{fig:voc}. We observer, that standard ViT performs the best for the native resolution, but is outperformed by \ours{} when elasticity is introduced. Both PVT and Swin performs slightly worse, and surprisingly, the self-supervised pre-trained MAE performs the worst, failing to achieve event half of the mean average precision score of ViT and \ours{}.
+
+\input{figures/voc}
+
+\subsubsection{ColonCancer dataset}
+
+We further test transfer learning properties of our model, evaluating it on the ColonCancer dataset. The dataset consists of histopathological images to be classified as malignant or benign. As previously, we train only the final linear layer of the model. For standard ViT we apply regular grid sampling, our ElasticViT uses EDGE sampling as described in the main paper. Results are presented in Tab.~\ref{tab:cc}, showing superior performance of ElasticViT. We attribute this superior performance to EDGE sampling, which extracts more patches in regions containing cell nuclei, enabling ElasticViT to create a better representation of the data.
+
+\begin{table}[t]
+    \centering
+    \begin{tabular}{rcl}
+    \toprule
+        Model & Sampling type & Accuracy \\
+        \midrule
+        ViT & GRID & 82\% \\
+        ElasticViT & EDGE & 87\% \\
+        \bottomrule
+    \end{tabular}
+    \caption{\textbf{ColonCancer transfer learning:} Results of fine-tuning the last layers of models for binary classification of the ColonCancer dataset. The standard ViT model was run with grid sampling, while our ElasticViT model utilized EDGE sampling as described in the main paper. We observe that our model outperforms the standard ViT, benefiting from variable scale sampling.}
+    \label{tab:cc}
+\end{table}
+
+\subsection{Stability of elastic evaluation}
+As our elasticity benchmark introduces randomness, we run the evaluation pipeline on the same trained model multiple times to check for any fluctuations in performance across different random seeds. The differences in performance are insignificant over multiple runs of elastic sampling, as shown in the histogram of performance standard deviations in Fig.~\ref{fig:seedcheck}. This consistency can be attributed to the large size of the ImageNet-1k validation set.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[scale=.5]{figures/hist.pdf}
+    \caption{\textbf{Elastic sampling impact on performance across multiple runs:} The histogram represents the distribution of classification error for five inference runs with different random seeds used for elastic sampling. We observe that the differences between runs are insignificant. Note that the accuracy scores of particular runs are provided in the plot legend.}
+    \label{fig:seedcheck}
+\end{figure}
+
+\subsection{Patch redundancy}
+
+\input{figures/gridredundancy}
+
+\input{figures/critdist}
+
+\begin{figure*}
+    \makebox[\textwidth][c]{\includegraphics[width=.95\textwidth]{imgs/aerial_example_10_32_32.png}} \\ 
+    \makebox[\textwidth][c]{\includegraphics[width=.95\textwidth]{imgs/imgs_448_64/config_10_32_32/img_1.png}} \\
+    \makebox[\textwidth][c]{\includegraphics[width=.95\textwidth]{imgs/imgs_448_64/config_10_32_32/img_2.png}} \\ 
+    \caption{\textbf{Elasticity pipeline visualization:} In this figure, we present visualizations of successive input data perturbations. For clarity, patch borders are marked in red, and patch overlap is highlighted.}
+    \label{fig:elasticity-vis}
+\end{figure*}
+
+Elastic sampling allows for patch overlap, which provides redundant information to the model. In this experiment, we explored vision transformer capability to deal with redundant information. The model was provided with a standard full grid of $16\times16$ patches, that covered the entire image. Then, a number of redundant, randomly sampled patches with scales between $0.5$ and $2$ was added to the input. The results are presented in Fig.~\ref{fig:grid-redundancy}. We observe, that for standard ViT and MAE models those redundant patches essentially constitute noise, which reduces the overall performance. Our \ours{} is capable of using the extra information to slightly increase the accuracy.
+
+\subsection{Overall performance comparison}
+To assess the overall elasticity of the compared methods, in Fig.~\ref{fig:critdist} we present a critical difference diagram, aggregating results from Fig. 4 and Fig. 5 of the main paper.
+
+
+\section{Pipeline visualizations}
+
+In Fig.~\ref{fig:elasticity-vis} we present visualization of our elasticity pipeline output. For clarity, patches are separated with red borders and patch overlap is highlighted in bright colors.
+
+
+
+\section{Theoretical analysis of input sampling strategies and their impact on positional embedding}
+
+\subsection{Definition recall}
+To strictly define the evaluation pipeline, let us consider image $I$ for which we generate set $P$ of patches $p = (x, y, s)$, where $x$ and $y$ denote the top-left corner's coordinates, and $s$ represents the relative scale (i.e. we sample a patch $r \cdot s \times r \cdot s$ and rescale it bilinearly to size $r \times r$). Initially, the coordinates $x$ and $y$ are from the regular grid and $s=1$. However, in the next step, we perturb them with three functions corresponding to the considered elasticities:
+\begin{itemize}
+\item $\E_{\scale(s_1, s_2)}(P)$ - introduces the scale perturbations,  sampling the $s$ parameter of every patch $p \in P$ independently and uniformly from range $[s_1, s_2]$.
+\item $\E_{\miss(d)}(P)$ - adds missing data perturbations, dropping out $d$ patches from $P$ randomly with equal probability. 
+\item $\E_{\pos(q)}(P)$ - applies positional perturbation, modifying $x$ and $y$ parameters of each patch $p \in P$, independently moving them by offsets sampled uniformly from range $[-r \cdot q, r \cdot q]$, where $r$ is the size of the patch.
+\end{itemize}
+
+The patches are described by their upper left $(x, y)$ and lower right corner $(x + rs, y+rs)$. Then each coordinate $\pos \in \{x, y, x+rs, y+rs\}$ is encoded by the sinusoidal positional encoding:
+\begin{align*}
+    \PE_{(\pos,2i)} &= \sin\left(\frac{\pos}{10000^{2i/l}}\right) \\
+    \PE_{(\pos,2i+1)} &= \cos\left(\frac{\pos}{10000^{2i/l}}\right).
+\end{align*}
+which are concatenated into a single vector.
+
+\subsection{Perturbations influence on positional embedding}
+
+The application of $\E_{\miss}$ does not affect the positional encoding of a patch. However, if a patch was not dropped by the $\E_{\miss}$ perturbation, then the other two perturbations can modify its position embedding.
+
+After application of $\E_{\pos}$, the values of $x$ and $y$ get updated to $x+ \Delta x$, $y+\Delta y$, while the lower right corner $x+rs$ and $y+rs$ get updated to values $x + rs + \Delta x$ and $y + rs + \Delta y$. The offset values $\Delta x$ and $\Delta y$ do not depend on $x$ nor $y$. Thus, for $x$, we obtain the following positional embedding
+\begin{align*}
+    \PE_{(x + \Delta x,2i)} &= \sin\left(\frac{x}{10000^{2i/l}} + \frac{\Delta x}{10000^{2i/l}}\right) \\
+    \PE_{(x + \Delta x,2i+1)} &= \cos\left(\frac{x}{10000^{2i/l}} + \frac{\Delta x}{10000^{2i/l}}\right),
+\end{align*}
+which holds analogously for the other three coordinates $\{y, x+rs, y+rs\}$.
+
+When it comes to $\E_{\scale}$, it modifies the $s$ value to $s + \Delta s$ therefore $\pos \in \{x, y\}$ remains unchanged, while both coordinates $\pos \in \{x + rs, y + rs\}$ are offset by the value $\Delta = r\Delta s$. The formula is analogous to the $\E_{\pos}$ case.
+
+\end{document}

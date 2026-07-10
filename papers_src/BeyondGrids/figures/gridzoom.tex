@@ -1,0 +1,64 @@
+\begin{figure}[t]
+\begin{center}
+\begin{small}
+\begin{sc}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    title={Patch Scale},
+    xlabel={Scale},
+    ylabel={Accuracy (\%)},
+    xtick={-8,0,8},
+    xticklabels={0.5,1,2},
+    xmin=-8,
+    xmax=8,
+    ymin=55,
+    ymajorgrids=true,
+    grid style=dashed,
+    scale only axis,
+    height=3.5cm,
+    width=.8\linewidth,
+    legend style={at={(0.5,0.03)},anchor=south},
+    legend cell align={left}
+]   
+    \addplot[color=red]
+    coordinates {
+    (-8,74.200)(-7,76.928)(-6,79.364)(-5,81.156)(-4,82.268)(-3,82.760)(-2, 83.206)(-1, 83.264)(0,83.800)(1, 83.358)(2, 82.936)(3, 82.142)(4, 82.138)(5, 79.860)(6, 78.000)(7, 76.148)(8, 73.790)
+    };
+    \addlegendentry{ViT}
+
+    \addplot[color=darkorange25512714]
+    coordinates {
+    (-8,73.1160022332764)(-7,75.5160023339844)(-6,77.3680022940064)(-5,79.3360023104858)(-4,80.7480022698975)(-3,81.8140023361206)(-2,82.6520023492432)(-1,83.2080022515869)(0,83.6380022329712)(1,83.3940023297119)(2,82.7840023770142)(3,81.7260022879028)(4,80.4420024073792)(5,78.8460023187256)(6,76.2080024163818)(7,72.784002151947)(8,67.6940020773316)
+    };
+    \addlegendentry{MAE}
+
+    \addplot[color=forestgreen4416044]
+    coordinates {
+    (-8,44.3920014324951)(-7,52.0040017056274)(-6,58.6980018432617)(-5,66.3200020761108)(-4,71.7220022833252)(-3,75.5400023120117)(-2,79.3040024160767)(-1,82.038002303772)(0,83.7920022860718)(1,81.9900023025513)(2,80.7500022860718)(3,79.0120023202515)(4,76.7640022634888)(5,74.8220023034668)(6,72.0040021818543)(7,68.4400022116089)(8,62.9700019551086)
+    };
+    \addlegendentry{PVT}
+
+
+    \addplot[color=gray]
+    coordinates {
+    (-8,54.3440017181397)(-7,63.5080020332336)(-6,68.1620022052002)(-5,74.1300022384644)(-4,78.0040023028565)(-3,80.0960023324585)(-2,81.806002359314)(-1,82.6700023193359)(0,83.4820023419189)(1,82.1840023556519)(2,81.9940023840332)(3,80.8060022799683)(4,78.2080023492432)(5,78.2840023413086)(6,76.106002303772)(7,72.7760022932434)(8,68.3600020809937)
+    };
+    \addlegendentry{Swin}
+
+    
+    \addplot[color=blue]
+    coordinates {
+    (-8,80.552)(-7,81.186)(-6,81.422)(-5,81.684)(-4,81.896)(-3,81.974)(-2, 82.016)(-1, 81.944)(0,82.036)(1, 81.780)(2, 81.240)(3, 80.790)(4, 79.742)(5, 79.594)(6, 78.898)(7, 78.244)(8, 77.504)
+    };
+    \addlegendentry{\ours{} (ours)}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\end{sc}
+\end{small}
+\end{center}
+\afterplot
+\caption{\textbf{Patch Scale:} The impact of changing the patch scale on accuracy. \ours{} can extract information from patches of various scales, being superior to other models in situations when information is lost either because patches do not cover the whole image or because the patches are of low resolution.}
+\label{fig:zoom-sample}
+\end{figure}

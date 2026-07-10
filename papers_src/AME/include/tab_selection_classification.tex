@@ -1,0 +1,24 @@
+\begin{table}[t]
+\begin{center}
+\begin{small}
+\begin{sc}
+\begin{tabular}{llrr}
+\toprule
+Selection & glimpse regime & train all & head-only \\
+\midrule
+Random & $8 \times 32^2$ & 72.4	& 66.2 \\
+Checker & $8 \times 32^2$ & 70.1 &64.0 \\
+Attention & $8 \times 32^2$ & \textbf{73.4} & \textbf{66.9} \\
+\midrule
+Random & $8 \times 16^2$ & 61.9	& 53.7\\
+Checker & $8 \times 16^2$ & 57.8 & \textbf{56.2} \\
+Attention & $8 \times 16^2$ & \textbf{63.4} & 55.9 \\
+\bottomrule
+\end{tabular}
+\end{sc}
+\end{small}
+\end{center}
+\vskip -0.1in
+\caption{\textbf{AME-based glimpse selection versus naive sampling - classification:} Comparison of glimpse selection strategies in classification task for SUN360 database. The metric used is accuracy (higher is better). We used regular (non-retinal) glimpses for this ablation and tested full-model and head-only training strategies. Our method performs better than random position sampling and random sampling from a checkerboard-like pattern.}
+\label{tab:selection-classification}
+\end{table}

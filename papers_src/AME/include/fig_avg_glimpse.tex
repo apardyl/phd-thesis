@@ -1,0 +1,18 @@
+\begin{figure}[t]
+\begin{center}
+\begin{small}
+\begin{sc}
+\begin{tabular}{rc@{\hskip5pt}c}
+Image resolution & $256\times128$ & $224\times224$ \\
+Glimpse regime & $8\times48^2$ & $37\times16^2$ \\
+SUN360 & \tabfigure{width=2cm}{fig/avg_glimpse/sun360.jpg} & \tabfigure{width=1cm}{fig/avg_glimpse/sun36037.jpg} \\[15pt]
+ADE20k & \tabfigure{width=2cm}{fig/avg_glimpse/ade20k.jpg} &\tabfigure{width=1cm}{fig/avg_glimpse/ade20k37.jpg} 
+
+\end{tabular}
+\end{sc}
+\end{small}
+\end{center}
+\vskip -0.1in
+\caption{\textbf{Average glimpse image:} Mean glimpse map, averaged over all glimpse positions in all test images for reconstruction task on SUN360 and ADE20K. We can see that the first glimpse is consistently selected in the same place. Dataset and training regimes determine its best starting position.}
+\label{fig:avg-glimpse}
+\end{figure}

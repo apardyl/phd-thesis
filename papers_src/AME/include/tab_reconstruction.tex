@@ -1,0 +1,28 @@
+\begin{table*}[t]
+\begin{center}
+\begin{small}
+\begin{sc}
+\begin{tabular}{lrrrllrr}
+\toprule
+Method & SUN360 & ADE20k & MS COCO & Image res. & Glimpse regime & Pixel \% & Area \% \\
+\midrule
+AttSeg & 37.6 & 36.6 & 41.8 & $128 \times 256$ & $8 \times 48^2$ (retinal) & 18.75 & 56.25 \\
+GlAtEx & 33.8 & 41.9 & 40.3 & $128 \times 256$ & $8 \times 48^2$ (retinal) & 18.75 & 56.25 \\
+Ours (retinal) & \textbf{23.6} & \textbf{23.8} & \textbf{25.2} & $128 \times 256$ & $8 \times 48^2$ (retinal) & 18.75 & 56.25\\
+\midrule
+Ours (non-retinal) & 37.9 & 40.7 & 43.2 & $128 \times 256$ & $8 \times 16^2$ (non ret.) & 6.25 & 6.25\\
+Ours (non-retinal) & 29.8 & 30.8 & 32.5 & $128 \times 256$ & $8 \times 32^2$ (non ret.) & 25.00 & 25.00\\
+Ours (non-retinal) & \textbf{20,1} & \textbf{20.6} & \textbf{22.1} & $128 \times 256$ & $8 \times 48^2$ (non ret.) & 56.25 & 56.25 \\
+\midrule
+SimGlim (detached) & 26.2 & 27.2 & 29.8 & $224 \times 224$ & $37 \times 16^2$ (non ret.) & 18.75 & 18.75\\
+SimGlim (end-to-end) & 28.0 & 28.8 & 31.3 & $224 \times 224$ & $37 \times 16^2$ (non ret.) & 18.75 & 18.75 \\
+Ours (non-retinal) & \textbf{23.4} & \textbf{26.2} & \textbf{28.6} & $224 \times 224$ & $37 \times 16^2$ (non ret.) & 18.75 & 18.75 \\
+\bottomrule
+\end{tabular}
+\end{sc}
+\end{small}
+\end{center}
+\vskip -0.1in
+\caption{\textbf{Reconstruction results:} Comparison of our model in reconstruction task against AttSeg~\protect\cite{seifi2020segment}, GlAtEx~\protect\cite{seifi2021glimpse} and SimGlim~\protect\cite{Jha2023WACV} on SUN360, ADE20K and MS COCO datasets. The metric used is a root mean square error (RMSE; lower is better). For each experiment, we provide a training and evaluation regime defined by a number of glimpses of a specific resolution. Pixel \% and area \% denote respectively: the percentage of image pixels known to the model and the percentage of image area seen by the model. Differences in both measures occur when dealing with retina-like glimpses, which have lower pixel counts by design. Our method outperforms competitive solutions in all configurations.}
+\label{tab:reconstruction}
+\end{table*}

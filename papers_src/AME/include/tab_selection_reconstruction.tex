@@ -1,0 +1,24 @@
+\begin{table}[t]
+\begin{center}
+\begin{small}
+\begin{sc}
+\begin{tabular}{llrr}
+\toprule
+Selection & glimpse regime & SUN360 & MS COCO \\
+\midrule
+Random & $8 \times 32^2$ & 32.8 & 38.3 \\
+Checker & $8 \times 32^2$ & 32.0 & 32.6 \\
+Attention & $8 \times 32^2$ & \textbf{29.8} & \textbf{32.5} \\
+\midrule
+Random & $8 \times 16^2$ & 39.8 & 47.3\\
+Checker & $8 \times 16^2$ & 39.3 & 44.1 \\
+Attention & $8 \times 16^2$ & \textbf{37.9} & \textbf{43.2} \\
+\bottomrule
+\end{tabular}
+\end{sc}
+\end{small}
+\end{center}
+\vskip -0.1in
+\caption{\textbf{AME-based glimpse selection versus naive sampling - reconstruction:} Comparison of glimpse selection strategies for reconstruction task on SUN360 and MS COCO databases. The metric used is a root mean square error (RMSE; lower is better). We used regular (non-retinal) glimpses for this ablation. Our method performs better than random position sampling and random sampling from a checkerboard-like pattern.}
+\label{tab:selection-reconstruction}
+\end{table}

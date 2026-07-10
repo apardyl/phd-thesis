@@ -1,0 +1,419 @@
+\pdfoutput=1
+
+\documentclass[runningheads]{llncs}
+% ---------------------------------------------------------------
+% Include basic ECCV package
+ 
+% TODO REVIEW: Insert your submission number below by replacing '*****'
+% TODO FINAL: Comment out the following line for the camera-ready version
+% \usepackage[review,year=2024,ID=3128]{eccv}
+% TODO FINAL: Un-comment the following line for the camera-ready version
+\usepackage{eccv}
+
+% OPTIONAL: Un-comment the following line for a version which is easier to read
+% on small portrait-orientation screens (e.g., mobile phones, or beside other windows)
+%\usepackage[mobile]{eccv}
+
+
+% ---------------------------------------------------------------
+% Other packages
+
+% Commonly used abbreviations (\eg, \ie, \etc, \cf, \etal, etc.)
+\usepackage{eccvabbrv}
+
+% Include other packages here, before hyperref.
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+% The "axessiblity" package can be found at: https://ctan.org/pkg/axessibility?lang=en
+\usepackage[accsupp]{axessibility}  % Improves PDF readability for those with disabilities.
+
+
+% ---------------------------------------------------------------
+% Hyperref package
+
+% It is strongly recommended to use hyperref, especially for the review version.
+% Please disable hyperref *only* if you encounter grave issues.
+% hyperref with option pagebackref eases the reviewers' job, but should be disabled for the final version.
+%
+% If you comment hyperref and then uncomment it, you should delete
+% main.aux before re-running LaTeX.
+% (Or just hit 'q' on the first LaTeX run, let it finish, and you
+%  should be clear).
+
+% TODO FINAL: Comment out the following line for the camera-ready version
+% \usepackage[pagebackref,breaklinks,colorlinks,citecolor=eccvblue]{hyperref}
+% TODO FINAL: Un-comment the following line for the camera-ready version
+\usepackage{hyperref}
+
+% Support for ORCID icon
+\usepackage{orcidlink}
+
+
+\newcommand{\ent}{\mathcal{H}}
+\newcommand{\tr}{\mathrm{tr}}
+
+% Constant matrices and vectors.
+\newcommand{\ones}{\boldsymbol{1}}
+\newcommand{\eye}{\boldsymbol{I}}
+\newcommand{\zeros}{\boldsymbol{0}}
+
+% Other helpers
+\newcommand{\voidarg}{{\,\cdot\,}}
+
+
+% MDP
+% \newcommand{\xspace}{\mathcal{X}}
+
+\newcommand{\st}{{\mathbf{s}_t}}
+\newcommand{\at}{{\mathbf{a}_t}}
+\newcommand{\E}[2]{\operatorname{\mathbb{E}}_{#1}\left[#2\right]}
+
+\usepackage{pifont}
+\newcommand{\cmarkg}{\color{gray}\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{shapes.geometric,shapes.multipart,arrows,positioning,calc,shapes.arrows,arrows.meta,pgfplots.statistics,backgrounds}
+\pgfplotsset{compat=1.17}
+\usepackage{makecell}
+\usepackage[inline]{enumitem}
+
+
+\def\todo#1{{\textbf{\color{red}{[{#1}]}}}}
+\def\bartek#1{{\textbf{\color{green}{Bartek[{#1}]}}}}
+\def\maciek#1{{\textbf{\color{blue}{Maciek[{#1}]}}}}
+\def\maciekadd#1{{\color{blue}{#1}}}
+\def\ka#1{{\color{purple}{ka[{#1}]}}}
+\def\ap#1{{\color{pink}{ap[{#1}]}}}
+
+
+\newcommand{\ours}[0]{AdaGlimpse}
+
+\newcommand{\dcam}{d_{\text{cam}}}
+\newcommand{\dmax}{d_{\text{max}}}
+\newcommand{\dmin}{d_{\text{min}}}
+\newcommand{\dpatch}{d_{\text{patch}}}
+
+\newcommand\smallimg{2cm}
+\newcommand\smallerimg{1.4cm}
+\newcommand\smallestimg{1.1cm}
+\newcommand{\tabfigure}[2]{\raisebox{-.5\height}{\includegraphics[#1]{#2}}}
+
+\definecolor{crimson2143940}{RGB}{214,39,40}
+\definecolor{darkgray176}{RGB}{176,176,176}
+\definecolor{darkorange25512714}{RGB}{255,127,14}
+\definecolor{forestgreen4416044}{RGB}{44,160,44}
+\definecolor{gray}{RGB}{128,128,128}
+\definecolor{mediumpurple148103189}{RGB}{148,103,189}
+\definecolor{steelblue31119180}{RGB}{31,119,180}
+
+\usepackage{array}
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\CONCAT}{CONCAT}
+
+
+\begin{document}
+
+% ---------------------------------------------------------------
+% TODO REVIEW: Replace with your title
+\title{\ours{}: Active Visual Exploration with Arbitrary Glimpse Position and Scale} 
+
+% TODO REVIEW: If the paper title is too long for the running head, you can set
+% an abbreviated paper title here. If not, comment out.
+\titlerunning{\ours{}}
+
+% TODO FINAL: Replace with your author list. 
+% Include the authors' OCRID for the camera-ready version, if at all possible.
+\author{Adam Pardyl\inst{1,2,3}\orcidlink{0000-0002-3406-6732} \and % 
+Michał Wronka\inst{2}\orcidlink{0009-0002-5208-9900} \and % 
+Maciej Wołczyk\inst{1}\orcidlink{0000-0002-3933-9971} \and % 
+Kamil Adamczewski\inst{1}\orcidlink{0000-0002-2917-4392} \and % 
+Tomasz Trzciński\inst{1,4,5}\orcidlink{0000-0002-1486-8906} \and % 
+Bartosz Zieliński\inst{1,2}\orcidlink{0000-0002-3063-3621}} % 
+
+% TODO FINAL: Replace with an abbreviated list of authors.
+\authorrunning{A.~Pardyl et al.}
+% First names are abbreviated in the running head.
+% If there are more than two authors, 'et al.' is used.
+
+% TODO FINAL: Replace with your institution list.
+\institute{IDEAS NCBR \\
+\email{\{adam.pardyl, maciej.wolczyk, kamil.adamczewski,\\tomasz.trzcinski, bartosz.zielinski\}@ideas-ncbr.pl} \and
+Jagiellonian University, Faculty of Mathematics and Computer Science \\
+\email{michal.wronka@student.uj.edu.pl}\and
+Jagiellonian University, Doctoral School of Exact and Natural Sciences \and
+Warsaw University of Technology \and
+Tooploox}
+
+\maketitle
+
+
+\begin{abstract}
+Active Visual Exploration (AVE) is a task that involves dynamically selecting observations (glimpses), which is critical to facilitate comprehension and navigation 
+ within an environment. While modern AVE methods have demonstrated impressive performance, they are constrained to fixed-scale glimpses from rigid grids. In contrast, existing mobile platforms equipped with optical zoom capabilities can capture glimpses of arbitrary positions and scales.
+To address this gap between software and hardware capabilities, we introduce \ours{}. It uses Soft Actor-Critic, a reinforcement learning algorithm tailored for exploration tasks, to select glimpses of arbitrary position and scale. This approach enables our model to rapidly establish a general awareness of the environment before zooming in for detailed analysis.
+Experimental results demonstrate that \ours{} surpasses previous methods across various visual tasks while maintaining greater applicability in realistic AVE scenarios.
+
+\keywords{Active visual exploration \and Vision transformers \and Reinforcement learning}
+\end{abstract}
+
+\begin{figure}[th]
+    \centering
+    \includegraphics[scale=1]{figures/rlglimpse.pdf}
+    \vspace{-.2cm}
+    \caption{\textbf{Adaptive Glimpse (\ours{})}: Our approach selects and processes glimpses of arbitrary position and scale, fully exploiting the capabilities of modern hardware. In this example, \ours{} selects a low-resolution glimpse of the whole environment. Based on this glimpse, it predicts a bird with probability $0.01$, too low to make the final decision. Instead, it selects the second glimpse by zooming in to the upper left corner. The process repeats four times until the probability of the predicted class is higher than a specified threshold.}
+    \label{fig:teaser}
+\end{figure}
+
+\section{Introduction}
+\label{intro}
+
+Common machine learning solutions for computer vision tasks, such as classification, segmentation, or scene understanding, usually presume access to complete input data~\cite{girdhar2022omnivore}. However, this assumption does not apply to embodied agents functioning in the real world. Agents such as robots and UAVs face constraints on their data-gathering capabilities, such as a restricted field of view and limited operational time, caused by dynamically changing environments~\cite{4seasons}. Moreover, capturing and analyzing high-resolution images of the entire visible area is inefficient, as not every part of an image contains the same amount of details.
+
+Active Visual Exploration (AVE) addresses the challenge of how an agent should select visual information from its environment to achieve a particular objective. Instead of systematically sampling and analyzing the entire available environment at the highest resolution, an agent dynamically chooses the location for sampling subsequent observations, informed by insights from prior exploration steps~\cite{ramakrishnan2021exploration}.  This process of selecting visual samples, often referred to as \textit{glimpses}, is inspired by the natural way humans explore their surroundings by instinctively moving their heads and eyes~\cite{hayhoe2005eye}.
+
+Current research in active visual exploration can be categorized into two groups. The first group of approaches divides the image into a regular grid of fixed-sized glimpses from which the model tries to pick the most informative ones~\cite{seifi2020attend,seifi2021glimpse,rangrej2022consistency,pardyl2023active}. The second group starts by capturing a low-resolution image of the entire environment, and then it again selects glimpses from regular grids~\cite{elsayed2019saccader,papadopoulos2021hard,uzkent2020learning}.
+Relying solely on regular grids fails to fully exploit the capabilities of modern hardware, which can provide a glimpse of any position and scale. For example, in a pan-tilt-zoom camera, we can achieve it by using optical zoom~\cite{DoubleRobotics2024}, while in a UAV, we can alter its altitude~\cite{krotenok2019change}.
+
+In this paper, we overcome current limitations by introducing~\textbf{\ours{}} (Adaptive Glimpse)\footnote{Source code is available at \url{https://github.com/apardyl/AdaGlimpse}}, % https://anonymous.4open.science/r/WTLNv2-BF5F/
+an active visual exploration method that selects glimpses of arbitrary scale and position, significantly reducing the number of observations required to understand the environment. Drawing inspiration from~\cite{pardyl2023beyond}, we build our network on an input-elastic vision transformer. In each exploration step, our model predicts the optimal position and scale for the next glimpse as a value in a continuous space. Since the patch-sampling operation is not differentiable, we train the model using a reinforcement learning algorithm. In particular, we use the Soft Actor-Critic algorithm~\cite{haarnoja2018soft} since it excels in exploration tasks.
+
+
+Through exhaustive experiments, we show that \ours{}  outperforms state-of-the-art methods on common benchmarks for reconstruction, classification, and segmentation tasks. As such, our method enables more effective utilization of embodied platform capabilities, leading to faster environmental awareness. Our contributions can be summarized as follows:
+\begin{itemize}
+\item We introduce a novel approach to Active Visual Exploration (AVE) that selects and processes glimpses of arbitrary position and scale.
+\item We present a task-agnostic architecture based on a visual transformer.
+\item We formulate AVE as a Markov Decision Process with a carefully designed observation space, and leverage the Soft Actor-Critic reinforcement learning algorithm that excels in exploration.
+\end{itemize}
+
+
+\section{Related work}
+
+\subsubsection{Missing data.}
+%merge sekcji hard attention ze STAM i missing information z AME oraz trochę patch selection ze STAM i czesciowo glimpse selection z AME
+% "partial information also known as missing data"
+The problem of missing data in context of images has been addressed in a variety of ways, such as inferring remaining information from the input distribution using a fully connected network~\cite{smieja2018processing}, or more commonly by image reconstruction. 
+In particular, MAT\cite{li2022mat} performs inpainting using a transformer network with local attention masking, a solution that additionally reduces computation by processing only informative parts of the image. 
+A similar principle can be found in ViT based Masked Autoencoder (MAE)\cite{he2022masked} where the encoder network operates only on visible patches, while the decoder processes all patches, including the masked ones.
+\subsubsection{Region selection.}
+Numerous methods exist for selecting the most informative regions from an image, including expectation maximization\cite{ranzato2014learning,yoo2015attentionnet}, majority voting \cite{alexe2012searching}, wake-sleep algorithm \cite{ba2015learning}, sampling from self-attention or certainty maps\cite{seifi2021glimpse,seifi2020attend,pardyl2023active}, and Bayesian optimal experiment design\cite{rangrej2021probabilistic}; 
+yet, recently the most predominant solution is using reinforcement learning algorithms, such as variants of the Policy Search\cite{xu2015show,mnih2014recurrent,mathe2016reinforcement} %\cite{,ba2015multiple,elsayed2019saccader,papadopoulos2021hard,uzkent2020learning}, % pierwszy to jedyny do którego się nie porównujemy
+Deep Q-Learning\cite{caicedo2015active,chai2019patchwork} or Actor-Critic\cite{rangrej2022consistency}.  
+  % \maciek{TODO: check citations} 
+% razem tu są policy gradient i actor critic, czy to trzeba podzielić?
+%Opcjonalnie: dodać tu podział na metody RL, lub wspomnieć o konkretnych sieciach które będą w tabelce (DRAM,..., Patchdrop)
+
+\subsubsection{Variable scale transformers.}
+A number of studies have been conducted to overcome the constraint of Vision Transformers (ViTs) of working only with rigid grid of fixed size patches, be it by modifying grid scale sampling during training phase\cite{li2021efficient,touvron2022deit,wu2020multigrid} or with position and patch encoding rescaling tricks \cite{beyer2022flexivit}. 
+Beyond Grids\cite{pardyl2023beyond} interests us in particular, as it equips ViT with the ability to use any square present in an image as a patch, removing both grid and size limitation.
+
+\subsubsection{Active visual exploration.} 
+%...tez pozbierac ze STAM i AME
+The SLAM (simultaneous localization and mapping) challenge is often described in the context of active exploration\cite{ramakrishnan2021exploration}. 
+%In the context of AVE, not only does a model not see the entire data sample, but it also receives different snippets of an image (glimpses) depending on its decisions. 
+%\cite{rangrej2021visual} use VAE to hallucinate multiple hypotheses of the unseen parts of the image and infer uncertainty scores, later used to select the next glimpse parameters. % does not scale beyond mnist
+A popular approach seen in many models\cite{ba2015multiple,elsayed2019saccader,papadopoulos2021hard,uzkent2020learning} is to feed the model a low-resolution version of the image and use a variation of a policy gradient algorithm to choose parts of an image to focus on.
+Many notable works in domain of AVE are using CNN-based attention maps for glimpse selection\cite{seifi2020attend,seifi2021glimpse,seifi2019wheretolooknext,wang2020glance}. 
+Simglim \cite{jha2023simglim} introduces a MAE-based model with an additional glimpse decision neural network to solve image reconstruction tasks. 
+AME\cite{pardyl2023active} similarly uses MAE as a backbone, but makes decisions solely on the basis of attention maps without added loss or modules.
+STAM\cite{rangrej2022consistency} uses a visual transformer and a one-step actor-critic for choosing glimpse locations in the classification task.
+
+\section{\ours{}}
+\label{sec:ours}
+
+The key idea of Adaptive Glimpse (\ours{}) is to let the agent select both the scale and position of each successive observation (\textit{glimpse}) from a continuous action space. This way, the agent can learn to decide whether, at a given step of the exploration process, it is preferable to sample a wider view field at a lower relative resolution, zoom in on detail to capture a small high-resolution glimpse, or choose a midway solution.
+
+In this section, we start by formalizing the concept of adaptive glimpse sampling (see~\cref{sec:archoverview}), and then we discuss the main two components of \ours{} presented in~\cref{fig:arch}. In~\cref{sec:elasticvit}, we describe a vision transformer encoder with variable scale sampling and a task-specific head. In~\cref{sec:rl}, we present the reinforcement learning agent based on the Soft Actor-Critic (SAC) algorithm.
+
+
+\subsection{Adaptive glimpse sampling}
+\label{sec:archoverview}
+
+\subsubsection{Glimpses.}
+Let $X$ be an unobserved scene to explore. We assume $X$ to be a rectangle within the Cartesian coordinate system. A \textit{glimpse} $G$ is a square region within $X$ that can be observed by a camera, specified by the position of its top-left corner $(x, y)$ and its size $d$ (camera field of view). Furthermore, we define glimpse scale as: 
+$z = (d - \dmin) / (\dmax - \dmin)$, where $\dmax$ and $\dmin$ are constants denoting the maximum and minimum field of view of an agent camera. Intuitively, a scale of $0$ corresponds to the maximum camera zoom level and a scale of $1$ to the widest view possible. Finally, let $C = (x, y, z)$ be the coordinates of glimpse $G$ and constant $\dcam \times \dcam$ denote the sampling resolution of $G$, i.e., the resolution glimpses obtained from the camera sensor.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[scale=1,clip,trim={0 .9cm 0 .2cm}]{figures/rlarch.pdf}
+    \vspace{-.2cm}
+    \caption{\textbf{Architecture}: \ours{} consists of two parts: a vision transformer-based encoder with a task-specific head (see~\cref{sec:elasticvit}) and a Soft Actor-Critic RL agent (see~\cref{sec:rl}). At each exploration step, the RL agent selects the position and scale of the next glimpse based on the information about previous patches, their coordinates, importance, and latent representations.}
+    \label{fig:arch}
+\end{figure}
+
+\subsubsection{AVE process.}
+Now, we can define the active visual exploration process as a sequence of glimpse selections. Let $T$ be the maximum number of exploration steps. The process starts at time $t = 0$ with an empty sequence of observations. At time $t \in \{1, ..., T\}$, the camera captures a glimpse $G_t$ at coordinates $C_t$ proposed by the model, generating a patch of resolution $\dcam \times \dcam$. We simulate the process of glimpse capturing by cropping a patch from a large image representing the environment $X$ and scaling it to $\dcam \times \dcam$. The model stores information about glimpses; therefore, at step $t$, it can access glimpses $G_1, G_2, ..., G_t$ and their corresponding coordinates. The exploration process is stopped when a set confidence level or a maximum number of glimpses is reached. As we will show in~\cref{sec:rl}, this process can be formulated as a Markov Decision Process (MDP) to leverage RL methods~\cite{sutton2018reinforcement}.
+
+\subsection{Vision transformer with variable scale sampling}
+\label{sec:elasticvit}
+
+The architecture of our backbone network consists of two parts: an encoder based on a modified version of ViT~\cite{dosovitskiy2020vit} and a task-specific head (decoder). The goal is to perform the main task, e.g. classification or reconstruction, based on already observed glimpses while providing information for the RL agent network.
+
+\subsubsection{Glimpse encoder.}
+At each step $t$, the ViT encoder is provided with a sequence of glimpses $G_1, G_2, ..., G_{t-1}$ and their coordinates $C_1, C_2, ..., C_{t-1}$. Depending on the $\dcam$ resolution relative to the ViT native patch size $\dpatch$, each glimpse $G_i$ is divided with a standard sampling grid into a sequence of patches $G'_i = g'_{i,1}, ..., g'_{i, k}$ with coordinates $C'_i = c'_{i,1}, ..., c'_{i, k}$, where $k = (\lceil \dcam / \dpatch \rceil)^2$. The resulting sequences of patches and coordinates from all previous glimpses are concatenated into $\widehat{G}_t$ and $\widehat{C}_t$, respectively.
+
+The standard ViT positional embeddings assume that all patches are sampled from a regular grid. As our method relaxes this constraint, we apply ElasticViT~\cite{pardyl2023beyond} positional encoding calculated according to the patch coordinates. Finally, a trainable class token is appended to the sequence, which is then passed through ViT transformer blocks. The encoder outputs a sequence of latent tokens $\widehat{H_t}$, one per patch, and the class token. Furthermore, we estimate the importance of each input patch, calculating a transformer attention rollout~\cite{abnar2020quantifying}, which results in a sequence $\widehat{I_t}$.
+
+\subsubsection{Task-specific decoder.}
+The head of the classification model is a simple linear layer taking as an input the class token, as in standard ViT. However, for dense prediction tasks (e.g., reconstruction, segmentation), a MAE-like~\cite{he2022masked} transformer decoder is used. Then, the decoder receives a sequence of all tokens from the encoder and a full grid of mask tokens as input. The mask tokens consist of a positional embedding for each position in the decoder grid and a shared learnable query embedding, indicating that the token value is to be predicted. This is in contrast to MAE, which only uses mask tokens for unknown areas of the image. However, using tokens for all positions is essential in our case because with variable scale sampling we must predict the entire image rather than solely focus on the absent portions.
+
+The decoder consists of a series of transformer blocks, generating output tokens projected through a linear layer for reconstruction or a progressive upscale module~\cite{zheng2021rethinking} of 4 convolutional layers and interpolations for segmentation. Finally, the output mask tokens are arranged according to a grid, and the remaining ones are discarded.
+
+\subsubsection{Training objectives.}
+The entire backbone network is trained using a task-specific loss function. Optimization is performed only on the last exploration step $t=T$ after seeing all glimpses. The loss function for reconstruction is the root mean squared error (RMSE). For classification and segmentation, we use distilled soft targets computed by a teacher model and the Kullback-Leibler divergence as the loss function. The teacher model is a pre-trained ViT from~\cite{touvron2022deit} for classification and a DeepLabV3~\cite{chen2017rethinking} with a ResNet-101 backbone for segmentation. In both cases, the teacher model is provided with the entire scene $X$, as in STAM~\cite{rangrej2022consistency}.
+
+\subsection{Soft Actor-Critic agent}
+\label{sec:rl}
+
+We consider AVE as a Markov Decision Process (MDP), where at timestep $t$, the agent observing state $s_{t}$ (information about previous glimpses) takes action $a_t$ (coordinates of the next glimpse). It leads to state $s_{t+1}$ (information about previous glimpses and the next glimpse) as well as the reward $r_{t+1}$ (scalar estimating how much the glimpse helped in refining the prediction). Presenting AVE as MDP allows us to leverage reinforcement learning algorithms.
+
+\subsubsection{Preliminaries.}
+The focal point of reinforcement learning is the policy $\pi_\theta$, which chooses the next action based on the current state, i.e., $a_t \sim \pi_\theta(s_t)$. The goal is to find the policy $\pi_\theta$ that maximizes the value function, corresponding to the expected discounted sum of rewards:
+$V^{\pi_\theta}(s) := \mathbb{E}_{\pi_\theta}\left[\sum_{t=k}^{T} \gamma^t r_t \vert s_k = s\right],$
+where $\gamma=0.99$ is the discount factor. The expectation is taken under the policy $\pi_\theta$, i.e., we use $\pi_\theta$ to take actions in the environment. As such, we aim to find $\theta^* = \argmax_{\theta} V^{\pi_\theta}$. Additionally, in order to evaluate actions and facilitate the learning of the policy, we define the state-action value function $Q^{\pi_\theta}(s, a) := r(s, a) + \gamma \mathbb{E}_{s'}V^{\pi_\theta}(s'),$ % =  r(s, a) + \gamma \mathbb{E}_{s'} \mathbb{E}_{\pi}\left[\sum_{t=k}^{T} \gamma^t r_t \vert s_k = s'\right],$
+where $r(s, a)$ is the reward received in state $s$ when executing action $a$, and state $s'$ represents the next sampled state. Intuitively, it represents the expected return of our policy, that is, the value function of executing the action $a$ in the first step and choosing the subsequent actions according to the policy $\pi$. Below, we define observations, actions, rewards, the maximum-entropy objective central to the Soft Actor-Critic algorithm, and the design of our actor and critic architectures.
+
+\begin{figure}[t]
+\centering
+\includegraphics[scale=0.99]{figures/rlrl.pdf}
+\vspace{-.2cm}
+\caption{\textbf{RL agent}: RL module of \ours{} uses two networks: the actor and the critic. The actor predicts the action $a_t$ (position and scale of the next glimpse) based on state $s_t = (\widehat{G}_t, \widehat{C}_t, \widehat{I_t}, \widehat{H_t})$. The critic estimates the $Q(s_t, a_t)$, corresponding to the expected cumulative reward for taking this action.}
+\label{fig:rlagent}
+\end{figure}
+
+
+\subsubsection{State, action and reward.}
+\label{sec:state}
+To create the \textit{state} for the RL agent, we supplement the glimpses $G_t$ with additional information to make the inference easier. In particular, the state $s_{t}$ consists of sequences $(\widehat{G}_t, \widehat{C}_t, \widehat{I_t}, \widehat{H_t})$, where (as defined in~\cref{sec:archoverview} and~\ref{sec:elasticvit}):
+\begin{itemize}
+\item $\widehat{G}_t$ are all patches of the previously sampled glimpses, 
+\item $\widehat{C}_t$ are coordinates of these patches,
+\item $\widehat{I_t}$ are their importance (one importance value per patch),
+\item $\widehat{H_t}$ are latent representations of these patches (one token per patch).
+\end{itemize}
+%Using those sequences is crucial for obtaining a comprehensive form of a state, as presented in~\cref{sec:ablation}.
+Notice that the starting state $s_0$ is an empty sequence corresponding to the fact that we do not know anything about the environment.
+
+\ours{} proposes continuous-valued \textit{actions} that describe the arbitrary position and scale of an image. Therefore, the action is a tuple $(x, y, z) \in [0, 1]^3$, where $x, y$ represents the normalized coordinates of the top-left glimpse corner and $z$ is its scale.
+
+Finally, we define the \textit{reward} as the difference between the loss in the successive timesteps, i.e. $r_t = L_{t-1} - L_t$.
+
+\subsubsection{Soft Actor-Critic.}
+RL objective can be optimized with various approaches~\cite{sutton2018reinforcement}. However, since exploration is crucial to solving AVE, we decided to use Soft Actor-Critic~\cite{haarnoja2018soft} (SAC) reinforcement learning algorithm. SAC operates in the maximum entropy framework, meaning that besides maximizing the expected sum of rewards, it also takes into account the entropy of the action distribution. That is, the goal is to optimize 
+$V^{\pi_\theta}(s) := \mathbb{E}_{\pi}\left[\sum_{t=k}^{T} \gamma^t r_t + \alpha\ent(\pi(s_t)) |s_k = s\right],$
+where $\ent$ is the entropy, and $\alpha$ is used to weigh its importance. Higher $\alpha$ values encourage the RL algorithm to find more exploratory policies, resulting in more diverse actions.
+
+\subsubsection{Actor and Critic architectures.}
+\ours{} requires two networks: the actor that encodes the policy $\pi$ and the critic that encodes the state-action value function $Q$. For this purpose, we build a custom-crafted architecture, see~\cref{fig:rlagent}. In particular, we create separate token encoders for each part of the input $s_t$: a small convolutional network that processes patches in $\widehat{G}_t$, and a small MLP for each of the other inputs $\widehat{C}_t, \widehat{I_t}, \widehat{H_t}$. As a result, we obtain four embedding vectors for each patch. We concatenate and process them using an attention pooling~\cite{ilse2018attention} layer to combine information across patches. Finally, we use another MLP to obtain the action $a_{t}$ for the actor and the value prediction $Q(s_t, a_t)$ for the critic. Despite the similarity in the actor and critic architectures, we do not share any parameters between them as it destabilizes the training process.
+
+\section{Experimental Setup}
+\label{sec:setup}
+
+
+
+\subsubsection{Architecture.}
+In all our experiments we use an encoder of the same size as standard ViT-B~\cite{dosovitskiy2020vit}, i.e., 12 transformer blocks and embedding size of 768. The decoder consists of 8 blocks with the embedding size of 512. For the RL networks the hidden dimension size is 256, the number of attention heads is 8 and MLPs have 3 layers. All networks use GELU activation functions~\cite{hendrycks2016gaussian}.
+
+
+\subsubsection{Training.}
+We adopt the AdamW optimization algorithm~\cite{loshchilov2018decoupled}, setting the weight decay value to $10^{-4}$ and the initial learning rate to $10^{-5}$ for classification and $10^{-4}$ for other tasks. The learning rate is then decayed using a half-cycle cosine rate to $10^{-8}$ for the remainder of the training. The model is trained for 100 epochs with early stopping. During training, we alternate between optimizing the backbone and the RL agent each epoch, except for the first 30 epochs when we train the RL agent only. We augment the training data using the 3-Augment regime proposed in~\cite{touvron2022deit} extended with a random affine transform for the segmentation target. Additionally, we pre-train the model for 600 epochs with 196 random glimpses per image with sizes and positions sampled from a uniform distribution. In segmentation experiments we fine-tune a model trained for reconstruction to accommodate for the relatively small size of the dataset.
+
+\input{figures/cls_im/fig}
+
+\subsubsection{Datasets and metrics.}
+We assess our method on several publicly available vision datasets. ImageNet-1k~\cite{deng2009imagenet} is used for classification and reconstruction tasks. The performance of zero-shot reconstruction is evaluated on MS COCO 2014~\cite{lin2014microsoft}, ADE20K~\cite{zhou2017scene} and SUN360~\cite{song2015sun}. Semantic segmentation is evaluated on the ADE20K dataset (the MIT scene parsing benchmark subset)~\cite{zhou2017scene}. Since the SUN360 dataset does not have a predetermined train-test split, we use a 9:1 train-test split according to an index provided by the authors of \cite{seifi2021glimpse}. We report accuracy for classification tasks, root mean squared error (RMSE) for reconstruction, and pixel average precision (AP), class-mean average precision (mAP) and class-mean intersection over union score (mIoU) for segmentation.
+
+\subsubsection{Glimpse regimes} \label{sec:glimpseregimes} We compare our model to baselines with different glimpse regimes, that can be categorized as follows: \begin{enumerate*}[label=(\alph*)]
+    \item simple - square glimpses with a fixed and constant resolution~\cite{rangrej2022consistency, pardyl2023active, jha2023simglim},
+    \item retinal - retina-like glimpses\cite{sandini2003retina} with more pixels in the center than on the edges~\cite{seifi2020attend, seifi2021glimpse, pardyl2023active},
+    \item full+simple - one low-resolution glimpse of the entire scene followed by simple glimpses~\cite{ba2015multiple,wang2020glance,elsayed2019saccader,uzkent2020learning,recasens2018learning,papadopoulos2021hard}, and
+    \item adaptive - our variable scale glimpse regime.
+\end{enumerate*}
+
+For easy comparison of different glimpse regimes, we provide a \textit{pixel percentage} metric representing the percentage of image pixels known to the model, as defined in~\cite{pardyl2023active}, which is calculated as the number of pixels captured in all glimpses divided by the number of pixels in the full scene image.
+
+\section{Results}
+
+\input{tables/table_recon}
+\input{figures/rec_sun/fig}
+\input{tables/table_classification}
+\input{tables/table_segmentation}
+\input{figures/seg_ade/fig}
+
+In this section, we present an evaluation of \ours{} compared to competitive methods, followed by an analysis of our approach. Both quantitative and qualitative results for all baseline methods were taken from~\cite{pardyl2023active} for reconstruction and segmentation, and~\cite{rangrej2022consistency} for classification. Further results are provided in the supplementary materials.
+
+
+An overview of glimpse selection performed by our model is portrayed in \cref{fig:qualiative-cls}. The visualization demonstrates the arbitrary glimpse position and scale capabilities of our method. \ours{} detects objects of interest and zooms in on them to extract fine details. 
+
+
+\subsection{Tasks}
+
+\subsubsection{Reconstruction.}
+
+
+Reconstructing the entire scene from observed glimpses verifies comprehensive scene understanding. In~\cref{tab:reconstruction} we group the results by pixel percentage (fraction of pixels of the original input image known to the model). Our approach outperforms existing methods by a large margin. In particular, with only 6\% of the pixels seen, \ours{} performs better than other methods that had over 18\% of the image visible to them. Note that unlike baseline methods, we train our model only on ImageNet-1k without fine-tuning for each evaluated dataset. Qualitative outcomes in~\cref{fig:qualiative} showcase \ours{} producing reconstructions with a higher level of detail, reproducing more objects compared to baseline methods. All models except AttSeg have backbone networks pre-trained on ImageNet-1k; AttSeg's pre-training details were not disclosed.
+
+\subsubsection{Classification.}
+
+
+Results for multi-class classification on the ImageNet-1k dataset can be found in~\cref{tab:classification}. \ours{} outperforms all prior methods, achieving $77.54\%$ $(\pm 0.18)$ accuracy compared to $76.13\%$ of the best baseline method STAM~\cite{rangrej2022consistency}. With early exploration termination after reaching $85\%$ probability of predicted class, it requires over $40\%$ less pixels to match STAM accuracy.
+Visualizations of glimpse selection for classification are presented in~\cref{fig:qualiative-cls}. With an early stopping probability threshold of $75\%$, it is able to classify $224\times224$ images using only a few $32\times32$ glimpses of $4$ patches each.
+
+\subsubsection{Segmentation.}
+
+
+
+The goal of the semantic segmentation task is to classify each pixel of the full scene based on the captured glimpses. The numerical results are presented in~\cref{tab:segmentation}. \ours{} outperforms both AttSeg~\cite{seifi2020attend} and GlAtEx~\cite{seifi2021glimpse} by a large margin. It performs on par with AME~\cite{pardyl2023active} in terms of accuracy; however, it requires $35\%$ less information to achieve this result. Consistently, visualizations in~\cref{fig:qualiative-seg} confirm the quality of the produced segmentation maps.
+
+
+
+\subsection{Analysis}
+
+
+\input{figures/nglimpses}
+
+\subsubsection{Percentage of image pixels.} The relationship between the percentage of the full image pixels known to the model (pixel \%, see~\cref{sec:glimpseregimes}) and performance is plotted in~\cref{fig:nglimpses}. \ours{} requires fewer pixels to perform better than the baseline methods. In particular for reconstruction, with only 5\% of pixels it produces superior results to those achieved by competitive approaches when provided with 25\% of scene pixels.
+
+\input{tables/table_state}
+
+\subsubsection{Importance of RL state elements.}
+\label{sec:ablation}
+The key component of \ours{} reinforcement learning algorithm is the state, which consists of the sequence $(\widehat{G}_t, \widehat{C}_t, \widehat{I_t}, \widehat{H_t})$ as described in~\cref{sec:state}. In~\cref{tab:state_ablation}, we present the ImageNet-1k classification performance when omitting and replacing each component with its mean value during inference. The resulting lower accuracy proves the significance of each component. The transformer latent $\widehat{H_t}$ and glimpse positions $\widehat{C}_t$ are especially crucial for this task, highlighting both the importance of the glimpse location within the original scene and the benefit of using the processed input over the original image.
+
+
+\input{figures/avg_glimpse/fig}
+
+\subsubsection{Glimpse location.}
+In~\cref{fig:avgglimpse}, we illustrate the average location of each subsequent glimpse, revealing a notable distinction between reconstruction and classification tasks explored by \ours{}. In the reconstruction task, attention spans all image regions initially and later focuses on key elements. In contrast, in the classification task our model swiftly identifies crucial class-specific elements in the image center, directing attention those regions early on. Notably, both tasks uncover the well-known fact about ImageNet-1k, where key objects are concentrated around the image center~\cite{DBLP:journals/corr/KummererTB14}.
+
+\section{Discussion and Conclusions}
+
+This paper presents \ours{}, a novel approach to Active Visual Exploration, which enables the selection and processing of glimpses at arbitrary positions and scales. We formulate the glimpse selection problem as a Markov Decision Process with continuous action space and leverage the Soft Actor-Critic reinforcement learning algorithm, which specializes in exploration problems. Our task-agnostic architecture allows for a more efficient exploration and understanding of environments, significantly reducing the number of observations needed. \ours{} can quickly analyze the scene with large low-resolution glimpses before zooming in on details for a closer inspection. Its success across multiple benchmarks suggests a broad applicability and potential for further development in embodied AI and robotics.
+
+While excelling in exploration, \ours{} is limited in performance by the underlying transformer architecture, which incurs quadratic computational cost relative to the number of sampled patches. A possible way to overcome this limitation is to replace it with a selective structured state-space model~\cite{gu2021efficiently,gu2023mamba}. Finally, although \ours{} perform well on current benchmarks, they do not fully reflect the complexity of Active Visual Exploration, as they do not incorporate dynamic scenes that change over time. As such, further evaluations are required before real-life deployment.
+
+\section*{Acknowledgments}
+
+
+This paper has been supported by the Horizon Europe Programme (HORIZON-CL4-2022-HUMAN-02) under the project "ELIAS: European Lighthouse of AI for Sustainability", GA no. 101120237.
+This research was funded by National Science Centre, Poland (grant no. 2023/49/N/ST6/02465, 2022/47/B/ST6/03397, 2022/45/B/ST6/02817, and 2023/50/E/ST6/00469).
+The research was supported by a grant from the Faculty of Mathematics and Computer Science under the Strategic Programme Excellence Initiative at Jagiellonian University.
+We gratefully acknowledge Polish high-performance computing infrastructure PLGrid (HPC Center: ACK Cyfronet AGH) for providing computer facilities and support within computational grant no. PLG/2023/016558.
+
+% \section*{}
+
+% ---- Bibliography ----
+%
+% BibTeX users should specify bibliography style 'splncs04'.
+% References will then be sorted and formatted in the correct style.
+%
+\bibliographystyle{splncs04}
+\bibliography{main}
+\end{document}

@@ -1,0 +1,51 @@
+\begin{figure}[t]
+\begin{center}
+\begin{small}
+\begin{sc}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    title={Patch redundancy},
+    xlabel={Redundant patches},
+    ylabel={Accuracy (\%)},
+    xtick={0,98,196},
+    xticklabels={0,+98,+196},
+    xmin=0,
+    xmax=196,
+    ymin=81,
+    ymax=84,
+    ymajorgrids=true,
+    grid style=dashed,
+    scale only axis,
+    height=4cm,
+    width=.8\linewidth,
+    legend pos=south west,
+    legend cell align={left}
+]   
+    \addplot[color=red]
+    coordinates {
+    (0,83.800)(14,83.6300022894287)(28,83.5880023202515)(42,83.4080023330689)(56,83.3060022860718)(70,83.2960023062134)(84,83.1600023751831)(98,83.1160023620605)(112,82.9620022775269)(126,82.8240023101807)(140,82.8220023364258)(154,82.7120022756958)(168,82.6500023751831)(182,82.4460023348999)(196,82.6080023468018)
+    };
+    \addlegendentry{ViT}
+    
+    \addplot[color=darkorange25512714]
+    coordinates {
+    (0,83.6380022329712)(14,83.5440022390747)(28,83.4960022766113)(42,83.3000022998047)(56,83.3620022659302)(70,83.148002253418)(84,83.0060022091675)(98,82.9380022369385)(112,82.7960022888184)(126,82.6260022964478)(140,82.6300022943115)(154,82.4080023196411)(168,82.280002260437)(182,82.3020022433472)(196,82.066)
+    };
+    \addlegendentry{MAE}
+    
+    \addplot[color=blue]
+    coordinates {
+    (0,82.036)(14,82.0480023139954)(28,82.1640023265076)(42,82.1760022859192)(56,82.2980022731018)(70,82.3020022349548)(84,82.3480023153687)(98,82.3020023014832)(112,82.328002297821)(126,82.3640022996521)(140,82.4520023216248)(154,82.4480023033142)(168,82.3920022712708)(182,82.4140022583008)(196,82.3480022109985)
+    };
+    \addlegendentry{\ours{} (ours)}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\end{sc}
+\end{small}
+\end{center}
+\afterplot
+\caption{\textbf{Patch redundancy}: The impact of adding randomly sampled patches in addition of a standard sampling grid. We observe, that standard ViT and MAE lose performance, as those randomly sampled patches as treated as noise. In contrast, ElasticViT can utilize the extra information to improve the result.}
+\label{fig:grid-redundancy}
+\end{figure}

@@ -1,0 +1,187 @@
+\pdfoutput=1
+
+\documentclass[runningheads]{llncs}
+% ---------------------------------------------------------------
+% Include basic ECCV package
+ 
+% TODO REVIEW: Insert your submission number below by replacing '*****'
+% TODO FINAL: Comment out the following line for the camera-ready version
+% \usepackage[review,year=2024,ID=3128]{eccv}
+% TODO FINAL: Un-comment the following line for the camera-ready version
+\usepackage{eccv}
+
+% OPTIONAL: Un-comment the following line for a version which is easier to read
+% on small portrait-orientation screens (e.g., mobile phones, or beside other windows)
+%\usepackage[mobile]{eccv}
+
+
+% ---------------------------------------------------------------
+% Other packages
+
+% Commonly used abbreviations (\eg, \ie, \etc, \cf, \etal, etc.)
+\usepackage{eccvabbrv}
+
+% Include other packages here, before hyperref.
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+% The "axessiblity" package can be found at: https://ctan.org/pkg/axessibility?lang=en
+\usepackage[accsupp]{axessibility}  % Improves PDF readability for those with disabilities.
+
+
+% ---------------------------------------------------------------
+% Hyperref package
+
+% It is strongly recommended to use hyperref, especially for the review version.
+% Please disable hyperref *only* if you encounter grave issues.
+% hyperref with option pagebackref eases the reviewers' job, but should be disabled for the final version.
+%
+% If you comment hyperref and then uncomment it, you should delete
+% main.aux before re-running LaTeX.
+% (Or just hit 'q' on the first LaTeX run, let it finish, and you
+%  should be clear).
+
+% TODO FINAL: Comment out the following line for the camera-ready version
+% \usepackage[pagebackref,breaklinks,colorlinks,citecolor=eccvblue]{hyperref}
+% TODO FINAL: Un-comment the following line for the camera-ready version
+\usepackage{hyperref}
+
+% Support for ORCID icon
+\usepackage{orcidlink}
+
+
+\newcommand{\ent}{\mathcal{H}}
+\newcommand{\tr}{\mathrm{tr}}
+
+% Constant matrices and vectors.
+\newcommand{\ones}{\boldsymbol{1}}
+\newcommand{\eye}{\boldsymbol{I}}
+\newcommand{\zeros}{\boldsymbol{0}}
+
+% Other helpers
+\newcommand{\voidarg}{{\,\cdot\,}}
+
+
+% MDP
+% \newcommand{\xspace}{\mathcal{X}}
+
+\newcommand{\st}{{\mathbf{s}_t}}
+\newcommand{\at}{{\mathbf{a}_t}}
+\newcommand{\E}[2]{\operatorname{\mathbb{E}}_{#1}\left[#2\right]}
+
+\usepackage{pifont}
+\newcommand{\cmarkg}{\color{gray}\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{shapes.geometric,shapes.multipart,arrows,positioning,calc,shapes.arrows,arrows.meta,pgfplots.statistics,backgrounds}
+\pgfplotsset{compat=1.17}
+\usepackage{makecell}
+\usepackage[inline]{enumitem}
+
+
+\def\todo#1{{\textbf{\color{red}{[{#1}]}}}}
+\def\bartek#1{{\textbf{\color{green}{Bartek[{#1}]}}}}
+\def\maciek#1{{\textbf{\color{blue}{Maciek[{#1}]}}}}
+\def\maciekadd#1{{\color{blue}{#1}}}
+\def\ka#1{{\color{purple}{ka[{#1}]}}}
+\def\ap#1{{\color{pink}{ap[{#1}]}}}
+
+
+\newcommand{\ours}[0]{AdaGlimpse}
+
+\newcommand{\dcam}{d_{\text{cam}}}
+\newcommand{\dmax}{d_{\text{max}}}
+\newcommand{\dmin}{d_{\text{min}}}
+\newcommand{\dpatch}{d_{\text{patch}}}
+
+\newcommand\medimg{2.5cm}
+\newcommand\smallimg{2cm}
+\newcommand\smalllimg{1.8cm}
+\newcommand\smallimgT{4cm}
+\newcommand\smallerimg{1.4cm}
+\newcommand\smallestimg{1.2cm}
+\newcommand{\tabfigure}[2]{\raisebox{-.5\height}{\includegraphics[#1]{#2}}}
+
+\definecolor{crimson2143940}{RGB}{214,39,40}
+\definecolor{darkgray176}{RGB}{176,176,176}
+\definecolor{darkorange25512714}{RGB}{255,127,14}
+\definecolor{forestgreen4416044}{RGB}{44,160,44}
+\definecolor{gray}{RGB}{128,128,128}
+\definecolor{mediumpurple148103189}{RGB}{148,103,189}
+\definecolor{steelblue31119180}{RGB}{31,119,180}
+
+\usepackage{array}
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\CONCAT}{CONCAT}
+
+
+\begin{document}
+
+% ---------------------------------------------------------------
+% TODO REVIEW: Replace with your title
+\title{\ours{}: Active Visual Exploration with Arbitrary Glimpse Position and Scale -- Supplementary Materials} 
+
+% TODO REVIEW: If the paper title is too long for the running head, you can set
+% an abbreviated paper title here. If not, comment out.
+\titlerunning{\ours{}}
+
+% TODO FINAL: Replace with your author list. 
+% Include the authors' OCRID for the camera-ready version, if at all possible.
+\author{Adam Pardyl\inst{1,2,3}\orcidlink{0000-0002-3406-6732} \and % 
+Michał Wronka\inst{2}\orcidlink{0009-0002-5208-9900} \and % 
+Maciej Wołczyk\inst{1}\orcidlink{0000-0002-3933-9971} \and % 
+Kamil Adamczewski\inst{1}\orcidlink{0000-0002-2917-4392} \and % 
+Tomasz Trzciński\inst{1,4,5}\orcidlink{0000-0002-1486-8906} \and % 
+Bartosz Zieliński\inst{1,2}\orcidlink{0000-0002-3063-3621}} % 
+
+% TODO FINAL: Replace with an abbreviated list of authors.
+\authorrunning{A.~Pardyl et al.}
+% First names are abbreviated in the running head.
+% If there are more than two authors, 'et al.' is used.
+
+% TODO FINAL: Replace with your institution list.
+\institute{IDEAS NCBR \\
+\email{\{adam.pardyl, maciej.wolczyk, kamil.adamczewski,\\tomasz.trzcinski, bartosz.zielinski\}@ideas-ncbr.pl} \and
+Jagiellonian University, Faculty of Mathematics and Computer Science \\
+\email{michal.wronka@student.uj.edu.pl}\and
+Jagiellonian University, Doctoral School of Exact and Natural Sciences \and
+Warsaw University of Technology \and
+Tooploox}
+
+\maketitle
+
+In this Supplementary Materials, we present additional experiments and visualizations for our \ours{} active visual exploration method.
+
+\input{tables_sup/fixed_policy}
+
+\input{tables_sup/hyperparams}
+
+\input{figures_sup/cls_imnet/fig}
+
+\input{figures_sup/ade_steps/fig}
+
+\input{figures_sup/rec_imnet/fig}
+
+\input{figures_sup/rec_coco/fig}
+
+\input{figures_sup/rec_sun/fig}
+
+\input{figures_sup/seg_ade/fig}
+
+\clearpage
+
+% ---- Bibliography ----
+%
+% BibTeX users should specify bibliography style 'splncs04'.
+% References will then be sorted and formatted in the correct style.
+%
+% \bibliographystyle{splncs04}
+% \bibliography{main}
+\end{document}

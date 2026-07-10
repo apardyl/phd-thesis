@@ -1,0 +1,20 @@
+\begin{table*}[t]
+\centering
+\scriptsize
+\caption{Performance of Gemini 2.0 Flash and Pixtral-Large in ablation studies. Surprisingly, increasing the number of steps might lead to worse performance. Additionally, explicitly specifying the object type in \anomalychallenge{} improves the results as the task becomes easier.}
+\label{tab:ablations}
+\begin{tabular}{llcccccc}
+\toprule
+& \multirow{2}{*}{\textbf{Setting}} & \multicolumn{2}{c}{\textbf{City}} & \multicolumn{2}{c}{\textbf{Forest}} & \multicolumn{2}{c}{\textbf{Overall}}   \\
+\cmidrule(lr){3-4} \cmidrule(lr){5-6} \cmidrule(lr){7-8} 
+&&\textbf{Gemini} & \textbf{Pixtral} & \textbf{Gemini} & \textbf{Pixtral}  & \textbf{Gemini} & \textbf{Pixtral} \\
+\midrule
+\multirow{3}{*}{\challenge{}}&{5 steps limit} & $34.5\%$ & $15.5\%$ & $41.5\%$ & $33.5\%$ & $38.0\%$ & $24.5\%$ \\
+&\textbf{10 steps limit (baseline)} & $\mathbf{41.5\%}$ & $\mathbf{21.5\%}$ & $42.5\%$ & $\mathbf{38.0\%}$ & $\mathbf{42.0\%}$ & $\mathbf{29.8\%}$ \\
+&{20 steps limit} & $33.5\%$ & $13.5\%$ & $\mathbf{45.5\%}$ & $36.0\%$ & $39.5\%$ & $24.8\%$ \\
+\midrule
+\multirow{2}{*}{\anomalychallenge{}}&\textbf{Searching for an anomaly (baseline)} & $25.0\%$ & $4.0\%$ & $46.0\%$ & $26.0\%$ & $35.5\%$ & $15.0\%$ \\
+&{Searching for explicit object types} & $\mathbf{34.0\%}$ & $\mathbf{7.0\%}$ & $\mathbf{59.0\%}$ & $\mathbf{34.0\%}$ & $\mathbf{46.5\%}$ & $\mathbf{20.5\%}$ \\
+\bottomrule \\
+\end{tabular}
+\end{table*}

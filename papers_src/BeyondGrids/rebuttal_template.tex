@@ -1,0 +1,128 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+% \usepackage[rebuttal,applications]{wacv}  % use this for an Applications Track rebuttal
+\usepackage[rebuttal,algorithms]{wacv}  % use this for an Algorithms Track rebuttal
+
+
+\newcommand{\janek}[2]{\textcolor{red}{#1} \textcolor{blue}{[janek: #2]}}
+% Include other packages here, before hyperref.
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+
+\usepackage[dvipsnames]{xcolor}
+
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[pagebackref,breaklinks,colorlinks,bookmarks=false]{hyperref}
+
+
+% Support for easy cross-referencing
+\usepackage[capitalize]{cleveref}
+\crefname{section}{Sec.}{Secs.}
+\Crefname{section}{Section}{Sections}
+\Crefname{table}{Table}{Tables}
+\crefname{table}{Tab.}{Tabs.}
+
+
+% If you wish to avoid re-using figure, table, and equation numbers from
+% the main paper, please uncomment the following and change the numbers
+% appropriately.
+%\setcounter{figure}{2}
+%\setcounter{table}{1}
+%\setcounter{equation}{2}
+
+
+% If you wish to avoid re-using reference numbers from the main paper,
+% please uncomment the following and change the counter for `enumiv' to
+% the number of references you have in the main paper (here, 6).
+%\let\oldthebibliography=\thebibliography
+%\let\oldendthebibliography=\endthebibliography
+%\renewenvironment{thebibliography}[1]{%
+%     \oldthebibliography{#1}%
+%     \setcounter{enumiv}{6}%
+%}{\oldendthebibliography}
+
+
+
+
+%%%%%%%%% PAPER ID  - PLEASE UPDATE
+\def\wacvPaperID{650} % *** Enter the CVPR Paper ID here
+\def\confName{WACV}
+\def\confYear{2024}
+
+
+\begin{document}
+
+
+%%%%%%%%% TITLE - PLEASE UPDATE
+\title{Beyond Grids: Exploring Elastic Input Sampling for Vision Transformers}  % **** Enter the paper title here
+
+
+\maketitle
+\thispagestyle{empty}
+\appendix
+
+\newcommand{\Rone}{{\textbf{\textcolor{JungleGreen}{R1}}}}
+\newcommand{\Rtwo}{{\textbf{\textcolor{BurntOrange}{R2}}}}
+\newcommand{\Rthree}{{\textbf{\textcolor{Blue}{R3}}}}
+\newcommand\todo[1]{\textcolor{red}{[#1]}}
+
+
+%%%%%%%%% BODY TEXT - ENTER YOUR RESPONSE BELOW
+
+We want to thank all Reviewers for their insightful and positive feedback. We are happy to hear that the Reviewers found that the work is very valuable for understanding the quirks of ViTs (\Rone), addresses an interesting problem (\Rthree), and recognized that proposed modifications demonstrate clear and well-supported improvements in aspects that are crucial to ViT applicability in real-world problems (\Rtwo). Below, we have addressed the specific comments raised by Reviewers 1, 2, and 3 (\Rone, \Rtwo, \Rthree), and we kindly ask them to consider increasing the rating if they are satisfied with our response.
+
+\vspace{-0.05in}
+\paragraph{Motivation (\Rone{} and \Rthree{}).}
+The main goal of this paper is to evaluate and increase the robustness of Vision Transformer (ViT) for various input data configurations (e.g. various positions and scales of patches). We assume that such robustness should be preferable when applying ViTs to embodied AI (e.g. in AVE, where glimpses of various scales are obtained) or to medical image analysis (e.g. in multi-scale whole slide images).
+However, each application has its architectural and training choices (e.g., sampling policy in AVE trained with reinforcement learning) that interfere with our solution and significantly impact the overall performance. That is why we decided to experiment on ViTs with deterministic sampling strategies (CENTRAL, EDGE) and obtain information about the actual influence of our model on the performance.
+
+\vspace{-0.05in}
+\paragraph{Selected elasticities.}
+We agree with \Rthree{} that rotation is an interesting subject to further study. However, we decided to start with the three considered elasticities because they appear most often in embodied AI and medical image analysis. As an example of applications that do not need rotation, one can consider aerial imagery or histopathological images.
+
+\vspace{-0.05in}
+\paragraph{PatchMix vs. TokenMix.}
+As noticed by \Rone{}, our PatchMix is similar to the existing TokenMix because it also swaps tokens between images in batch. However, TokenMix replaces patches in the standard sampling grid, while our PatchMix replaces patches sampled from different positions and scales. We updated Fig.~3 in the paper and added Fig.~1 in the supplement to depict this difference.
+
+\vspace{-0.05in}
+\paragraph{Multi-scale positional encoding.}
+\Rone{} propose to explore other scale embeddings described in~[1, 2]. However, those embedddings use a limited set of positions from 3D grids. Therefore, they cannot be applied to ElasticViT, which requires continuous space coordinates. Nevertheless, we will include those papers in Sec.~2.
+
+When it comes to other types of embedding that can be used in ElasticViT, we also tested encoding patches as centers and scales instead of the upper left and bottom right corners. However, the differences were statistically insignificant.
+
+\vspace{-0.05in}
+\paragraph{Relation to self-supervised learning and augmentation.}
+\Rone{} and \Rthree{} notice that missing data elasticity is similar to Masked Autoencoders (MAE). However, MAE uses masking as an augmentation in self-supervised training, while our ElasticViT aims to effectively process missing data during inference. We clarified this matter in Sec.~2.
+
+\vspace{-0.05in}
+\paragraph{Implementation complexity.} \Rtwo{} expressed concern about the added complexity of ElasticViT. In practice, the increase in training is marginal because the perturbations are performed in parallel on the CPU with other augmentations. Regarding inference, our method is optimal because it processes patches obtained directly from the hardware, such as drones, and it only has to calculate positional embeddings.
+
+\vspace{-0.05in}
+\paragraph{Elasticity types vs input perturbations.}
+\Rone{} noted that the elasticity types introduced in our work are not independent because missing data, as currently implemented, can be obtained with position and scale perturbations. To address this concern, we separated the definitions of elasticities (see Sec.~3.1) from their measurement methods (see Sec.~3.2). We also emphasized in the paper that the definitions are abstract and independent, while the measurements rely on standard input perturbations and may coincide.
+
+Finally, to address the request of \Rone{}, we added an experiment on patch redundancy in Fig.~7 of the Supplement.
+
+
+\vspace{-0.05in}
+\paragraph{Editing improvements.}
+As requested by \Rone{} and \Rthree{}, we rephrased ambiguous fragments, swapped the order of paragraphs where requested, and fixed several typos. Furthermore, we have updated citations to match their current status.
+
+
+%%%%%%%%% REFERENCES
+{\small
+\begin{flushleft}
+\section*{References}
+\noindent [1] Ronen et al., "Vision Transformers with Mixed-Resolution Tokenization", 2023 \break
+[2] Ke et al., "MUSIQ: Multi-scale Image Quality Transformer", 2021
+\end{flushleft}
+% \bibliographystyle{ieee_fullname}
+% \bibliography{main}
+}
+
+
+\end{document}

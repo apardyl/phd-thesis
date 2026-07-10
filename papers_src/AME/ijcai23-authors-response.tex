@@ -1,0 +1,70 @@
+% IJCAI 2023 Author's response
+
+% Template file with author's response
+
+\documentclass{article}
+\pdfpagewidth=8.5in
+\pdfpageheight=11in
+\usepackage{ijcai23-authors-response}
+
+\usepackage{times}
+\usepackage{soul}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[small]{caption}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{lipsum}
+\usepackage[inline]{enumitem}
+\urlstyle{same}
+
+\usepackage[dvipsnames]{xcolor}
+
+\newtheorem{example}{Example}
+\newtheorem{theorem}{Theorem}
+
+\newcommand{\Rone}{{\textbf{\textcolor{JungleGreen}{R1}}}}
+\newcommand{\Rtwo}{{\textbf{\textcolor{BurntOrange}{R2}}}}
+\newcommand{\Rthree}{{\textbf{\textcolor{Blue}{R3}}}}
+\newcommand{\Rfour}{{\textbf{\textcolor{RedViolet}{R4}}}}
+\newcommand\todo[1]{\textcolor{red}{[#1]}}
+
+\begin{document}
+
+\section*{Rebuttal}
+
+We want to thank all Reviewers for their insightful and positive feedback. We address the specific comments raised by Reviewers 1, 2, 3, and 4 (\Rone, \Rtwo, \Rthree, \Rfour) below. We will add this discussion to the camera-ready version of the paper, if accepted. 
+
+\paragraph{Segmentation results:}
+\Rthree{} indicates a discrepancy in the segmentation task between the quantitative results in Table 3 and the qualitative comparison in Figure 7, noticing a significantly lower mean Pixel Accuracy (mPA) score of our method compared to the baselines. To verify this discrepancy and clarify the evaluation procedure, we contacted the authors of~\cite{seifi2021glimpse,seifi2020segment}. In their response, they stated that \emph{``As the evaluation metric, we report the pixel accuracy averaged over all images in the dataset, thus calling it a mean pixel accuracy. However, \textbf{it is not class normalized}''}. In contrast, we calculate the mPA metric by scoring the accuracy of each class separately and averaging the result. We also report Pixel Accuracy (PA) scores, averaged over all pixels regardless of their classes. This indicates that we computed the averages differently and the mPA results of~\cite{seifi2021glimpse,seifi2020segment} should be compared with our PA results. Considering this, our method performs significantly better on the segmentation task, scoring 70.27\% PA compared to 52\% PA of GlAtEx~\cite{seifi2021glimpse} and 47.9\% PA of AttSeg~\cite{seifi2020segment} and therefore no factual discrepancy exists, only the naming of the metrics is different. We thank the reviewer for spotting this, and we will update Table 3, results discussion, and conclusion in the camera-ready version of the paper to reflect this discovery. Furthermore, for the examples presented in Figure 7 and all other qualitative comparisons with baselines, we strictly follow the selection proposed by~\cite{seifi2021glimpse,Jha2023WACV}, and we did not cherry-pick any of the presented results.  
+
+\paragraph{Comparison with baseline methods:}
+As correctly spotted by \Rthree{}, we report the results of baseline methods based on the peer-reviewed articles in which they were presented. Furthermore, to provide a fair comparison, we report the performance of our method versus the SimGlim~\cite{Jha2023WACV} approach on a common reconstruction task since SimGlim cannot be extended beyond the reproduction task (to segmentation or classification) without significant modifications, which deserve a separate research project.
+
+\paragraph{Slower qualitative improvement after the initial steps:} \Rone{}~points out that, for some examples, the gain in reconstruction slows down after the initial steps. Our working hypothesis is that our method focuses more on exploration than on improving the reconstruction of already known areas. In the example pointed out by \Rone{}, we observe that the method samples more patches from the background than from the already discovered animal. This is also discussed in Section 5.1 of the paper, but we plan to further investigate this behavior in future work.
+
+\paragraph{Glimpse selection using mutual information:} A study on using mutual information between known and unknown patches was proposed by \Rtwo{}. We are grateful for this suggestion as it presents an intriguing path for further research.
+
+\paragraph{Applicability to other transformer based architecture:}
+As per \Rfour{}'s question, we consider the generalization of our method beyond the presented architecture possible, as long as the new architecture follows three requirements: \begin{enumerate*}[label = {\alph*)}]
+    \item it works with partial input (can be supplied with only a subset of all tokens/patches),
+    \item it uses self-attention (as we use it to guide exploration), and
+    \item missing tokens are introduced at some point in the model as blank tokens (enabling uncertainty estimation of missing areas).
+\end{enumerate*}
+We choose MAE~\cite{he2022masked} as the backbone because it is arguably the most straightforward transformer architecture for image processing that meets those requirements. Nevertheless, our approach could be applied to various architectures and other modalities (e.g. video) as long as the above assumptions hold.
+
+\paragraph{Missing and out-of-place related work:} We will add missing related work on attention in transformers in the camera-ready version as pointed out by \Rthree{}. We will also modify the order of paragraphs in the related work section to improve the narrative when SLAM tasks are discussed.
+
+\paragraph{Detailed model architecture:} To make this work self-contained, we will add a detailed description of the underlining Masked Autoencoder~\cite{he2022masked} as well as technical details of our glimpse selection mechanism to the supplementary material in addition to the code as requested by \Rfour{}.
+
+\paragraph{Minor editorial corrections:} In Equation 1, we will add the missing transposition symbol in the final version as correctly spotted by \Rone{} and \Rfour{}. Regarding lines 83-84 mentioned by \Rthree{}, we will elaborate more on the significance of retina-like glimpses instead of only providing a related paper. Lines 134-135 will be rephrased for readability, and ``competitive methods'' will be replaced with ``compared methods'' as further requested by \Rthree{}.
+
+\bibliographystyle{named}
+\bibliography{example_paper}
+
+\end{document}

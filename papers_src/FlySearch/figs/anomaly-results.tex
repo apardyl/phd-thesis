@@ -1,0 +1,86 @@
+\begin{figure*}[t]
+    \centering
+    \begin{footnotesize}
+    \begin{subfigure}{.45\linewidth}
+    \centering
+    \begin{tikzpicture}
+    \begin{axis}[
+        title=Anomaly Forest,
+        width=.75\linewidth,
+        height=4cm,
+        ybar,
+        ylabel={Success},
+        yticklabel={\pgfmathprintnumber\tick\%},
+        xticklabels={GPT-4o,Claude 3.5 Sonnet,Gemini 2.0 flash,Phi 3.5 vision,InternVL-2.5 8B MPO,Llava-Interleave-7b,Qwen2-VL-72B,Llava-Onevision 72b,Pixtral-Large},
+        xticklabel style={rotate=45,anchor=east,xshift=0cm},
+        xtick={1,2,3,4,5,6,7,8,9},
+        xmin=0.5,
+        xmax=9.5,
+        ymin=0,
+        ymax=100,
+        x tick style={draw=none},
+        scale only axis,
+        every axis plot/.append style={
+          ybar,
+          bar width=.5,
+          bar shift=0pt,
+          fill
+        }
+        ]
+% generated
+\addplot[style={fill=color0},error bars/.cd, y dir=both, y explicit] coordinates {(1, 39.000) += (0,10.270) -= (0,9.600)};
+\addplot[style={fill=color1},error bars/.cd, y dir=both, y explicit] coordinates {(2, 37.000) += (0,10.240) -= (0,9.440)};
+\addplot[style={fill=color2},error bars/.cd, y dir=both, y explicit] coordinates {(3, 46.000) += (0,10.260) -= (0,10.020)};
+\addplot[style={fill=color3},error bars/.cd, y dir=both, y explicit] coordinates {(4, 0.000) += (0,3.620) -= (0,0.000)};
+\addplot[style={fill=color4},error bars/.cd, y dir=both, y explicit] coordinates {(5, 6.000) += (0,6.600) -= (0,3.770)};
+\addplot[style={fill=color5},error bars/.cd, y dir=both, y explicit] coordinates {(6, 0.000) += (0,3.620) -= (0,0.000)};
+\addplot[style={fill=color6},error bars/.cd, y dir=both, y explicit] coordinates {(7, 10.000) += (0,7.620) -= (0,5.100)};
+\addplot[style={fill=color7},error bars/.cd, y dir=both, y explicit] coordinates {(8, 11.000) += (0,7.830) -= (0,5.380)};
+\addplot[style={fill=color8},error bars/.cd, y dir=both, y explicit] coordinates {(9, 26.000) += (0,9.730) -= (0,8.260)};
+    \end{axis}
+    \end{tikzpicture}
+    \end{subfigure}
+    \begin{subfigure}{.45\linewidth}
+    \centering
+    \begin{tikzpicture}
+    \begin{axis}[
+        title=Anomaly City,
+        width=.75\linewidth,
+        height=4cm,
+        ybar,
+        ylabel={Success},
+        yticklabel={\pgfmathprintnumber\tick\%},
+        xticklabels={GPT-4o,Claude 3.5 Sonnet,Gemini 2.0 flash,Phi 3.5 vision,InternVL-2.5 8B MPO,Llava-Interleave-7b,Qwen2-VL-72B,Llava-Onevision 72b,Pixtral-Large},
+        xticklabel style={rotate=45,anchor=east,xshift=0cm},
+        xtick={1,2,3,4,5,6,7,8,9},
+        % nodes near coords,
+        xmin=0.5,
+        xmax=9.5,
+        ymin=0,
+        ymax=100,
+        x tick style={draw=none},
+        scale only axis,
+        every axis plot/.append style={
+          ybar,
+          bar width=.5,
+          bar shift=0pt,
+          fill
+        }
+        ]
+% generated
+\addplot[style={fill=color0},error bars/.cd, y dir=both, y explicit] coordinates {(1, 15.000) += (0,8.530) -= (0,6.350)};
+\addplot[style={fill=color1},error bars/.cd, y dir=both, y explicit] coordinates {(2, 18.000) += (0,8.950) -= (0,6.970)};
+\addplot[style={fill=color2},error bars/.cd, y dir=both, y explicit] coordinates {(3, 25.000) += (0,9.660) -= (0,8.120)};
+\addplot[style={fill=color3},error bars/.cd, y dir=both, y explicit] coordinates {(4, 0.000) += (0,3.620) -= (0,0.000)};
+\addplot[style={fill=color4},error bars/.cd, y dir=both, y explicit] coordinates {(5, 1.000) += (0,4.450) -= (0,0.970)};
+\addplot[style={fill=color5},error bars/.cd, y dir=both, y explicit] coordinates {(6, 0.000) += (0,3.620) -= (0,0.000)};
+\addplot[style={fill=color6},error bars/.cd, y dir=both, y explicit] coordinates {(7, 5.000) += (0,6.280) -= (0,3.360)};
+\addplot[style={fill=color7},error bars/.cd, y dir=both, y explicit] coordinates {(8, 6.000) += (0,6.600) -= (0,3.770)};
+\addplot[style={fill=color8},error bars/.cd, y dir=both, y explicit] coordinates {(9, 4.000) += (0,5.930) -= (0,2.900)};
+    \end{axis}
+    \end{tikzpicture}
+    \end{subfigure}
+    \end{footnotesize}
+    \caption{}
+    \label{fig:anomalyresults}
+\end{figure*}

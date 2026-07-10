@@ -1,0 +1,62 @@
+\begin{figure}[t]
+\begin{center}
+\begin{small}
+\begin{sc}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    title={Patch position},
+    xlabel={Patch shake (\%)},
+    ylabel={Accuracy (\%)},
+    xtick={1,3,5,7,9},
+    xticklabels={0, 12.5, 25.0, 37.5, 50},
+    xmin=1,
+    xmax=9,
+    ymin=77,
+    ymajorgrids=true,
+    grid style=dashed,
+    scale only axis,
+    height=3.8cm,
+    width=.8\linewidth,
+    legend pos=south west,
+    legend cell align={left}
+]
+    \addplot[color=red]
+    coordinates {
+    (1,83.800)(2,83.728)(3,83.524)(4,83.222)(5,82.954)(6,82.504)(7,81.964)(8,81.532)(9,80.838)
+    };
+    \addlegendentry{ViT}
+
+    \addplot[color=darkorange25512714]
+    coordinates {
+    (1,83.6380022329712)(2,83.6540022796631)(3,83.5340022680664)(4,83.3500022714233)(5,83.0480023071289)(6,82.7980022903442)(7,82.4940022140503)(8,82.1240023007202)(9,81.7680023339844)
+    };
+    \addlegendentry{MAE}
+
+    \addplot[color=forestgreen4416044]
+    coordinates {
+    (1,83.7960022872925)(2,82.9260023580933)(3,81.7320023175049)(4,80.1100023526001)(5,78.2520023229981)(6,76.4020022477722)(7,74.1960022163391)(8,71.7180021903992)(9,69.016002142334)
+    };
+    \addlegendentry{PVT}
+
+    \addplot[color=gray]
+    coordinates {
+    (1,83.4820023419189)(2,83.2860023699951)(3,83.0220023693848)(4,82.7500023706055)(5,82.2060024127197)(6,81.688002366333)(7,81.0780023422241)(8,80.3400023358154)(9,79.4460023458862)
+    };
+    \addlegendentry{Swin}
+    
+    \addplot[color=blue]
+    coordinates {
+    (1,82.036)(2,81.946)(3,82.012)(4,81.950)(5,81.830)(6,81.738)(7,81.704)(8,81.496)(9,81.294)
+    };
+    \addlegendentry{\ours{} (ours)}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\end{sc}
+\end{small}
+\end{center}
+\afterplot
+\caption{\textbf{Patch position:} The effect of applying positional perturbation on the accuracy. \ours{} can naturally interpret a whole range of possible position values. Being almost immune to the movement of sampled patches it eventually outperforms all but MAE for large perturbations. Note that the X-axis represents the percentage of patch movement relative to the patch size}
+\label{fig:shake-sample}
+\end{figure}

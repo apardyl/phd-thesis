@@ -1,0 +1,20 @@
+\begin{table*}[ht]
+\centering
+\footnotesize
+\caption{Performance of Gemini 2.0 Flash and Pixtral-Large on ablations.}
+\label{tab:ablations2}
+\begin{tabular}{llcccc}
+\toprule
+& \multirow{2}{*}{\textbf{Setting}} & \multicolumn{2}{c}{\textbf{City}} & \multicolumn{2}{c}{\textbf{Forest}} \\
+\cmidrule(lr){3-4} \cmidrule(lr){5-6}
+&& \textbf{Gemini} & \textbf{Pixtral} & \textbf{Gemini} & \textbf{Pixtral} \\
+\midrule
+\multirow{3}{*}{\challenge{}} & \textbf{Baseline} & $\mathbf{41.5\%}$ & $\mathbf{21.5\%}$ & $\mathbf{42.5\%}$ & $\mathbf{38.0\%}$ \\
+& Compass actions & $17.5\%$ & $21.0\%$ & $17.5\%$ & $22.0\%$ \\
+& No grid overlay & $17.0\%$ & $15.5\%$ & $31.5\%$ & $20.0\%$ \\
+\midrule
+\multirow{2}{*}{FS-Anomaly} & \textbf{Baseline} & $25.0\%$ & $4.0\%$ & $46.0\%$ & $26.0\%$ \\
+& Anomaly with ID & $\mathbf{34.0\%}$ & $\mathbf{7.0\%}$ & $\mathbf{59.0\%}$ & $\mathbf{34.0\%}$ \\
+\bottomrule \\
+\end{tabular}
+\end{table*}
