@@ -13,7 +13,7 @@ The central research question of this chapter is whether such a dual-objective d
 \section{Preliminaries}
 \label{sec:uncertainty-preliminaries}
 
-Before describing the publication summarised in this chapter, to make this thesis self-contained, we introduce three background concepts required to understand it: the transformer-based masked autoencoder architecture on which it is built, the notion of entropy as a measure of predictive uncertainty, and the glimpse-based exploration protocol used throughout the chapter.
+Before describing the publication summarised in this chapter, to make this thesis self-contained, we introduce four background concepts required to understand it: the transformer-based masked autoencoder architecture on which it is built, the notion of entropy as a measure of predictive uncertainty, the glimpse-based exploration protocol used throughout the chapter, and the retina-like sensor model evaluated as one of its variants.
 
 \subsection{Vision transformers and masked autoencoders}
 \label{sec:prelim-vit-mae}
@@ -35,4 +35,10 @@ Entropy is maximised when $p$ is uniform, i.e. when all outcomes are equally lik
 \subsection{The glimpse-based exploration protocol}
 \label{sec:prelim-glimpse-protocol}
 
-Throughout this chapter, an image is partitioned into a fixed grid of $N$ candidate patches, or small groups of patches referred to as \emph{glimpses}. An agent is given a fixed budget of $T \ll N$ steps. At step $t$, it has already observed $t$ glimpses and must select the position of the $(t+1)$-th glimpse from among the $N - t$ still-unseen positions; once the glimpse is revealed, the model performing the target task (reconstruction, classification, or segmentation) is run again, conditioned on all $t+1$ known glimpses. This process repeats until the budget $T$ is exhausted, at which point the final prediction is produced. The publication summarised in this chapter additionally evaluates a \emph{retina-like} glimpse variant, in which each rectangular glimpse is deliberately degraded in resolution away from its centre, mimicking the foveated sampling of a biological retina~\cite{sandini2003retina}, in contrast to a uniform-resolution glimpse of the same size.
+Throughout this chapter, an image is partitioned into a fixed grid of $N$ candidate patches, or small groups of patches referred to as \emph{glimpses}. An agent is given a fixed budget of $T \ll N$ steps. At step $t$, it has already observed $t$ glimpses and must select the position of the $(t+1)$-th glimpse from among the $N - t$ still-unseen positions; once the glimpse is revealed, the model performing the target task (reconstruction, classification, or segmentation) is run again, conditioned on all $t+1$ known glimpses. This process repeats until the budget $T$ is exhausted, at which point the final prediction is produced.
+
+
+\subsection{Retina-like foveated sensing}
+\label{sec:prelim-retina}
+
+The human retina provides a compelling model for efficient partial observation: it delivers high spatial acuity only within a small central region called the \emph{fovea}, while receptor density -- and thus spatial resolution -- decreases steeply towards the periphery~\cite{sandini2003retina}. This non-uniform sampling is highly efficient: a wide field of view is maintained with relatively few photoreceptors, while fine detail is reserved for the region currently fixated. The publication summarised in this chapter evaluates a \emph{retina-like} glimpse variant that mirrors this structure: each rectangular glimpse is rendered at full resolution at its centre but progressively degraded towards its edges, in contrast to a uniform-resolution glimpse of the same spatial extent.

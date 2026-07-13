@@ -21,6 +21,20 @@
 \usepackage[draft]{pdfpages} % TODO: change to final
 \let\CheckCommand\providecommand
 \usepackage{microtype}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{shapes.geometric,arrows,positioning,calc,arrows.meta,fit}
+\usepackage{subcaption}
+\definecolor{crimson2143940}{RGB}{214,39,40}
+\definecolor{darkorange25512714}{RGB}{255,127,14}
+\definecolor{forestgreen4416044}{RGB}{44,160,44}
+\definecolor{mediumpurple148103189}{RGB}{148,103,189}
+\definecolor{steelblue31119180}{RGB}{31,119,180}
+\newcommand{\afterplot}{\vspace{-.1in}}
+\newcommand{\smallestimg}{1.1cm}
+\newcommand{\smallerimg}{1.55cm}
+\newcommand{\tabfigure}[2]{\raisebox{-.5\height}{\includegraphics[#1]{#2}}}
 
 \title{Learning to explore:\\Towards efficient embodied vision}
 \author{Adam Pardyl}
