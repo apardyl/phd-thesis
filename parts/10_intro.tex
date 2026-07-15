@@ -19,7 +19,7 @@ Movies such as Forbidden Planet (1956)~\cite{wilcox1956forbidden} and Star Wars 
 presented robots as beings with almost human psychology and thinking capabilities, albeit somewhat more clumsy and limited in their actions, bringing the idea to the mainstream.
 On a philosophical level, the discourse shifted from Descartes' reflections that the
 human living body might be nothing but an intricate machine~\cite{descartes1664homme} to Turing's question of whether we can actually determine if a machine is intelligent or not~\cite{turing1950computing}.
-At the time the founders of artificial intelligence confidently predicted that
+At the time, the founders of artificial intelligence confidently predicted that
 human-level perception and reasoning were only a few years away~\cite{mccarthy1955proposal}.
 
 Reality proved to be quite different and more humbling. Tasks that were regarded as the pinnacle of human intellect, such as playing chess~\cite{campbell2002deep} 
@@ -27,8 +27,8 @@ or proving mathematical theorems~\cite{davis1960computing,de2008z3}, turned out 
 At the same time, everyday competences such as finding a path in a cluttered room, locating and moving objects from one place to another, or even just looking for a familiar face in a crowd, turned out to be surprisingly
 hard to reproduce even at the animal level. This inversion, known as Moravec's paradox~\cite{moravec1988mind}, has a compelling explanation in evolutionary
 terms. Those abilities are a product of hundreds of millions of years of natural selection. The sudden emergence of eyes is even
-credited with igniting the Cambrian explosion of animal life~\cite{parker2003blink,land2012animal}, and a strikingly large fraction of the
-primate brain is dedicated to processing what we see. We are, in effect, expert visual explorers by nature. What our brains do
+credited with igniting the Cambrian explosion of animal life~\cite{parker2003blink,land2012animal}, and a large fraction of the
+primate cerebral cortex is dedicated to processing what we see~\cite{felleman1991distributed}. We are, in effect, expert visual explorers by nature. What our brains do
 almost subconsciously -- allocating gaze and gathering just enough visual evidence
 to act -- remains as of today one of the hardest open problems in artificial intelligence~\cite{dreyfus1992computers}.
 
@@ -41,9 +41,9 @@ the environment is not static, but changes constantly, making it impossible to m
 Therefore, the agent must be able to reason based on partial information, while actively pointing its senses where they matter to gather more data as needed.
 The perception process is not a passive act of reception, but rather an active, goal-driven process of exploration~\cite{bajcsy1988active,aloimonos1988active,ballard1991animate}.
 Human studies have shown that this exploration process happens on both a local and a global scale. 
-On the local scale, we are expert at scanning our surroundings with our eyes, moving our gaze in a task-driven manner~\cite{yarbus1967eye,hayhoe2005eye}.
+On the local scale, we are experts at scanning our surroundings with our eyes, moving our gaze in a task-driven manner~\cite{yarbus1967eye,hayhoe2005eye}.
 On the global scale, we excel at exploring our environment by moving our body to different locations, navigating through complex scenes and avoiding obstacles without much effort~\cite{fajen2003behavioral}.
-The main focus of this thesis is to enable machines to do the same: to \emph{learn to explore actively} their environment efficiently, perceiving only what they need in order to act on their goals.
+The main focus of this thesis is to enable machines to do the same: to \emph{learn to actively explore} their environment efficiently, perceiving only what they need in order to act on their goals.
 
 The gap between this goal and the current state of machine learning and computer vision is the
 central motivation of this dissertation. Modern models achieve remarkable
@@ -51,8 +51,8 @@ accuracy in passive perception tasks~\cite{krizhevsky2012imagenet,dosovitskiy202
 yet the very assumption of complete access to visual information~\cite{girdhar2022omnivore} breaks down the moment
 a model is placed inside an embodied agent with a limited field of view, a
 finite time budget, and a world that refuses to wait~\cite{ramakrishnan2021exploration,wenzel2021four}. Understanding how an agent
-should efficiently acquire visual information, rather than merely how it should process information it already
-has captured, remains an open problem. The remainder of this chapter traces how the field arrived at this point, explains why general-purpose exploration is
+should efficiently acquire visual information, rather than merely how it should process information it has already
+captured, remains an open problem. The remainder of this chapter traces how the field arrived at this point, explains why general-purpose exploration is
 still unsolved, and introduces the research direction pursued across the four publications that constitute this thesis.
 
 \section{A brief outline of the field}
@@ -60,7 +60,7 @@ still unsolved, and introduces the research direction pursued across the four pu
 \subsection{From hand-crafted features to foundation models}
 
 Computer vision is almost as old as computing itself, with the first works on machine perception dating back to the 1960s~\cite{roberts1963machine},
-epitomized by the so-called ``blocks world'' of simple polyhedral scenes. First attempts to apply machine vision to real-world robotics problems followed
+epitomised by the so-called ``blocks world'' of simple polyhedral scenes. First attempts to apply machine vision to real-world robotics problems followed
 soon after, with the SRI Shakey project~\cite{nilsson1984shakey}, developed already in the late 1960s and early 1970s, and, roughly a decade later, with
 Moravec's stereo-vision-guided Stanford Cart~\cite{moravec1980obstacle}. These early systems were built on hand-crafted geometry and operated in carefully prepared evaluation environments.
 Their brittleness outside such controlled settings exposed how hard vision really is. Marr's influential computational theory of vision
@@ -79,9 +79,9 @@ The transformer architecture proved equally powerful for visual data, quickly su
 Moreover, transformers were able to learn rich feature representations with self-supervised and weakly-supervised learning~\cite{radford2021learning,caron2021emerging,he2022masked},
 enabling training of models on vast amounts of unlabelled or loosely labelled data from the web to produce models with broad, general-purpose visual competence.
 Those so-called vision foundation models in turn not only proved to be highly accurate backbones for standard vision tasks,
-but also enabled the development of vision-language models~\cite{achiam2023gpt,team2023gemini}, which generalized and scaled up the ability of machines to transcribe images into text and vice versa to an unprecedented degree.
+but also enabled the development of vision-language models~\cite{achiam2023gpt,team2023gemini}, which generalised and scaled up the ability of machines to transcribe images into text and vice versa to an unprecedented degree.
 
-The trajectory from the 1960s' blocks world to today's foundation models is, by any measure, a triumph. Yet nearly all of these
+The trajectory from the 1960s blocks world to today's foundation models is, by any measure, a triumph. Yet nearly all of these
 advances share a quiet assumption: that the model is handed all needed visual information in advance, in a complete, static, sufficiently high-resolution image.
 
 \subsection{The passive-perception assumption}
@@ -108,8 +108,8 @@ Machine learning approaches to active vision followed the broader deep learning 
 Recurrent models of visual attention~\cite{mnih2014recurrent} learned to select a sequence of glimpses for recognition,
 drawing on the reinforcement learning methods~\cite{sutton2018reinforcement} that had begun to master control
 problems from raw pixels~\cite{mnih2015human}. In parallel, the robotics and embodied-AI communities studied exploration in the context of simultaneous
-localization and mapping (SLAM)~\cite{cadena2016past}, where an agent must build an explicit map of the environment.
-More recently, the task of embodied visual exploration~\cite{ramakrishnan2021exploration} studied how an agent should build an internal model of an unfamiliar space to support downstream tasks such as reconstruction, localization, and navigation.
+localisation and mapping (SLAM)~\cite{cadena2016past}, where an agent must build an explicit map of the environment.
+More recently, the task of embodied visual exploration~\cite{ramakrishnan2021exploration} studied how an agent should build an internal model of an unfamiliar space to support downstream tasks such as reconstruction, localisation, and navigation.
  Another recent line of work on active visual exploration specifically studies how a model equipped with a
 limited field of view should select successive glimpses to reconstruct,
 classify, or segment a scene \cite{seifi2021glimpse}. These threads share a common conviction: that intelligent sensing is a decision problem.
@@ -123,21 +123,21 @@ Moreover, the exploration is often limited to a grid game, where an agent uncove
  a simplification that mirrors the grid input format of vision transformers rather than the continuous, zoomable optics of real
 cameras or moving agents. Embodied navigation is most often studied in constrained indoor simulators~\cite{savva2019habitat,kolve2017ai2,xia2018gibson},
 where the agent can map the entire environment explicitly, without having to deal with the complexity and vast size of real-world environments.
-This allows relativly simple object-goal navigation methods~\cite{batra2020objectnav,gu2022vision} to produce strong results on those benchmarks, but it does not address the problem of general exploration. 
+This allows relatively simple object-goal navigation methods~\cite{batra2020objectnav,gu2022vision} to produce strong results on those benchmarks, but it does not address the problem of general exploration.
 A different body of work pushes this global-scale exploration outdoors, using simulators such as AirSim~\cite{airsim2017fsr}, vision-and-language navigation tasks such as
 AerialVLN~\cite{liu2023aerialvln} and CityNav~\cite{lee2024citynav}, or, more rarely, open-ended object-goal search directly in such settings~\cite{xie2023reasoning}.
 Notably, most of this active-vision progress, indoors and outdoors alike, still operates at what we earlier called the
 local scale, or follows a fairly constrained navigation task: an agent at each step decides where to look or move within a scene it can already sense.
-Whether the same efficient, learned decision-making transfers to the unconstrained, zero-shot global-scale search largely remains an open question.
-Finally, it is not clear if methods designed for simplified simulation environments can be transferred to real phisical world, bridging the sim-to-real gap.
+Whether the same efficient, learned decision-making transfers to unconstrained, zero-shot, global-scale search remains largely an open question.
+Finally, it is not clear whether methods designed for simplified simulation environments can be transferred to the real physical world, bridging the sim-to-real gap.
 
 
 \section{Learning to explore efficiently}
 
-The central thesis of this dissertation is that \emph{active visual exploration} should be treated as a learning problem in its own right.
+The central thesis of this dissertation is that \emph{active visual exploration} (AVE) should be treated as a learning problem in its own right.
 Doing so yields agents which are \emph{efficient}, in the sense of understanding an environment from as few observations as possible.
 Moreover, they are \emph{flexible}, in the sense of exploiting the true continuous capabilities of real sensors rather than artificial grids.
-And finally, they are \emph{scalable} toward the demands of real embodied agents operating in the open world, spanning both the local scale of choosing where to look and the global scale of choosing where to move.
+Finally, they are \emph{scalable} toward the demands of real embodied agents operating in the open world, spanning both the local scale of choosing where to look and the global scale of choosing where to move.
 The four publications that make up this thesis form a deliberate progression along this path, each dismantling a limitation left standing by the previous one.
 
 The first contribution, ``Active Visual Exploration Based on Attention-Map Entropy''~\cite{pardyl2023active}, asks how an agent should decide where to look
@@ -146,7 +146,7 @@ attention maps, is itself an effective signal for selecting the most informative
 classification, and segmentation from partial observations. This work operates, however, within the familiar setting of glimpses drawn from a fixed grid.
 
 The second contribution, ``Beyond Grids: Exploring Elastic Input Sampling for Vision Transformers''~\cite{pardyl2023grids}, removes that constraint.
-It formalizes the notion of input \emph{elasticity}, the resilience of a model to patches of varying scale, position, and coverage, introduces a protocol to
+It formalises the notion of input \emph{elasticity}, the resilience of a model to patches of varying scale, position, and coverage, introduces a protocol to
 measure it, and proposes architectural and training modifications that let a vision transformer ingest patches sampled freely from an image. This turns the
 rigid grid into a continuous sampling space, a prerequisite for exploration that matches real optics.
 
@@ -156,15 +156,15 @@ reinforcement learning algorithm to select glimpses of arbitrary continuous posi
 changing a UAV's altitude. The resulting agent rapidly establishes a coarse awareness of a scene before zooming in on detail, matching or surpassing prior
 methods while observing far fewer pixels.
 
-The first three papers progressively generalize \emph{local-scale} exploration: deciding
+The first three papers progressively generalise \emph{local-scale} exploration: deciding
 where to look within a scene the agent can already sense, moving from a fixed grid (AME), to
 elastic patch geometry (Beyond Grids), to arbitrary continuous zoom and pan (AdaGlimpse). The
 fourth contribution, ``FlySearch: Exploring how vision-language models explore''~\cite{pardyl2025flysearch}, turns to the complementary \emph{global-scale} problem: deciding where
 to move next in a large, open, three-dimensional world in order to find something. The environment
 is no longer a bounded scene from which glimpses can be sampled, but an unbounded outdoor space
 that the agent, a simulated UAV, must physically traverse to acquire each new observation. FlySearch introduces a photorealistic benchmark for goal-driven object search in such
-environments and uses it to ask whether today's vision-language models, can execute this kind of exploration. The answer is sobering:
-even state-of-the-art models fail to reliably solve even simple exploration tasks,
+environments and uses it to ask whether today's vision-language models can execute this kind of exploration. It finds that
+state-of-the-art models fail to reliably solve even simple exploration tasks,
 with the gap to human performance widening sharply as tasks demand longer,
 consistent search strategies, and this gap persists even after fine-tuning. In
 mapping out these failure modes, FlySearch both charts the frontier of the
@@ -178,4 +178,9 @@ the global scale of locomotion -- on the way to efficient embodied vision.
 
 \section{Thesis outline}
 
-{\color{red}TODO: add thesis outline}
+The remainder of this thesis follows the progression outlined above.
+Chapter~\ref{chap:uncertainty} studies exploration at the local scale and presents the first publication, ``Active Visual Exploration Based on Attention-Map Entropy'', which recasts glimpse selection as uncertainty reduction driven by the internal attention entropy of the task model itself.
+Chapter~\ref{chap:adaptive} lifts the fixed-grid assumption underlying that work and covers two publications: ``Beyond Grids: Exploring Elastic Input Sampling for Vision Transformers'', which formalises input elasticity and introduces the ElasticViT architecture, and ``AdaGlimpse: Active Visual Exploration with Arbitrary Glimpse Position and Scale'', which trains a reinforcement learning agent to select glimpses of continuous position and scale on top of that backbone.
+Chapter~\ref{chap:openworld} moves to the global scale and presents ``FlySearch: Exploring how vision-language models explore'', a benchmark for goal-driven object search in large outdoor environments.
+Each of these chapters opens with its research scope and the preliminaries needed to keep the thesis self-contained, then summarises the corresponding publication and its contributions; the full texts of the publications are provided in the appendix.
+Chapter~\ref{chapter:other} gives an overview of other research work and achievements from the author's doctoral studies, and Chapter~\ref{chap:conclusion} concludes the thesis with a synthesis of the results and a discussion of future research directions.
