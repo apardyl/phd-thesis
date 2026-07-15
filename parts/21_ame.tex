@@ -6,7 +6,7 @@
 
 As established in the Research scope section, the problem of glimpse-based active exploration requires a model to decide at every step \emph{where to look next}. Prior work most often relies on a dedicated component of the network (a probability-map output head)~\cite{seifi2019wheretolooknext,seifi2020segment,seifi2021glimpse}, an attention-pooling module, or a separately trained decision network~\cite{Jha2023WACV}, which is optimised specifically to choose the next glimpse. This is done in parallel to the loss function already used for the target task. This \emph{dual-objective} design has a tangible cost: it increases the number of network components, raises the memory footprint, and complicates training, since two training objectives (one for the perceptual task, one for exploration) must be balanced and may pull in opposite directions.
 
-The key hypothesis driving this work is that such a dedicated decision mechanism may not be necessary at all. A transformer-based masked autoencoder processing a partial view of a scene already produces a rich description of what it is uncertain about as the entropy of its self-attention maps. The question this publication asks is whether that signal alone is sufficient to drive effective glimpse selection, and whether eliminating the second objective actually improves rather than harms performance, see Figure~\ref{fig:ame-teaser}.
+The key hypothesis driving this work is that such a dedicated decision mechanism may not be necessary at all. A transformer-based masked autoencoder processing a partial view of a scene already produces a rich description of what it is uncertain about as the entropy of its self-attention maps. The question this publication asks is whether that signal alone is sufficient to drive effective glimpse selection, and whether eliminating the second objective actually improves rather than harms performance (see Figure~\ref{fig:ame-teaser}).
 
 \begin{figure}[H]
     \centering
@@ -29,7 +29,7 @@ The key hypothesis driving this work is that such a dedicated decision mechanism
 
 \subsection{Attention Map Entropy}
 
-The proposed method named, \emph{Attention-Map Entropy (AME)}, builds upon a masked autoencoder (Section~\ref{sec:prelim-vit-mae}) with a ViT-L encoder (24 transformer blocks, embedding size 1024) and an 8-block decoder (embedding size 512). At every step $t$, the encoder processes the $t$ glimpses observed so far, and the decoder combines their latent representations with mask tokens standing in for the unobserved patches, producing an output for the target task. Figure~\ref{fig:ame-architecture} illustrates this process for the reconstruction task. For other tasks, the architecture is overall similar with exception of the output head.
+The proposed method, named \emph{Attention-Map Entropy (AME)}, builds upon a masked autoencoder (Section~\ref{sec:prelim-vit-mae}) with a ViT-L encoder (24 transformer blocks, embedding size 1024) and an 8-block decoder (embedding size 512). At every step $t$, the encoder processes the $t$ glimpses observed so far, and the decoder combines their latent representations with mask tokens standing in for the unobserved patches, producing an output for the target task. Figure~\ref{fig:ame-architecture} illustrates this process for the reconstruction task. For other tasks, the architecture is overall similar, with the exception of the output head.
 
 \begin{figure}[H]
     \centering
@@ -158,7 +158,7 @@ Figure~\ref{fig:ame-steps} visualises the process step by step: as additional gl
     \label{fig:ame-steps}
 \end{figure}
 
-Classification results on SUN360 are summarised in Table~\ref{tab:ame-classification}. AME achieves 75.7\% accuracy when training the full model end-to-end, compared to 56.4\% for GlAtEx, and 70.1\% when only the classification head is trained on top of frozen reconstruction features, still outperforming both convolutional baselines. The improvement in the head-only regime is particularly notable because the encoder was never exposed to any classification signal, the representations learned for reconstruction already provide a strong enough basis for scene-category decisions.
+Classification results on SUN360 are summarised in Table~\ref{tab:ame-classification}. AME achieves 75.7\% accuracy when training the full model end-to-end, compared to 56.4\% for GlAtEx, and 70.1\% when only the classification head is trained on top of frozen reconstruction features, still outperforming both convolutional baselines. The improvement in the head-only regime is particularly notable because the encoder was never exposed to any classification signal: the representations learned for reconstruction already provide a strong enough basis for scene-category decisions.
 
 \begin{table}[H]
     \centering
