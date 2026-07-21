@@ -4,11 +4,7 @@
 \subsection{Motivation}
 \label{sec:motivation-ame}
 
-As established in Section~\ref{sec:uncertainty-scope}, the problem of glimpse-based active exploration requires a model to decide at every step \emph{where to look next}. Prior work most often relies on a dedicated network component optimised specifically to choose the next glimpse: a probability-map output head~\cite{seifi2019wheretolooknext,seifi2020segment}, an attention-pooling module~\cite{seifi2021glimpse}, or a separately trained decision network~\cite{Jha2023WACV}. This is done in parallel to the loss function already used for the target task. This \emph{dual-objective} design has a tangible cost: it increases the number of network components, raises the memory footprint, and complicates training, since two training objectives (one for the perceptual task, one for exploration) must be balanced and may pull in opposite directions.
-
-The key hypothesis driving this work is that such a dedicated decision mechanism may not be necessary at all. A transformer-based masked autoencoder processing a partial view of a scene already produces a rich description of what it is uncertain about as the entropy of its self-attention maps. The question this publication asks is whether that signal alone is sufficient to drive effective glimpse selection, and whether eliminating the second objective actually improves rather than harms performance (see Figure~\ref{fig:ame-teaser}).
-
-\begin{figure}[H]
+\begin{figure}[th]
     \centering
     \begin{minipage}{0.6\linewidth}
         \centering
@@ -27,11 +23,15 @@ The key hypothesis driving this work is that such a dedicated decision mechanism
     \label{fig:ame-teaser}
 \end{figure}
 
+As established in Section~\ref{sec:uncertainty-scope}, prior work on glimpse-based active exploration relies on a dedicated network component, trained separately from and in parallel to the target task, to decide where to look next. This \emph{dual-objective} design has a tangible cost -- it increases the number of network components, raises the memory footprint, and complicates training, since two training objectives (one for the perceptual task, one for exploration) may pull in opposite directions.
+
+The key hypothesis driving this work is that such a dedicated decision mechanism may not be necessary at all in this setting. A transformer-based masked autoencoder processing a partial view of a scene already produces a rich description of what it is uncertain about as the entropy of its self-attention maps. The question this publication asks is whether that signal alone is sufficient to drive effective glimpse selection, and whether eliminating the second objective actually improves rather than harms performance (see Figure~\ref{fig:ame-teaser}).
+
 \subsection{Attention Map Entropy}
 
-The proposed method, named \emph{Attention-Map Entropy (AME)}, builds upon a masked autoencoder (Section~\ref{sec:prelim-vit-mae}) with a ViT-L encoder (24 transformer blocks, embedding size 1024) and an 8-block decoder (embedding size 512). At every step $t$, the encoder processes the $t$ glimpses observed so far, and the decoder combines their latent representations with mask tokens standing in for the unobserved patches, producing an output for the target task. Figure~\ref{fig:ame-architecture} illustrates this process for the reconstruction task. For other tasks, the architecture is similar, with the exception of the output head.
+The proposed method, named \emph{Attention-Map Entropy (AME)}, builds upon a masked autoencoder (Section~\ref{sec:prelim-vit-mae}) with a ViT-L encoder (24 transformer blocks, embedding size 1024) and a lightweight 8-block decoder (embedding size 512). At every step $t$, the encoder processes the $t$ glimpses observed so far, and the decoder combines their latent representations with mask tokens standing in for the unobserved patches, producing an output for the target task. Figure~\ref{fig:ame-architecture} illustrates this process for the reconstruction task. For other tasks, the architecture is similar, with the exception of the output head.
 
-\begin{figure}[H]
+\begin{figure}[th]
     \centering
     \includegraphics[width=\linewidth]{papers_src/AME/architecture.png}
     \caption[AME architecture for the reconstruction task]{\textbf{Architecture for reconstruction.} The agent has observed two patches of the image, which are processed by the encoder to produce their feature representations (orange rectangles). These outputs are combined with the masked patches (grey rectangles) and passed through the decoder, which reconstructs the missing image patches. In addition, the method computes the entropy map for one of the decoder's multi-head self-attention layers and uses it to select the location of the third glimpse. The process repeats until the assumed number of glimpses is reached. Reproduced from~\cite{pardyl2023active}.}
@@ -47,7 +47,7 @@ Concretely, for patches $p_1, \dots, p_t$ observed so far, one of the decoder's 
 \end{equation}
 where $K$ packs together the key embeddings of all $t$ tokens produced by that layer. Row $i$ of $A$ is the probability distribution used to compute a weighted average of all patch representations when producing the updated representation of patch $i$. A peaked row means the model relies on a few already well-understood patches, while a flat row means it must combine evidence from many patches because none of them alone provides a confident answer. Figure~\ref{fig:ame-entropy} illustrates this on a toy $2\times2$ example.
 
-\begin{figure}[H]
+\begin{figure}[th]
     \centering
     \includegraphics[width=0.75\linewidth]{papers_src/AME/fig/shannon.png}
     \caption[Illustration of an attention-derived entropy map]{\textbf{Entropy map.} Consider an image divided into four patches ($2\times2$), shown on the left. Its attention map is a $4\times4$ matrix, each row of which holds the attention weights used to compute the output of the corresponding patch in the next transformer layer. Computing the Shannon entropy (Equation~\ref{eq:shannon-entropy}) of each row yields a $2\times2$ entropy map; the patch with the highest entropy value is selected as the next glimpse. Figure reproduced from~\cite{pardyl2023active}.}
@@ -59,18 +59,18 @@ Since transformers compute multiple attention maps in parallel (multi-head atten
     H_t[i] = \sum_h H\!\left(A_{h,t}[i]\right),
     \label{eq:ame-entropy-map}
 \end{equation}
-where $A_{h,t}[i]$ is the $i$-th row of head $h$'s attention matrix at step $t$, and $H(\cdot)$ is the Shannon entropy of Equation~\ref{eq:shannon-entropy}. Entries corresponding to already-known patches are set to zero so that they are never re-selected, and the next glimpse is placed at the position of maximal remaining entropy,
+where $A_{h,t}[i]$ is the $i$-th row of head $h$'s attention matrix at step $t$, and $H(\cdot)$ is the Shannon entropy of Equation~\ref{eq:shannon-entropy}. Entries corresponding to already-known patches are set to zero so that they are never re-selected, and the next glimpse is placed following a gready selection strategy, i.e. at the position of maximal remaining entropy,
 \begin{equation}
     i^* = \operatorname*{arg\,max}_i H_t[i].
     \label{eq:ame-argmax}
 \end{equation}
-The very first glimpse, for which no patch has yet been observed, is chosen by running the same procedure with only mask tokens as input. For reconstruction and segmentation, the decoder's final linear layer directly outputs pixel values or per-class logits for every patch. For classification, an auxiliary head attached to the encoder's \textsc{cls} token is trained jointly with the reconstruction objective. In every case, training uses only the losses of the perceptual tasks themselves; no loss function or decision network dedicated to exploration is introduced.
+The very first glimpse, for which no patch has yet been observed, is chosen by running the same procedure with only mask tokens as input. For reconstruction and segmentation, the decoder's final linear layer directly outputs pixel values or per-class logits for every patch. For classification, an auxiliary head attached to the encoder's \textsc{cls} token is trained jointly with the reconstruction objective. In every case, training uses only the losses of the perceptual tasks themselves, and no loss function or decision network dedicated to exploration is introduced.
 
 \subsection{Experimental results}
 
 The method is evaluated on three datasets: MS COCO~\cite{lin2014microsoft}, ADE20K~\cite{zhou2017scene}, and SUN360~\cite{xiao2012recognizing}, against two families of baselines, each tested under its corresponding glimpse regime: (i) $8 \times 48^2$ \emph{retinal} glimpses, matching the retina-like sensor simulation used by the convolutional methods AttSeg~\cite{seifi2020segment} and GlAtEx~\cite{seifi2021glimpse}, and (ii) $37\times16^2$ regular, non-retinal glimpses of a single ViT patch each, matching the transformer-based SimGlim~\cite{Jha2023WACV}.
 
-\begin{table*}[t]
+\begin{table*}[th]
     \begin{center}
     \begin{footnotesize}
     \begin{sc}
@@ -101,11 +101,13 @@ The method is evaluated on three datasets: MS COCO~\cite{lin2014microsoft}, ADE2
 
 As shown in Table~\ref{tab:ame-reconstruction}, AME achieves the best reconstruction RMSE across every dataset and glimpse regime tested, improving over both convolutional and transformer-based baselines. Non-retinal glimpses further improve scores over retinal ones by more than 10\%. The gain over SimGlim is particularly informative: since both methods share the same MAE backbone and differ only in the glimpse-selection rule, the improvement can be attributed to the entropy-based strategy itself rather than to the underlying architecture. Qualitative results on SUN360 in Figure~\ref{fig:ame-qualitative-retinal} confirm that the reconstructions produced by AME are visibly sharper and more detailed than those of the convolutional baselines.
 
-\begin{figure}[H]
+\begin{figure}[th]
     \centering
     \newcommand{\qualimg}[1]{\includegraphics[width=2.8cm]{#1}}
     \begin{tabular}{c@{\hspace{3pt}}c@{\hspace{3pt}}c@{\hspace{3pt}}c}
+        \toprule
         \small\textsc{Input} & \small\textsc{Ours} & \small\textsc{GlAtEx} & \small\textsc{AttSeg} \\[3pt]
+        \midrule
         \qualimg{papers_src/AME/fig/sun360/1/gt.jpg} &
         \qualimg{papers_src/AME/fig/sun360/1/ours.jpg} &
         \qualimg{papers_src/AME/fig/sun360/1/glatex.png} &
@@ -122,6 +124,7 @@ As shown in Table~\ref{tab:ame-reconstruction}, AME achieves the best reconstruc
         \qualimg{papers_src/AME/fig/sun360/5/ours.jpg} &
         \qualimg{papers_src/AME/fig/sun360/5/glatex.png} &
         \qualimg{papers_src/AME/fig/sun360/5/atseg.png} \\
+        \bottomrule
     \end{tabular}
     \caption[Reconstruction quality comparison on SUN360]{\textbf{Reconstruction quality for SUN360.} Qualitative reconstruction results comparing AME against AttSeg~\cite{seifi2020segment} and GlAtEx~\cite{seifi2021glimpse} on the SUN360 dataset using $8\times48^2$ retinal glimpses. Reconstructions produced by our method are visibly sharper and better preserve scene structure. Reproduced from~\cite{pardyl2023active}.}
     \label{fig:ame-qualitative-retinal}
@@ -129,7 +132,7 @@ As shown in Table~\ref{tab:ame-reconstruction}, AME achieves the best reconstruc
 
 Figure~\ref{fig:ame-steps} visualises the process step by step: as additional glimpses are selected, the entropy map concentrates on the regions of the scene that remain blurry or unexplained, and the overall reconstruction, not only in the immediate neighbourhood of the newest glimpse, becomes progressively sharper.
 
-\begin{figure}[H]
+\begin{figure}[th]
     \centering
     \newcommand{\amestepimg}[1]{\includegraphics[width=2.5cm]{#1}}
     \begin{tabular}{r c@{\hspace{1pt}}c@{\hspace{1pt}}c@{\hspace{1pt}}c c}
@@ -160,7 +163,7 @@ Figure~\ref{fig:ame-steps} visualises the process step by step: as additional gl
 
 Classification results on SUN360 are summarised in Table~\ref{tab:ame-classification}. AME achieves 75.7\% accuracy when training the full model end-to-end, compared to 56.4\% for GlAtEx, and 70.1\% when only the classification head is trained on top of frozen reconstruction features, still outperforming both convolutional baselines. The improvement in the head-only regime is particularly notable because the encoder was never exposed to any classification signal: the representations learned for reconstruction already provide a strong enough basis for scene-category decisions.
 
-\begin{table}[H]
+\begin{table}[th]
     \centering
     \begin{footnotesize}
     \begin{sc}
@@ -181,7 +184,7 @@ Classification results on SUN360 are summarised in Table~\ref{tab:ame-classifica
     \label{tab:ame-classification}
 \end{table}
 
-Ablation studies confirm that the entropy-based rule is a reasonable heuristic, which is measurably better than naive alternatives. AME outperforms both uniformly random glimpse placement and a fixed, non-overlapping checkerboard pattern on both reconstruction and classification. This result is noteworthy because it directly contradicts an earlier claim by the authors of SimGlim~\cite{Jha2023WACV}, who reported that attention-based selection did not outperform random sampling. A further ablation over which decoder layer the attention map is drawn from shows a consistent trend that entropy computed from deeper decoder layers, closer to the final output, yields better glimpse-selection decisions than entropy computed from shallow ones.
+Ablation studies confirm that the entropy-based rule is a reasonable heuristic, which is measurably better than naive alternatives. AME outperforms both uniformly random glimpse placement and a fixed, non-overlapping checkerboard pattern on both reconstruction and classification. A further ablation over which decoder layer the attention map is drawn from shows a consistent trend that entropy computed from deeper decoder layers, closer to the final output, yields better glimpse-selection decisions than entropy computed from shallow ones, see the attached publication text for more details.
 
 \subsection{Contributions}
 \label{sec:contributions-ame}
@@ -194,4 +197,4 @@ The publication summarised in this chapter makes the following contributions to 
     \item It provides, to the best of the authors' knowledge, the first published empirical evaluation coupling transformer-based active visual exploration with retina-like glimpses, mimicking a foveated sensor.
 \end{itemize}
 
-{\color{red}\textbf{TODO:} describe the author's individual contributions to this publication as its main author (conception of the idea, implementation, experimental design, and writing).}
+I was the primary author of this paper, and contributed to the conception of the idea, as well as majority of the experimental design and implementation. Furthemore, I conducted more than half of the experiments presented in the paper. I have presented this research at the  International Joint Conferences on Artificial Intelligence 2023 held in Macau. The code, data and futher visualisations are available on my website at \url{https://io.pardyl.com/AME/}.
