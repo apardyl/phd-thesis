@@ -4,10 +4,10 @@
 
 \subsection{Do humans dream of electric sheep?}
 
-The dream of creating artificial beings that perceive and act like us is far older than the transistor.
+The dream of creating artificial beings that perceive and act like us is far older than the invention of the semiconductor.
 From the ancient Greek myth of the bronze automaton Talos~\cite{mayor2018gods},
 through the mechanical contraptions of the Enlightenment~\cite{riskin2003defecating,voskuhl2013androids},
-to the very word \emph{robot}, formulated in Karel Čapek's 1920 play R.U.R.~\cite{capek1920rur}
+to the very word \emph{robot}, coined in Karel Čapek's 1920 play R.U.R.~\cite{capek1920rur},
 and the \emph{Maschinenmensch} (machine-human) of Fritz Lang's 1927 movie Metropolis~\cite{lang1927metropolis},
 the idea of building mechanical creatures has been a recurring theme in our history.
 Following the development of modern electronics and digital computers, this dream seemed within reach.
@@ -16,7 +16,7 @@ presented a vision of highly intelligent anthropomorphic machines that reason ba
 Stanisław Lem's stories~\cite{lem1965cyberiada} went a step further, giving them personalities, flaws, and desires,
 showcasing the complexity of artificial civilisations and their potential ethical dilemmas.
 Movies such as Forbidden Planet (1956)~\cite{wilcox1956forbidden} and Star Wars (1977)~\cite{lucas1977starwars}
-presented robots as beings with almost human psychology and thinking capabilities, albeit somewhat more clumsy and limited in their actions, bringing the idea to the mainstream.
+presented robots as beings with an almost human psychology and thinking capabilities, albeit clumsier and more limited in their actions, bringing the idea to the mainstream.
 On a philosophical level, the discourse shifted from Descartes' reflections that the
 human living body might be nothing but an intricate machine~\cite{descartes1664homme} to Turing's question of whether we can actually determine if a machine is intelligent or not~\cite{turing1950computing}.
 At the time, the founders of artificial intelligence confidently predicted that
@@ -43,16 +43,15 @@ The perception process is not a passive act of reception, but rather an active, 
 Human studies have shown that this exploration process happens on both a local and a global scale. 
 On the local scale, we are experts at scanning our surroundings with our eyes, moving our gaze in a task-driven manner~\cite{yarbus1967eye,hayhoe2005eye}.
 On the global scale, we excel at exploring our environment by moving our body to different locations, navigating through complex scenes and avoiding obstacles without much effort~\cite{fajen2003behavioral}.
-The main focus of this thesis is to enable machines to do the same: to \emph{learn to actively explore} their environment efficiently, perceiving only what they need in order to act on their goals.
+The main motivation of this thesis is to enable machines to do the same: to \emph{learn to actively explore} their environment efficiently, perceiving only what they need in order to act on their goals.
 
-The gap between this goal and the current state of machine learning and computer vision is the
-central motivation of this dissertation. Modern models achieve remarkable
+The gap between this goal and the current state of machine learning and computer vision remains far from closed. Modern models achieve remarkable
 accuracy in passive perception tasks~\cite{krizhevsky2012imagenet,dosovitskiy2021image,achiam2023gpt},
 yet the very assumption of complete access to visual information~\cite{girdhar2022omnivore} breaks down the moment
 a model is placed inside an embodied agent with a limited field of view, a
 finite time budget, and a world that refuses to wait~\cite{ramakrishnan2021exploration,wenzel2021four}. Understanding how an agent
 should efficiently acquire visual information, rather than merely how it should process information it has already
-captured, remains an open problem. The remainder of this chapter traces how the field arrived at this point, explains why general-purpose exploration is
+captured, remains an open problem~\cite{ramakrishnan2021exploration,bajcsy2018revisiting,duan2022survey,liu2025embodied}. The remainder of this chapter traces how the field arrived at this point, explains why general-purpose exploration is
 still unsolved, and introduces the research direction pursued across the four publications that constitute this thesis.
 
 \section{A brief outline of the field}
@@ -87,21 +86,21 @@ advances share a quiet assumption: that the model is handed all needed visual in
 \subsection{The passive-perception assumption}
 
 Standard computer vision solutions assume complete and unobstructed access to input data~\cite{girdhar2022omnivore}. This is an entirely reasonable simplification for most studied tasks,
-such as image classification or segmentation, and even most recent vision-language benchmarks~\cite{chen2024we,yue2025mmmu} follow this pattern.
+such as image classification or segmentation, and even the most recent vision-language benchmarks~\cite{chen2024we,yue2025mmmu} follow this pattern.
 However, this assumption falls apart when the model is placed inside an \emph{embodied} agent, such as a robot or an unmanned aerial vehicle (UAV), operating in the real world.
 Such an agent perceives the world through sensors with a restricted field of view and resolution, must move physically to acquire new observations, taking obstacles into account, and
-operates under tight constraints on time, energy, and computation power~\cite{wenzel2021four}. Capturing and processing every part of a large environment at maximum resolution is not merely wasteful but often infeasible, especially in open-world settings.
+operates under tight constraints on time, energy, and computation power~\cite{wenzel2021four}. Capturing and processing every part of a large environment at maximum resolution is not merely wasteful but often infeasible, especially in open-world settings~\cite{mnih2014recurrent,sandini2003retina,ramakrishnan2021exploration}.
 
-Under these conditions, the decisive question is no longer only \emph{what it is that we see}, but rather \emph{what we should observe} in the first
+Under these conditions, the question is no longer only \emph{what we currently see}, but rather \emph{what we should observe} in the first
 place. An agent that can choose its observations wisely can achieve strong performance at a fraction of the sensing and computational cost of one that
-processes everything indiscriminately. Moving this decision of \emph{where to look next} inside the model is precisely the shift from passive to active perception.
+processes everything indiscriminately. For active perception to work we need to move this decision of \emph{where to look next} inside the model itself.
 
 \subsection{Active embodied vision}
 
 The idea that perception systems should be active has been around since the early days of embodied computer vision.
 The active perception~\cite{bajcsy1988active}, active vision~\cite{aloimonos1988active}, and animate vision~\cite{ballard1991animate} proponents argued decades ago that a perceiver
 which controls its own sensing can turn otherwise ill-posed problems into tractable ones, and this perspective has been revisited in the modern learning
-era \cite{bajcsy2018revisiting}. The inspiration is deeply biological -- human vision is highly foveated, concentrating acuity at the centre of gaze, and we
+era \cite{bajcsy2018revisiting}. The inspiration is deeply biological. Human vision is highly foveated, concentrating acuity at the centre of gaze. Therefore we
 explore scenes through rapid saccadic eye movements that direct this fovea to informative regions~\cite{yarbus1967eye,hayhoe2005eye}.
 
 Machine learning approaches to active vision followed the broader deep learning progress.
@@ -120,23 +119,22 @@ Despite this long history of research and recent rapid progress, the problem of 
 The difficulty is easy to underestimate because existing methods achieve strong performance within simplified settings.
 For example, some active-vision methods operate in small search spaces, where even a random strategy can achieve strong performance~\cite{seifi2021glimpse}.
 Moreover, the exploration is often limited to a grid game, where an agent uncovers a fixed area at each move~\cite{rangrej2022consistency},
- a simplification that mirrors the grid input format of vision transformers rather than the continuous, zoomable optics of real
-cameras or moving agents. Embodied navigation is most often studied in constrained indoor simulators~\cite{savva2019habitat,kolve2017ai2,xia2018gibson},
+ a simplification that mirrors the grid input format of vision transformers rather than the continuous movements of real-world agents. Embodied navigation is most often studied in constrained indoor simulators~\cite{savva2019habitat,kolve2017ai2,xia2018gibson},
 where the agent can map the entire environment explicitly, without having to deal with the complexity and vast size of real-world environments.
 This allows relatively simple object-goal navigation methods~\cite{batra2020objectnav,gu2022vision} to produce strong results on those benchmarks, but it does not address the problem of general exploration.
 A different body of work pushes this global-scale exploration outdoors, using simulators such as AirSim~\cite{airsim2017fsr}, vision-and-language navigation tasks such as
 AerialVLN~\cite{liu2023aerialvln} and CityNav~\cite{lee2024citynav}, or, more rarely, open-ended object-goal search directly in such settings~\cite{xie2023reasoning}.
 Notably, most of this active-vision progress, indoors and outdoors alike, still operates at what we earlier called the
-local scale, or follows a fairly constrained navigation task: an agent at each step decides where to look or move within a scene it can already sense.
-Whether the same efficient, learned decision-making transfers to unconstrained, zero-shot, global-scale search remains largely an open question.
-Finally, it is not clear whether methods designed for simplified simulation environments can be transferred to the real physical world, bridging the sim-to-real gap.
+local scale, or follows a fairly constrained navigation task: an agent at each step decides where to look within a scene it can fully scan, or move towards an object it can already see.
+Whether the same efficient, learned decision-making transfers to unconstrained, zero-shot, global-scale search remains largely an open question~\cite{bajcsy2018revisiting,ramakrishnan2021exploration}.
+Finally, it is not clear whether methods designed for simplified simulation environments can be transferred to the real physical world, bridging the sim-to-real gap~\cite{aljalbout2025reality}.
 
 
 \section{Learning to explore efficiently}
 
 The central thesis of this dissertation is that \emph{active visual exploration} (AVE) should be treated as a learning problem in its own right.
-Doing so yields agents which are \emph{efficient}, in the sense of understanding an environment from as few observations as possible.
-Moreover, they are \emph{flexible}, in the sense of exploiting the true continuous capabilities of real sensors rather than artificial grids.
+Doing so yields agents which, first of all, are \emph{efficient}, in the sense of understanding an environment from as few observations as possible.
+Second, they are \emph{flexible}, in the sense of exploiting the true continuous capabilities of real sensors rather than artificial grids.
 Finally, they are \emph{scalable} toward the demands of real embodied agents operating in the open world, spanning both the local scale of choosing where to look and the global scale of choosing where to move.
 The four publications that make up this thesis form a deliberate progression along this path, each dismantling a limitation left standing by the previous one.
 
@@ -145,10 +143,9 @@ next without the machinery of a separate decision network. It shows that the int
 attention maps, is itself an effective signal for selecting the most informative next glimpse, simplifying training while improving reconstruction,
 classification, and segmentation from partial observations. This work operates, however, within the familiar setting of glimpses drawn from a fixed grid.
 
-The second contribution, ``Beyond Grids: Exploring Elastic Input Sampling for Vision Transformers''~\cite{pardyl2023grids}, removes that constraint.
+The second contribution, ``Beyond Grids: Exploring Elastic Input Sampling for Vision Transformers''~\cite{pardyl2023grids}, addresses that constraint.
 It formalises the notion of input \emph{elasticity}, the resilience of a model to patches of varying scale, position, and coverage, introduces a protocol to
-measure it, and proposes architectural and training modifications that let a vision transformer ingest patches sampled freely from an image. This turns the
-rigid grid into a continuous sampling space, a prerequisite for exploration that matches real optics.
+measure it, and proposes architectural and training modifications that let a vision transformer ingest patches sampled freely from an image. This turns the rigid grid into a continuous sampling space.
 
 The third contribution, ``AdaGlimpse: Active Visual Exploration with Arbitrary Glimpse Position and Scale''~\cite{pardyl2024adaglimpse}, closes the gap between
 software and hardware. Building on an input-elastic transformer, it casts exploration as a Markov decision process and uses the Soft Actor-Critic
@@ -173,8 +170,8 @@ problem and motivates further research in this field.
 Taken together, these works trace an arc from deciding where to look within a single reachable
 scene, through freeing the model from rigid sampling and matching real sensor geometry, to deciding
 where to move through an open, three-dimensional world. They constitute concrete steps toward the
-goal that gives this thesis its title: learning to explore -- at both the local scale of gaze and
-the global scale of locomotion -- on the way to efficient embodied vision.
+goal that gives this thesis its title: learning to explore, at both the local scale of gaze and
+the global scale of locomotion, on the way to efficient embodied vision.
 
 \section{Thesis outline}
 
