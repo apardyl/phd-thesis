@@ -6,12 +6,12 @@
 
 Beyond Grids (Section~\ref{sec:beyond}) established that a ViT can be made elastic enough to accept patches of any position and scale without significant accuracy loss, and that adaptive non-uniform sampling provides a measurable performance advantage at low patch budgets even with simple heuristic sampling strategies. The next step is to replace these hand-designed heuristics with a learned policy that, at each exploration step, observes the partial information accumulated so far and selects the position and scale of the next glimpse so as to maximise task performance.
 
-Prior AVE methods, including AME (Chapter~\ref{chap:uncertainty}), STAM~\cite{rangrej2022consistency}, and SimGlim~\cite{Jha2023WACV} are fundamentally constrained to discrete grid-aligned action spaces, either because their selection mechanisms are tied to a fixed patch grid or because they sample from a finite set of candidate positions. None of them can exploit variable-scale observations even on hardware that natively supports zoom. AdaGlimpse bridges this gap by formulating glimpse selection over a fully continuous three-dimensional action space of position and scale, and training a Soft Actor-Critic agent~\cite{haarnoja2018soft} to navigate it.
+As reviewed in Section~\ref{sec:adaptive-scope}, prior AVE methods, whether they pick glimpses directly from a full-scene grid or refine a low-resolution overview with fixed-scale crops, are constrained to discrete, grid-aligned action spaces and cannot exploit variable-scale observations even on hardware that natively supports zoom. AdaGlimpse bridges this gap by formulating glimpse selection over a fully continuous three-dimensional action space of position and scale, and training a Soft Actor-Critic agent~\cite{haarnoja2018soft} to navigate it.
 
 \subsection{Adaptive glimpse sampling}
 \label{sec:adaglimpse-formulation}
 
-\textbf{Glimpse parameterisation.} Let $X$ be the scene to be explored, represented as a rectangle. A glimpse $G$ is a square region of $X$ captured by a camera with a fixed sensor resolution of $d_{\mathrm{cam}} \times d_{\mathrm{cam}}$ pixels, regardless of the zoom level. A glimpse is specified by its top-left corner $(x, y)$ and its \emph{scale} $z = (d - d_{\mathrm{min}}) / (d_{\mathrm{max}} - d_{\mathrm{min}})$, where $d$ is the physical size of the glimpse in the scene, and $d_{\mathrm{min}}$, $d_{\mathrm{max}}$ are the minimum and maximum camera field of view. Intuitively, scale $z = 0$ corresponds to maximum zoom (smallest, highest-resolution glimpse) and $z = 1$ to the widest possible view (full-scene overview at lowest resolution). Glimpse coordinates $C = (x, y, z) \in [0, 1]^3$ form the continuous action space.
+\textbf{Glimpse parameterisation.} Let $X$ be the scene to be explored, represented as a rectangle. A glimpse $G$ is a square region of $X$ captured by a camera with a fixed sensor resolution of $d_{\mathrm{cam}} \times d_{\mathrm{cam}}$ pixels. A glimpse is specified by its top-left corner $(x, y)$ and its \emph{scale} $z = (d - d_{\mathrm{min}}) / (d_{\mathrm{max}} - d_{\mathrm{min}})$, where $d$ is the physical size of the glimpse in the scene, and $d_{\mathrm{min}}$, $d_{\mathrm{max}}$ are the minimum and maximum camera field of view. Intuitively, scale $z = 0$ corresponds to maximum camera zoom (smallest, highest-detail glimpse) and $z = 1$ to the widest possible view (full-scene overview at lowest detail level). Glimpse coordinates $C = (x, y, z) \in [0, 1]^3$ form the continuous action space.
 
 \textbf{AVE as an MDP.} The exploration process unfolds over at most $T$ steps. At step $t$, the agent captures glimpse $G_t$ at coordinates $C_t$ selected by the policy, yielding a $d_{\mathrm{cam}} \times d_{\mathrm{cam}}$ image patch (simulated by cropping from a high-resolution image and rescaling). The agent maintains a growing sequence of observed patches $G_1, \ldots, G_t$ and their coordinates $C_1, \ldots, C_t$. Exploration terminates when either the maximum step count is reached or a task-specific confidence threshold is exceeded (early stopping). Figure~\ref{fig:adaglimpse-teaser} illustrates the resulting coarse-to-fine exploration behaviour.
 
@@ -22,7 +22,7 @@ Prior AVE methods, including AME (Chapter~\ref{chap:uncertainty}), STAM~\cite{ra
     \label{fig:adaglimpse-teaser}
 \end{figure}
 
-\subsection{Architecture}
+\subsection{AdaGlimpse}
 \label{sec:adaglimpse-arch}
 
 AdaGlimpse consists of two interacting components: a vision transformer backbone that processes the accumulated glimpses and produces both task predictions and representations for the RL agent, and a Soft Actor-Critic policy that selects the next glimpse coordinates. The overall design is shown in Figure~\ref{fig:adaglimpse-arch}.
@@ -36,16 +36,13 @@ AdaGlimpse consists of two interacting components: a vision transformer backbone
 
 \textbf{Glimpse encoder.} The encoder is a ViT-B (12 transformer blocks, embedding size 768) with the ElasticViT positional encoding from Section~\ref{sec:beyond}: each patch is positioned using the four-dimensional continuous sine-cosine encoding of its corner coordinates (Equation~\ref{eq:pos-enc}). At step $t$, the encoder receives all patches from glimpses $G_1, \ldots, G_{t-1}$ and their coordinates, concatenated into sequences $\widehat{G}_t$ and $\widehat{C}_t$. Additionally, the encoder computes an attention-rollout importance score for each patch~\cite{abnar2020quantifying}, forming a sequence $\widehat{I}_t$. The transformer blocks produce a sequence of latent tokens $\widehat{H}_t$ (one per patch) plus a class token.
 
-\textbf{Task-specific decoder.} For classification, a linear layer acting on the class token suffices. For dense prediction tasks (reconstruction and segmentation) a MAE-style decoder of 8 transformer blocks (embedding size 512) is used. Unlike standard MAE, which inserts mask tokens only for the unobserved image regions, AdaGlimpse inserts mask tokens for \emph{all} grid positions in the output. This is necessary because variable-scale glimpses can overlap, meaning no fixed partition of ``seen'' and ``unseen'' regions exists: any output pixel may have been observed by multiple glimpses at different resolutions, and the decoder must reconcile these into a coherent full-image prediction.
+\textbf{Task-specific decoder.} For classification, a linear layer acting on the class token suffices. For dense prediction tasks (reconstruction and segmentation) a MAE-style decoder of 8 transformer blocks (embedding size 512) is used. Unlike standard MAE, which inserts mask tokens only for the unobserved image regions, AdaGlimpse inserts mask tokens for \emph{all} grid positions in the output. This is necessary because variable-scale glimpses can overlap, meaning no fixed partition of ``seen'' and ``unseen'' regions exists. Any output pixel may have been observed by multiple glimpses at different resolutions, and the decoder must reconcile these into a coherent full-image prediction.
 
 \textbf{Training objectives.} The backbone is optimised on the task loss computed at the \emph{final} step $t = T$ only (not at intermediate steps). For reconstruction the loss is RMSE; for classification and segmentation, knowledge distillation against a teacher model (a DeiT ViT for classification and a DeepLabV3+/ResNet-101 for segmentation) is used via KL divergence. This matches the training setup of STAM~\cite{rangrej2022consistency} and enables a fair comparison.
 
-\subsection{Reinforcement learning policy}
-\label{sec:adaglimpse-rl}
-
 \textbf{State, action, and reward.} The RL agent's state at step $t$ is the tuple $s_t = (\widehat{G}_t,\, \widehat{C}_t,\, \widehat{I}_t,\, \widehat{H}_t)$: the raw patches, their coordinates, their importance scores, and their backbone latent representations. The action is $a_t = (x, y, z) \in [0, 1]^3$, the continuous coordinates of the next glimpse. The reward is defined as the improvement in the task loss: $r_t = L_{t-1} - L_t$, where $L_t$ is the task loss at step $t$. This direct signal encourages the agent to select glimpses that maximally reduce the residual task error.
 
-\textbf{SAC agent.} The agent uses Soft Actor-Critic with separate actor and critic networks. Each component of the state receives its own encoder: a small CNN for the raw patches $\widehat{G}_t$, and small MLPs for the coordinate, importance, and latent sequences $\widehat{C}_t$, $\widehat{I}_t$, $\widehat{H}_t$. The four resulting per-patch embeddings are concatenated and aggregated across patches via an attention-pooling layer~\cite{ilse2018attention}; the resulting fixed-size vector is passed through a final MLP to produce either the action distribution (actor) or the $Q$-value estimate (critic). The maximum-entropy SAC objective (Equation~\ref{eq:sac-objective}) is crucial here: it prevents premature convergence to a deterministic greedy policy and encourages the agent to explore diverse glimpse sequences during training. Figure~\ref{fig:adaglimpse-rl} shows the RL module.
+\textbf{RL agent.} The agent uses Soft Actor-Critic with separate actor and critic networks. Each component of the state receives its own encoder: a small CNN for the raw patches $\widehat{G}_t$, and small MLPs for the coordinate, importance, and latent sequences $\widehat{C}_t$, $\widehat{I}_t$, $\widehat{H}_t$. The four resulting per-patch embeddings are concatenated and aggregated across patches via an attention-pooling layer~\cite{ilse2018attention}; the resulting fixed-size vector is passed through a final MLP to produce either the action distribution (actor) or the $Q$-value estimate (critic). The maximum-entropy SAC objective (Equation~\ref{eq:sac-objective}) is crucial here: it prevents premature convergence to a deterministic greedy policy and encourages the agent to explore diverse glimpse sequences during training. Figure~\ref{fig:adaglimpse-rl} shows the RL module.
 
 \begin{figure}[H]
     \centering
@@ -206,28 +203,6 @@ coordinates {
 \label{fig:adaglimpse-nglimpses}
 \end{figure}
 
-\textbf{State ablation.} Table~\ref{tab:adaglimpse-state} quantifies the contribution of each component of the RL state to classification accuracy. Removing the backbone latents $\widehat{H}_t$ causes the largest drop (from 77.54\% to 61.82\%), confirming that processed representations are far more informative for the policy than raw patch pixels alone. Glimpse coordinates $\widehat{C}_t$ are the second most important component (removing them drops accuracy to 68.25\%).
-
-\begin{table}[H]
-\caption[\textbf{RL state ablation} on ImageNet-1k classification]{\textbf{Importance of RL state components.} Each component of the state $s_t = (\widehat{G}_t, \widehat{C}_t, \widehat{I}_t, \widehat{H}_t)$ is replaced with its dataset-mean value to measure its individual contribution. The transformer latent $\widehat{H}_t$ and glimpse coordinates $\widehat{C}_t$ are the most critical. Adapted from~\cite{pardyl2024adaglimpse}.}
-\label{tab:adaglimpse-state}
-\begin{center}
-\begin{small}
-\begin{tabular}{ccccr}
-\toprule
-patches $\widehat{G}_t$ & coordinates $\widehat{C}_t$ & importance $\widehat{I}_t$ & latent $\widehat{H}_t$ & Accuracy \% \\
-\midrule
-\checkmark & \checkmark & \checkmark & \checkmark & 77.54 \\
-            & \checkmark & \checkmark & \checkmark & 76.99 \\
-\checkmark &             & \checkmark & \checkmark & 68.25 \\
-\checkmark & \checkmark &             & \checkmark & 77.36 \\
-\checkmark & \checkmark & \checkmark &             & 61.82 \\
-\bottomrule
-\end{tabular}
-\end{small}
-\end{center}
-\end{table}
-
 \textbf{Qualitative glimpse sequences.} Figure~\ref{fig:adaglimpse-qualitative} shows two representative classification sequences. The policy takes an initial wide-field glimpse, then progressively zooms in on discriminative regions, and halts as soon as the confidence threshold is exceeded, illustrating the coarse-to-fine strategy emerging from the learned policy without any explicit inductive bias towards it.
 
 \begin{figure}[H]
@@ -246,17 +221,17 @@ D) & 22\% & 33\% & 49\% & 36\% & {\color{forestgreen4416044}76\%} & 26\% & {\col
 \label{fig:adaglimpse-qualitative}
 \end{figure}
 
+Further experimental results are presented in the original paper~\cite{pardyl2024adaglimpse}.
+
 \subsection{Contributions}
 \label{sec:contributions-adaglimpse}
 
 The publication ``AdaGlimpse: Active Visual Exploration with Arbitrary Glimpse Position and Scale''~\cite{pardyl2024adaglimpse} makes the following contributions to the field of active visual exploration:
 
 \begin{itemize}
-    \item It introduces AdaGlimpse, the first AVE method to select glimpses in a fully continuous three-dimensional position-scale action space, overcoming the grid constraint shared by all prior approaches.
+    \item It introduces AdaGlimpse, the first AVE method to select glimpses in a fully continuous three-dimensional position-scale action space, overcoming the grid constraint shared by all prior approaches. AdaGlimpse is able to learn the coarse-to-fine exploration without any explicit inductive bias towards it.
     \item It formulates AVE as a Markov Decision Process with a four-component state space $(\widehat{G}_t, \widehat{C}_t, \widehat{I}_t, \widehat{H}_t)$ and trains it with the Soft Actor-Critic algorithm, whose maximum-entropy objective encourages diverse, exploratory policies.
-    \item It presents an architecture based on an ElasticViT encoder~\cite{pardyl2023grids} that addresses reconstruction, classification, and segmentation within a unified framework, with only the output decoder changing between tasks.
     \item It demonstrates state-of-the-art performance across three visual tasks and five datasets. In reconstruction, AdaGlimpse achieves better results with 6\% of pixels than competing methods achieve with 18\%. In classification, it surpasses the best prior method (STAM) in absolute accuracy and can match STAM's accuracy using 40\% fewer pixels with early stopping. In segmentation, it matches AME while observing 35\% fewer pixels.
-    \item Through qualitative visualisation of glimpse sequences, it provides evidence that AdaGlimpse independently discovers the coarse-to-fine strategy, without that strategy being explicitly encoded in the architecture or reward.
 \end{itemize}
 
-{\color{red}\textbf{TODO:} describe the author's individual contributions to this publication as its main author (conception of the idea, implementation, experimental design, and writing).}
+I was the primary author of this paper, and contributed to the conception of the idea, as well as majority of the experimental design and implementation. Furthemore, I conducted more than half of the experiments presented in the paper. I have presented this research at the European Conference on Computer Vision -- ECCV 2024, held in Milan, Italy. The code, data and futher visualisations are available on my website at \url{https://io.pardyl.com/AdaGlimpse/}.
