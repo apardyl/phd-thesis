@@ -1,4 +1,3 @@
-% Shorthand commands used throughout this section
 \newcommand{\flysearch}{FlySearch}
 \newcommand{\challenge}{FS-1}
 \newcommand{\anomalychallenge}{FS-Anomaly-1}
@@ -10,44 +9,38 @@
 \subsection{Motivation}
 \label{sec:flysearch-motivation}
 
-Despite the rapid adoption of vision-language models as zero-shot tools across a wide range of perception and reasoning tasks, their ability to perform sequential, goal-directed exploration in open three-dimensional environments has received little systematic attention. Most existing evaluations of VLMs use static benchmarks, such as single-image question answering or visual entailment, that do not require the model to decide what to observe next~\cite{goyal2017making,liu2025mmbench}. The few interactive benchmarks that do exist tend to focus on game-like environments or instruction-following in indoor simulators, where the state space is small and the environment provides strong structural cues~\cite{paglieri2024balrog,liu2024visualagentbench}.
-
-Existing ObjectNav benchmarks suffer from complementary limitations. The indoor simulators that dominate this field, Habitat~\cite{savva2019habitat}, AI2-THOR~\cite{kolve2017ai2}, and Gibson~\cite{xia2018gibson}, were designed for purpose-built navigation agents, not for evaluating foundation models. Their structured layouts allow methods that build explicit floor maps to perform well without genuine exploration capability. The few outdoor UAV ObjectNav environments that exist, such as OUTDOOR~\cite{xie2023reasoning}, restrict the agent to two-dimensional horizontal movement, omitting the altitude dimension that is central to UAV-based search.
-
-FlySearch addresses both problems. It provides a realistic outdoor environment with a three-dimensional action space, a zero-shot language-conditioned search task, and a suite of standardised challenges that isolate distinct aspects of exploration capability. By evaluating VLMs directly rather than as components within a larger navigation system, it measures exploration capability in isolation.
+Despite the rapid development of vision-language models as zero-shot tools across a wide range of perception and reasoning tasks, their ability to perform goal-directed exploration in open three-dimensional environments has received little systematic attention. The existing benchmarks that come closest each fall short of the goal as shown in Section~\ref{sec:openworld-scope}. FlySearch addresses these gaps directly -- it provides a simulated photorealistic outdoor environment with a three-dimensional action space, a zero-shot language-conditioned search task, and a suite of standardised challenges that isolate distinct aspects of exploration capability. By evaluating VLMs directly rather than as components within a larger navigation system, it measures spatial exploration capability in isolation.
 
 \subsection{Benchmark design}
 \label{sec:flysearch-benchmark}
 
-\textbf{Task formulation.} In \flysearch{}, the agent controls a simulated multirotor UAV equipped with a downward-facing camera and is tasked with finding a target object described in natural language. The interaction follows a fixed protocol designed to be equally natural for human testers and VLMs.
+\textbf{Task formulation.} In \flysearch{}, the agent controls a simulated multirotor UAV equipped with a downward-facing camera. The UAV serves as a proxy for evaluation of spatial exploration capability, rather than low-level control of a physical robot, and is therefore controllable with high-level relative movement commands, resembling autopilot inputs. The agent is tasked with finding a target object described in natural language or with a visual example. The interaction follows a fixed protocol designed to be equally natural for human testers and VLMs.
 
-At the start of each episode, the model receives a \emph{starting prompt} that contains a brief textual description of the object to be located (e.g.\ \emph{a red pickup truck}), the communication format, and an instruction that the model may preface each response with a chain of reasoning before issuing its action. This allows the model to ``think aloud'' before committing to a movement.
+At the start of each episode, the model receives a \emph{starting prompt} that contains a brief textual description of the object to be located (e.g.\ \emph{a red pickup truck}) and in some cases a visual example of the target object. The starting prompt also specifies the communication format, and an instruction that the model may preface each response with a chain of reasoning before issuing its action. This allows the model to ``think aloud'' before committing to a movement~\cite{wei2022chain}.
 
-At each subsequent step, the agent receives an \emph{observation} consisting of a $500\times500$ pixel RGB image from the UAV camera, overlaid with a coordinate grid to help the model judge distances and directions, together with the current altitude above the ground. This information is provided in XML format, keeping the observation modality consistent with the model's language interface.
+At each subsequent step, the agent receives an \emph{observation} consisting of a $500\times500$ pixel RGB image from the UAV camera, overlaid with a coordinate grid~\cite{lei2024scaffolding} to help the model judge distances and directions, together with the current altitude above the ground.
 
-The agent responds with an \emph{action}: a text command \texttt{<action>(X, Y, Z)</action>} specifying a relative displacement in metres in the three spatial directions, or the terminal command \texttt{FOUND} when it believes the target is in view. Low-level flight control (collision avoidance, trajectory execution) is handled by an autopilot layer, so the model focuses entirely on exploration decisions.
+The agent responds with an \emph{action}: a text command \texttt{<action>(X, Y, Z)</action>} specifying a relative displacement in metres in the three spatial directions, or the terminal command \texttt{FOUND} when it believes the target is in view. Low-level flight control (collision avoidance, trajectory execution) is handled by a simulated autopilot layer, so the model focuses entirely on exploration decisions.
 
 An episode is considered successful if, at the moment the agent issues \texttt{FOUND}, the object's centre point lies within the camera's field of view \emph{and} the agent is at most $10\,\mathrm{m}$ above the object's highest point. This metric, adapted from the standard ObjectNav criterion~\cite{batra2020objectnav}, requires the agent to be close enough for meaningful visual confirmation rather than merely in the neighbourhood of the target.
 
 \begin{figure*}[t]
     \centering
     \includegraphics[width=\linewidth, trim={.7cm .2cm .7cm .2cm}, clip]{papers_src/FlySearch/figs/teaser/avebench.pdf}
-    \caption{\textbf{\flysearch{}} evaluates exploration capabilities of vision-language models in a realistic outdoor setting. The agent controls a UAV by observing images captured from successive positions and providing text commands describing the next movement. To complete each scenario, the model must locate an object specified in natural language and signal success with a \texttt{FOUND} command. Reproduced from~\cite{pardyl2025flysearch}.}
+    \caption[FlySearch task overview]{\textbf{\flysearch{}} evaluates exploration capabilities of vision-language models in a realistic outdoor setting. The agent controls a UAV by observing images captured from successive positions and providing text commands describing the next movement. To complete each scenario, the model must locate an object specified in natural language and signal success with a \texttt{FOUND} command. Reproduced from~\cite{pardyl2025flysearch}.}
     \label{fig:flysearch-teaser}
 \end{figure*}
 
-\textbf{Evaluation pipeline.} The \flysearch{} system consists of two main components: a simulator and an evaluation controller. The \emph{simulator} is built on Unreal Engine 5~\cite{unrealengine}, which provides near-photorealistic graphics through real-time ray tracing and dynamic global illumination. Large, open-world maps are supported natively, and the procedural content generation system can place tens of thousands of object meshes in seconds at runtime, enabling an unlimited number of distinct evaluation scenarios. The simulator runs in headless mode on both consumer-grade NVIDIA RTX GPUs and standard deep-learning cluster hardware (A100/H100), lowering the entry barrier for independent replication.
-
-The \emph{evaluation controller} is implemented in Python and handles the full lifecycle of the benchmarking process: generating scenarios, managing the communication between the simulator and the VLM under test, enforcing episode termination conditions, and computing performance metrics. The controller supports a wide range of VLMs through a simple adapter interface, and additional models can be integrated using the open-source vLLM inference server.
+\textbf{Evaluation pipeline.} The \flysearch{} system consists of two main components: a simulator and an evaluation controller. The \emph{simulator} is built on Unreal Engine 5~\cite{unrealengine}, which provides near-photorealistic graphics through real-time ray tracing and dynamic global illumination. Large, open-world maps are supported natively, and the procedural content generation system can place tens of thousands of object meshes in seconds at runtime, enabling an unlimited number of distinct evaluation scenarios. The \emph{evaluation controller} is implemented in Python and handles the full lifecycle of the benchmarking process: generating scenarios, managing the communication between the simulator and the VLM under test, enforcing episode termination conditions, and computing performance metrics. The controller supports a wide range of VLMs through a simple adapter interface, and additional models can be integrated using the open-source vLLM inference server~\cite{kwon2023efficient}.
 
 \begin{figure*}[t]
     \centering
     \includegraphics[width=\linewidth]{papers_src/FlySearch/figs/arch/avebencharch.pdf}
-    \caption{\textbf{Evaluation pipeline.} \flysearch{} consists of three main components: the Unreal Engine 5 simulator that renders near-photorealistic views of the open-world map, the evaluation controller that manages communication between the VLM and the simulator, and the scenario generator that procedurally creates new evaluation scenarios. Reproduced from~\cite{pardyl2025flysearch}.}
+    \caption[FlySearch evaluation pipeline]{\textbf{Evaluation pipeline.} \flysearch{} consists of three main components: the Unreal Engine 5 simulator that renders near-photorealistic views of the open-world map, the evaluation controller that manages communication between the VLM and the simulator, and the scenario generator that procedurally creates new evaluation scenarios. Reproduced from~\cite{pardyl2025flysearch}.}
     \label{fig:flysearch-pipeline}
 \end{figure*}
 
-\textbf{Environments.} The benchmark provides two distinct evaluation environments. The \emph{forest environment} is based on the Electric Dreams UE5 demo and features sparse forest scenery with randomly placed rock formations, procedurally generated vegetation, and dynamic wind. The entire map is generated at runtime, ensuring that no two scenarios share the same layout. The \emph{city environment} is a large, semi-procedurally generated American-style city of approximately $4\times4\,\mathrm{km}$, populated at runtime with random distractor assets (parked cars, walking pedestrians) drawn from an extensive asset library. The visual complexity of the city environment is substantially higher than the forest, with many objects of similar appearance and strong visual clutter. Figure~\ref{fig:flysearch-environments} shows example scenes from both environments.
+\textbf{Environments.} The benchmark provides two distinct evaluation environments. The \emph{forest environment} is based on the Electric Dreams UE5 demo~\cite{electridreams} and features sparse forest scenery with randomly placed rock formations, procedurally generated vegetation, and dynamic wind. The entire map is generated at runtime, ensuring that no two scenarios share the same layout. The \emph{city environment} is based on the City Sample UE5 demo~\cite{citysample}, a large, semi-procedurally generated American-style city of approximately $4\times4\,\mathrm{km}$, populated at runtime with random distractor assets (parked cars, walking pedestrians) drawn from Unreal's asset marketplace. The visual complexity of the city environment is substantially higher than the forest, with many objects of similar appearance and strong visual clutter. Figure~\ref{fig:flysearch-environments} shows example scenes from both environments.
 
 \begin{figure}[H]
     \centering
@@ -56,9 +49,9 @@ The \emph{evaluation controller} is implemented in Python and handles the full l
         \includegraphics[width=\linewidth]{papers_src/FlySearch/figs/samples/forest3.jpg}
         \vspace{2pt}
         \begin{tabular}{@{}ccc@{}}
-            \includegraphics[width=0.31\linewidth]{papers_src/FlySearch/figs/samples/20.jpg} &
-            \includegraphics[width=0.31\linewidth]{papers_src/FlySearch/figs/samples/17.jpg} &
-            \includegraphics[width=0.31\linewidth]{papers_src/FlySearch/figs/samples/19.jpg}
+            \includegraphics[width=0.29\linewidth]{papers_src/FlySearch/figs/samples/20.jpg} &
+            \includegraphics[width=0.29\linewidth]{papers_src/FlySearch/figs/samples/17.jpg} &
+            \includegraphics[width=0.29\linewidth]{papers_src/FlySearch/figs/samples/19.jpg}
         \end{tabular}
         \caption{Forest environment.}
     \end{subfigure}
@@ -68,23 +61,23 @@ The \emph{evaluation controller} is implemented in Python and handles the full l
         \includegraphics[width=\linewidth]{papers_src/FlySearch/figs/samples/HighresScreenshot00000.jpg}
         \vspace{2pt}
         \begin{tabular}{@{}ccc@{}}
-            \includegraphics[width=0.31\linewidth]{papers_src/FlySearch/figs/samples/6.jpg} &
-            \includegraphics[width=0.31\linewidth]{papers_src/FlySearch/figs/samples/8.jpg} &
-            \includegraphics[width=0.31\linewidth]{papers_src/FlySearch/figs/samples/9.jpg}
+            \includegraphics[width=0.29\linewidth]{papers_src/FlySearch/figs/samples/6.jpg} &
+            \includegraphics[width=0.29\linewidth]{papers_src/FlySearch/figs/samples/8.jpg} &
+            \includegraphics[width=0.29\linewidth]{papers_src/FlySearch/figs/samples/9.jpg}
         \end{tabular}
         \caption{City environment.}
     \end{subfigure}
-    \caption{\textbf{Evaluation environments.} Each column shows a wide-angle environment overview (top) and a selection of top-down views of target objects from the UAV camera (bottom), illustrating the visual fidelity of the simulation and the variety of objects the agent must locate. Reproduced from~\cite{pardyl2025flysearch}.}
+    \caption[Forest and city evaluation environments]{\textbf{Evaluation environments.} Each column shows a wide-angle environment overview (top) and a selection of top-down views of target objects from the UAV camera (bottom), illustrating the visual fidelity of the simulation and the variety of objects the agent must locate. Reproduced from~\cite{pardyl2025flysearch}.}
     \label{fig:flysearch-environments}
 \end{figure}
 
-\textbf{Scenario sets.} Three standardised challenge sets are defined, each designed to stress a different aspect of exploration. These are not static datasets: the environment dynamically reacts to the agent's actions, and the same challenge set can generate new scenario instances.
+\textbf{Scenario sets.} In addition to the procedurally generated environments, three standardised challenge sets are defined, each designed to stress a different aspect of exploration. To ensure reproducibility, the scenarios in those sets are pre-generated to ensure all models are evaluated in the same conditions.
 
 \textbf{\challenge{}} contains 400 scenes across forest and city environments. The agent has at most 10 actions to find the target object. The starting altitude is between 30 and 100~m, the search area is bounded to $400\times400\times120\,\mathrm{m}$, and crucially, the target is always within the camera's field of view at the starting position (though it may be too small to identify from above). This setting tests basic perception, spatial reasoning, and short-horizon navigation. City targets include road construction works, crowds, large trash piles, fires, and vehicles of specified types and colours; forest targets include campsites, trash piles, persons, forest fires, and buildings.
 
 \textbf{\anomalychallenge{}} contains 200 scenes using the same setup as \challenge{} but with a twist: the agent must find an object that does not belong in its environment (for example, a giraffe wandering through a city or a flying saucer in a forest) without being told which specific object is out of place. The agent must first determine what constitutes an anomaly and then locate it. This tests contextual world knowledge on top of basic search capability.
 
-\textbf{\hardchallenge{}} contains 200 harder city scenes in which the starting altitude is raised to 100--125~m, dynamic lighting simulates different times of day, and, most importantly, the target object may be completely outside the initial field of view. The agent may also move beyond its current field of view at each step. This setting requires the agent to form and execute a systematic multi-step search strategy, exploring the environment methodically until the target is found.
+\textbf{\hardchallenge{}} contains 200 harder city scenes in which the starting altitude is raised to 100--125~m and dynamic lighting simulates different times of day. Most importantly, the target object may be completely outside the initial field of view. The agent may also move beyond its current field of view at each step. This setting requires the agent to form and execute a systematic multi-step search strategy, exploring the environment methodically until the target is found.
 
 \subsection{Results}
 \label{sec:flysearch-results}
@@ -96,7 +89,7 @@ The \emph{evaluation controller} is implemented in Python and handles the full l
 \begin{table}[t]
     \centering
     \begin{footnotesize}
-    \caption{\textbf{Benchmark results:} Success rates ($\pm$ standard errors) on \challenge{} and \hardchallenge{}. Gemini 2.0 Flash achieves the highest overall score on \challenge{}, while all VLMs collapse on \hardchallenge{} relative to the human baseline. The last row shows a model fine-tuned on the Forest environment (marked grey as it may benefit from distribution overlap).}
+    \caption[Benchmark results on \challenge{} and \hardchallenge{}]{\textbf{Benchmark results:} Success rates ($\pm$ standard errors) on \challenge{} and \hardchallenge{}. Gemini 2.0 Flash achieves the highest overall score on \challenge{}, while all VLMs collapse on \hardchallenge{} relative to the human baseline. The last row shows a model fine-tuned on the Forest environment (marked grey as it may benefit from distribution overlap).}
     \label{tab:flysearch-main-results}
     \begin{tabular}{lcccc}
         \toprule
@@ -127,9 +120,9 @@ The \emph{evaluation controller} is implemented in Python and handles the full l
 
 \textbf{\hardchallenge{} and the exploration gap.} The most striking result concerns \hardchallenge{}. Human participants score 60.8\% (a modest drop from their \challenge{} City score of 66.7\%), reflecting that systematic search is a natural cognitive strategy that humans execute reliably when given sufficient steps. VLMs collapse dramatically. The best-performing model on \hardchallenge{} is Claude 3.5 Sonnet at just 6.5\%, and GPT-4o and Gemini achieve 3.5\% and 6.0\% respectively. The relative gap between the best VLM and humans grows from roughly 60\% on \challenge{} to more than 800\% on \hardchallenge{}.
 
-This collapse cannot be attributed solely to the harder detection conditions. The core problem is that \hardchallenge{} requires a genuine search strategy: covering the environment systematically and tracking which areas have been visited. Human participants intuitively begin following streets, grid-scanning districts, and ascending to survey larger areas when uncertain. VLMs, by contrast, tend to move in inconsistent, locally reactive patterns: repeating previously visited regions, failing to track coverage, and being easily derailed when they lose sight of a candidate object. This behavioural gap is further exacerbated by context-length degradation: models given 20 steps instead of 10 score lower, so longer episodes actively hurt performance rather than helping.
+This collapse cannot be attributed solely to the harder detection conditions. The core problem is that \hardchallenge{} requires a genuine search strategy, covering the environment systematically and tracking which areas have been visited. Human participants intuitively begin following streets, grid-scanning districts, and ascending to survey larger areas when uncertain. VLMs, by contrast, tend to move in inconsistent, locally reactive patterns, often repeating previously visited regions, failing to track coverage, and being easily derailed when they lose sight of a candidate object. This behavioural gap is further exacerbated by context-length degradation -- models given 20 steps instead of 10 score lower, which was isolated in an ablation study.
 
-\textbf{Qualitative analysis.} Manual inspection of failure trajectories reveals consistent failure modes across all models. When a model loses sight of an object it was tracking, it often backtracks or begins hallucinating the object's presence at an incorrect location, rather than reasoning about where the object was last seen and moving towards it. Collision handling is universally poor: all models occasionally attempt to repeat an action that was rejected by the collision avoidance system, rather than navigating around the obstacle. In several recorded trajectories, Gemini 2.0 Flash abandons the task entirely after a collision, noting ``I am unable to navigate without hitting the building.'' Figure~\ref{fig:flysearch-trajectory} shows an example of a successful trajectory, illustrating the descent-and-approach strategy that works well on \challenge{} but is insufficient when the target is not visible from the starting position.
+\textbf{Qualitative analysis.} Manual inspection of failure trajectories reveals consistent failure modes across all models. When a model loses sight of an object it was tracking, it often backtracks or begins hallucinating the object's presence at an incorrect location, rather than reasoning about where the object was last seen and moving towards it. Collision handling is universally poor, with all models occasionally attempting to repeat an action that was rejected by the collision avoidance system, rather than navigating around the obstacle. In several recorded trajectories, Gemini 2.0 Flash abandons the task entirely after a collision, noting ``I am unable to navigate without hitting the building.'' Figure~\ref{fig:flysearch-trajectory} shows an example of a successful trajectory, illustrating the descent-and-approach strategy that works well on \challenge{} but is insufficient when the target is not visible from the starting position in \hardchallenge{}.
 
 \begin{figure}[H]
 \begin{center}
@@ -145,7 +138,7 @@ Step 1 & Step 2 & Step 3 \\[2pt]
 \end{tabular}
 \end{small}
 \end{center}
-\caption{\textbf{Example successful trajectory on \challenge{}.} GPT-4o navigates to a red sports car by first descending (step 1) and then adjusting laterally (step 2) before claiming success. Note the coordinate grid overlay on the camera images, which helps the model estimate distances. Reproduced from~\cite{pardyl2025flysearch}.}
+\caption[Example successful trajectory on \challenge{}]{\textbf{Example successful trajectory on \challenge{}.} GPT-4o navigates to a red sports car by first descending (step 1) and then adjusting laterally (step 2) before claiming success. Note the coordinate grid overlay on the camera images, which helps the model estimate distances. Reproduced from~\cite{pardyl2025flysearch}.}
 \label{fig:flysearch-trajectory}
 \end{figure}
 
@@ -154,7 +147,7 @@ Step 1 & Step 2 & Step 3 \\[2pt]
 \begin{table}[t]
     \centering
     \begin{footnotesize}
-    \caption{\textbf{\anomalychallenge{} results:} Success rates ($\pm$ standard errors) of the evaluated models. Scores are substantially lower than on \challenge{}, reflecting the additional challenge of identifying which object is out of place.}
+    \caption[Benchmark results on \anomalychallenge{}]{\textbf{\anomalychallenge{} results:} Success rates ($\pm$ standard errors) of the evaluated models. Scores are substantially lower than on \challenge{}, reflecting the additional challenge of identifying which object is out of place.}
     \label{tab:flysearch-anomaly}
     \begin{tabular}{lc}
         \toprule
@@ -177,38 +170,11 @@ Step 1 & Step 2 & Step 3 \\[2pt]
     \end{footnotesize}
 \end{table}
 
-\textbf{Object-class analysis.} Breaking down \challenge{} results by target object category reveals that success rates vary substantially with object size and visual distinctiveness. Large, visually salient objects such as buildings in the forest and crowds in the city are significantly easier to locate, with the top proprietary models succeeding on 50--70\% of building and crowd scenarios. Objects that require fine-grained visual discrimination, such as single persons lying on the ground in the forest or individual garbage piles in a cluttered city, prove substantially harder, with success rates dropping below 25\% even for the best models. Notably, even the easiest class (buildings) poses a roughly 30\% miss rate for the best-performing Claude 3.5 Sonnet, illustrating that even the most favourable scenarios are far from solved. The full per-class breakdown, presented as a polar plot in the published paper~\cite{pardyl2025flysearch}, reveals that the ranking of object difficulty is largely consistent across proprietary models, suggesting that the challenges reflect properties of the task rather than idiosyncrasies of individual architectures.
-
 \textbf{Fine-tuning analysis.} To investigate whether fine-tuning can close the gap, Qwen2.5-VL-7B is fine-tuned using the GRPO algorithm~\cite{shao2024deepseekmath} on a set of 67,500 synthetically generated training examples derived from flight trajectories in the Forest environment. The reward function incentivises the model to move closer to the target at each step, produce explicit reasoning, and correctly issue \texttt{FOUND} when the target is in view. Training is conducted in offline, step-wise mode using LoRA~\cite{hu2022lora} on four H100 GPUs.
 
 The resulting fine-tuned model is evaluated on both the Forest environment it was trained on (achieving 57.0\% on \challenge{} Forest) and the held-out City environment (achieving 27.0\% on \challenge{} City). The transfer to City is notable: the base model scored only 1.5\%, so the improvement shows that fine-tuning taught transferable spatial reasoning skills rather than memorising environment-specific features. However, on \hardchallenge{}, the fine-tuned model scores 0.0\%, identical to the base model. The fine-tuning addresses surface-level failures (instruction format adherence, short-horizon spatial manoeuvring) but does not instil the systematic multi-step coverage strategy that \hardchallenge{} requires, suggesting that the exploration gap is a deeper limitation of current models rather than an artefact of missing task-specific training.
 
-\textbf{Ablations.} Table~\ref{tab:flysearch-ablations} summarises the ablation studies, conducted with Gemini 2.0 Flash and Pixtral-Large. Replacing the default Cartesian $(X, Y, Z)$ action format with compass-direction commands (north/south/east/west/up/down plus a distance) substantially degrades performance: Gemini's success rate drops from 42.5\% to 17.5\% in the forest and from 41.5\% to 17.5\% in the city, while Pixtral declines in the forest (38.0\% to 22.0\%) with little change in the city. Compass-style commands restrict fine-grained movement control, indicating that a flexible, continuous action space matters for effective search. Removing the coordinate grid overlay from the camera images also causes a significant performance drop, particularly in the city environment, where spatial reference points are more important for distinguishing similar-looking regions. Finally, episode length has a non-monotonic effect: reducing the limit from 10 to 5 steps predictably lowers performance, but increasing it to 20 steps also hurts, consistent with the long-context degradation observed on \hardchallenge{}.
-
-\begin{table}[t]
-    \centering
-    \scriptsize
-    \caption{\textbf{Ablation results.} Changing the action format to compass-style directions or removing the coordinate grid overlay substantially degrades performance. Longer episodes do not help and can hurt, reflecting VLMs' difficulty with long multi-image contexts.}
-    \label{tab:flysearch-ablations}
-    \begin{tabular}{llcccc}
-        \toprule
-        & \textbf{Setting} & \multicolumn{2}{c}{\textbf{City}} & \multicolumn{2}{c}{\textbf{Forest}} \\
-        \cmidrule(lr){3-4} \cmidrule(lr){5-6}
-        && \textbf{Gemini} & \textbf{Pixtral} & \textbf{Gemini} & \textbf{Pixtral} \\
-        \midrule
-        \multirow{5}{*}{\challenge{}}
-            & 5 steps limit & $34.5\%$ & $15.5\%$ & $41.5\%$ & $33.5\%$ \\
-            & \textbf{10 steps (baseline)} & $\mathbf{41.5\%}$ & $\mathbf{21.5\%}$ & $42.5\%$ & $\mathbf{38.0\%}$ \\
-            & 20 steps limit & $33.5\%$ & $13.5\%$ & $\mathbf{45.5\%}$ & $36.0\%$ \\
-            & Compass actions & $17.5\%$ & $21.0\%$ & $17.5\%$ & $22.0\%$ \\
-            & No grid overlay & $17.0\%$ & $15.5\%$ & $31.5\%$ & $20.0\%$ \\
-        \midrule
-        \multirow{2}{*}{\anomalychallenge{}}
-            & \textbf{Implicit anomaly (baseline)} & $25.0\%$ & $4.0\%$ & $46.0\%$ & $26.0\%$ \\
-            & Explicit object type & $\mathbf{34.0\%}$ & $\mathbf{7.0\%}$ & $\mathbf{59.0\%}$ & $\mathbf{34.0\%}$ \\
-        \bottomrule
-    \end{tabular}
-\end{table}
+Additional experimental results are provided in the paper~\cite{pardyl2025flysearch}.
 
 \subsection{Contributions}
 \label{sec:contributions-flysearch}
@@ -222,4 +188,7 @@ The publication ``FlySearch: Exploring how vision-language models explore''~\cit
     \item It demonstrates through GRPO fine-tuning that surface-level failures (instruction following, spatial grounding) are correctable with synthetic data, but that the deeper inability to form and execute multi-step exploration strategies persists after fine-tuning, identifying this as an open problem for current VLMs.
 \end{itemize}
 
-{\color{red}\textbf{TODO:} describe the author's individual contributions to this publication as its main author (conception and design of the benchmark, simulator and controller implementation, experimental design, analysis, and writing).}
+FlySearch does not resolve open-world exploration so much as define it more precisely. By characterising where current models fail and under what conditions the gap to human performance is largest, it establishes a concrete set of open problems and a reproducible benchmark against which future progress can be measured.
+
+I was the primary author of this paper, and contributed to the conception of the idea, as well as the majority of the experimental design and implementation of the simulator. Furthermore, I conducted most of the experiments presented in the paper. I have presented this research at the Thirty-Ninth Conference on Neural Information Processing Systems (NeurIPS 2025), held in San Diego, USA. The code, data and further visualisations are available on the project website at \url{https://flysearch.gmum.net/}.
+

@@ -59,7 +59,7 @@ AdaGlimpse consists of two interacting components: a vision transformer backbone
 \textbf{Reconstruction.} Table~\ref{tab:adaglimpse-reconstruction} compares AdaGlimpse with AME~\cite{pardyl2023active}, AttSeg~\cite{seifi2020segment}, GlAtEx~\cite{seifi2021glimpse}, and SimGlim~\cite{Jha2023WACV} on image reconstruction (RMSE, lower is better) across four datasets (ImageNet-1k, SUN360~\cite{xiao2012recognizing}, ADE20K~\cite{zhou2017scene}, and MS COCO~\cite{lin2014microsoft}) at three pixel budgets. A notable property of AdaGlimpse is that it is trained on ImageNet-1k only; the SUN360, ADE20K, and COCO results represent zero-shot transfer without any per-dataset fine-tuning.
 
 \begin{table}[H]
-\caption[\textbf{Reconstruction results (RMSE, lower is better)} across datasets and pixel budgets]{\textbf{Reconstruction results.} RMSE (lower is better) for AdaGlimpse against baselines across four datasets at three pixel budgets. Pixel~\% denotes the fraction of scene pixels seen by the model. $\dag$: reproduced result not published in the relevant paper. *: zero-shot performance (trained on ImageNet-1k only). AdaGlimpse outperforms all baselines at every pixel budget. Adapted from~\cite{pardyl2024adaglimpse}.}
+\caption[Reconstruction results across datasets and pixel budgets]{\textbf{Reconstruction results.} RMSE (lower is better) for AdaGlimpse against baselines across four datasets at three pixel budgets. Pixel~\% denotes the fraction of scene pixels seen by the model. $\dag$: reproduced result not published in the relevant paper. *: zero-shot performance (trained on ImageNet-1k only). AdaGlimpse outperforms all baselines at every pixel budget. Adapted from~\cite{pardyl2024adaglimpse}.}
 \label{tab:adaglimpse-reconstruction}
 \begin{center}
 \begin{small}
@@ -90,7 +90,7 @@ At the $\approx$6\% pixel budget, AdaGlimpse achieves a lower RMSE (17.6--21.5 a
 \textbf{Classification.} Table~\ref{tab:adaglimpse-classification} shows classification results on ImageNet-1k against a broad set of baselines including methods that take a low-resolution overview plus fixed-scale glimpses (DRAM~\cite{ba2015multiple}, GFNet~\cite{wang2020glance}, Saccader~\cite{elsayed2019saccader}, TNet~\cite{papadopoulos2021hard}, STN~\cite{recasens2018learning}, and PatchDrop~\cite{uzkent2020learning}) and the state-of-the-art grid-based method STAM~\cite{rangrej2022consistency}.
 
 \begin{table}[H]
-\caption[\textbf{Classification results} on ImageNet-1k]{\textbf{Classification results.} Top-1 accuracy on ImageNet-1k. AdaGlimpse achieves the best accuracy at the same pixel budget as STAM (28.57\%), and with early stopping at 85\% confidence, reaches STAM-level accuracy using $\sim$40\% fewer pixels. Adapted from~\cite{pardyl2024adaglimpse}.}
+\caption[Classification results on ImageNet-1k]{\textbf{Classification results.} Top-1 accuracy on ImageNet-1k. AdaGlimpse achieves the best accuracy at the same pixel budget as STAM (28.57\%), and with early stopping at 85\% confidence, reaches STAM-level accuracy using $\sim$40\% fewer pixels. Adapted from~\cite{pardyl2024adaglimpse}.}
 \label{tab:adaglimpse-classification}
 \begin{center}
 \begin{small}
