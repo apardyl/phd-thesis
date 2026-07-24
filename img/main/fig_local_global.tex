@@ -1,0 +1,46 @@
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+  imgnode/.style={inner sep=0pt, draw=black!35, line width=1.0pt},
+  titletext/.style={font=\Large\bfseries},
+  captiontext/.style={font=\small\itshape, align=center, text width=6.0cm},
+  actionarr/.style={-{Latex[length=2mm,width=1.4mm]}, very thick, orange},
+  actionlabel/.style={font=\scriptsize, orange},
+]
+
+% ---------- left: local scale (PTZ camera) ----------
+\node[imgnode] (ptz) {\includegraphics[width=6.6cm]{img/main/three/renders/ptz_scene.png}};
+
+% pan: curved horizontal double-arrow above the camera head
+\draw[actionarr, <->] ($(ptz.center)+(-0.85,1.15)$) to[bend left=35] node[actionlabel, above, yshift=1pt] {pan} ($(ptz.center)+(0.75,1.15)$);
+% tilt: curved vertical double-arrow beside the camera head
+\draw[actionarr, <->] ($(ptz.center)+(0.55,1.7)$) to[bend left=35] node[actionlabel, right] {tilt} ($(ptz.center)+(0.55,0.55)$);
+% zoom: short in/out arrows along the actual lens direction (upper-left,
+% matching where the dark lens cap points in the render)
+\draw[actionarr] ($(ptz.center)+(-0.4,0.2)$) -- node[actionlabel, below, sloped] {zoom} ($(ptz.center)+(-1.45,0.55)$);
+\draw[actionarr] ($(ptz.center)+(-1.45,0.55)$) -- ($(ptz.center)+(-0.4,0.2)$);
+
+\node[titletext, above=1.0cm of ptz] (lefttitle) {Local scale exploration};
+\node[captiontext, below=0.15cm of lefttitle] (leftsubtitle) {where to look};
+\node[captiontext, below=0.35cm of ptz] (leftcap) {fixed position, redirects gaze};
+
+% ---------- right: global scale (UAV) ----------
+\node[imgnode, right=2.6cm of ptz] (uav) {\includegraphics[width=6.6cm]{img/main/three/renders/uav_scene.png}};
+
+% Three-axis gizmo in the open ground beneath the UAV, rather than crossing
+% through its body/propellers, so the model itself stays fully visible.
+% z: vertical (altitude); x/y: the two ground-plane axes, splayed left/right
+% of horizontal so all three are visually distinct.
+\draw[actionarr, <->] ($(uav.center)+(0.62,-0.45)$) -- node[actionlabel, left, pos=0.05] {z} ($(uav.center)+(0.62,-1.45)$);
+\draw[actionarr, <->] ($(uav.center)+(-0.23,-0.64)$) -- node[actionlabel, below right, pos=1] {y} ($(uav.center)+(1.47,-1.26)$);
+\draw[actionarr, <->] ($(uav.center)+(-0.23,-1.26)$) -- node[actionlabel, above right, pos=1] {x} ($(uav.center)+(1.47,-0.64)$);
+
+\node[titletext, above=1.0cm of uav] (righttitle) {Global scale exploration};
+\node[captiontext, below=0.15cm of righttitle] (rightsubtitle) {where to move};
+\node[captiontext, below=0.35cm of uav] (rightcap) {physically relocates through 3D space};
+
+% ---------- divider ----------
+\node[fill=black!45, inner sep=0pt, minimum width=0.4pt, minimum height=8.6cm, anchor=north,
+      right=1.3cm of ptz.east, yshift=0.55cm] {};
+
+\end{tikzpicture}%
+}

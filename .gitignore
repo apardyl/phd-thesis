@@ -57,3 +57,7 @@ __pycache__/
 .venv/
 venv/
 papers/*.md
+
+# Node tooling (Three.js render pipeline for figures)
+img/main/three/node_modules/
+img/main/three/package-lock.json

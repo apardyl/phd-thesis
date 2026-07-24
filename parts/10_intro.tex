@@ -39,11 +39,18 @@ An eagle circling above a meadow searching for prey, a person looking for a fami
 never perceives its surroundings all at once and in perfect detail. Instead, it is limited by its perceptual capabilities and environmental constraints. Furthermore,
 the environment is not static, but changes constantly, making it impossible to map and analyse it in its entirety.
 Therefore, the agent must be able to reason based on partial information, while actively pointing its senses where they matter to gather more data as needed.
-The perception process is not a passive act of reception, but rather an active, goal-driven process of exploration~\cite{bajcsy1988active,aloimonos1988active,ballard1991animate}.
-Human studies have shown that this exploration process happens on both a local and a global scale. 
+The perception process is not a passive act of reception, but rather an active, goal-driven process of exploration~\cite{bajcsy1988active,aloimonos1988active,ballard1991animate}, illustrated in Figure~\ref{fig:passive-active}.
+Human studies have shown that this exploration process happens on both a local and a global scale.
 On the local scale, we are experts at scanning our surroundings with our eyes, moving our gaze in a task-driven manner~\cite{yarbus1967eye,hayhoe2005eye}.
 On the global scale, we excel at exploring our environment by moving our body to different locations, navigating through complex scenes and avoiding obstacles without much effort~\cite{fajen2003behavioral}.
 The main motivation of this thesis is to enable machines to do the same: to \emph{learn to actively explore} their environment efficiently, perceiving only what they need in order to act on their goals.
+
+\begin{figure}[t]
+\centering
+\input{img/main/fig_passive_active.tex}
+\caption[Passive perception versus active embodied vision]{\textbf{Passive perception versus active embodied vision.} A passive perception system is handed a complete, static view of the scene to produce a prediction. An active embodied agent instead senses only a narrow window onto a scene it is surrounded by, and closes the loop by acting, choosing where to move and where to look.}
+\label{fig:passive-active}
+\end{figure}
 
 The gap between this goal and the current state of machine learning and computer vision remains far from closed. Modern models achieve remarkable
 accuracy in passive perception tasks~\cite{krizhevsky2012imagenet,dosovitskiy2021image,achiam2023gpt},
@@ -115,6 +122,13 @@ classify, or segment a scene \cite{seifi2021glimpse}. These threads share a comm
 
 \subsection{Why general exploration is still unsolved}
 
+\begin{figure}[t]
+    \centering
+    \input{img/main/fig_local_global.tex}
+    \caption[The two scales of active exploration]{\textbf{The two scales of active exploration.} At the local scale, a sationary agent (e.g. a pan-tilt-zoom camera, or robot's head) remains at a fixed position and redirects its gaze towards different regions of the surrounding scene. At the global scale, a mobile agent (e.g. a robot or a UAV) relocates itself through three-dimensional space.}
+    \label{fig:local-global}
+\end{figure}
+
 Despite this long history of research and recent rapid progress, the problem of exploration in the general case remains far from solved.
 The difficulty is easy to underestimate because existing methods achieve strong performance within simplified settings.
 For example, some active-vision methods operate in small search spaces, where even a random strategy can achieve strong performance~\cite{seifi2021glimpse}.
@@ -135,7 +149,7 @@ Finally, it is not clear whether methods designed for simplified simulation envi
 The central thesis of this dissertation is that \emph{active visual exploration} (AVE) should be treated as a learning problem in its own right.
 Doing so yields agents which, first of all, are \emph{efficient}, in the sense of understanding an environment from as few observations as possible.
 Second, they are \emph{flexible}, in the sense of exploiting the true continuous capabilities of real sensors rather than artificial grids.
-Finally, they are \emph{scalable} toward the demands of real embodied agents operating in the open world, spanning both the local scale of choosing where to look and the global scale of choosing where to move.
+Finally, they are \emph{scalable} toward the demands of real embodied agents operating in the open world, spanning both the local scale of choosing where to look and the global scale of choosing where to move, contrasted in Figure~\ref{fig:local-global}.
 The four publications that make up this thesis form a deliberate progression along this path, each dismantling a limitation left standing by the previous one.
 
 The first contribution, ``Active Visual Exploration Based on Attention-Map Entropy''~\cite{pardyl2023active}, asks how an agent should decide where to look
@@ -168,10 +182,16 @@ mapping out these failure modes, FlySearch both charts the frontier of the
 problem and motivates further research in this field.
 
 Taken together, these works trace an arc from deciding where to look within a single reachable
-scene, through freeing the model from rigid sampling and matching real sensor geometry, to deciding
-where to move through an open, three-dimensional world. They constitute concrete steps toward the
+scene, through freeing the model from rigid sampling and matching real sensor geometry, to deciding where to move through an open, three-dimensional world. They constitute concrete steps toward the
 goal that gives this thesis its title: learning to explore, at both the local scale of gaze and
-the global scale of locomotion, on the way to efficient embodied vision.
+the global scale of locomotion, on the way to efficient embodied vision. Figure~\ref{fig:contributions} summarises this progression.
+
+\begin{figure}[t]
+\centering
+\input{img/main/fig_contributions.tex}
+\caption[The four contributions of this thesis]{\textbf{The four contributions of this thesis as a progression.} The first three papers generalise local-scale exploration, deciding where to look within a scene the agent can already sense, from a fixed grid (AME), to elastic patch geometry (Beyond Grids), to arbitrary continuous zoom and pan (AdaGlimpse). The fourth, FlySearch, turns to the complementary global-scale problem of deciding where to move through an open, three-dimensional world.}
+\label{fig:contributions}
+\end{figure}
 
 \section{Thesis outline}
 
