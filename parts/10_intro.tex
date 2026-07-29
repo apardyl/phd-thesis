@@ -69,8 +69,7 @@ Computer vision is almost as old as computing itself, with the first works on ma
 epitomised by the so-called ``blocks world'' of simple polyhedral scenes. First attempts to apply machine vision to real-world robotics problems followed
 soon after, with the SRI Shakey project~\cite{nilsson1984shakey}, developed already in the late 1960s and early 1970s, and, roughly a decade later, with
 Moravec's stereo-vision-guided Stanford Cart~\cite{moravec1980obstacle}. These early systems were built on hand-crafted geometry and operated in carefully prepared evaluation environments.
-Their brittleness outside such controlled settings exposed how hard vision really is. Marr's influential computational theory of vision
-\cite{marr1982vision} reframed the problem as one of recovering explicit representations of the world through successive stages of processing, and set an
+Their brittleness outside such controlled settings exposed how hard vision really is. Marr's influential computational theory of vision~\cite{marr1982vision} reframed the problem as one of recovering explicit representations of the world through successive stages of processing, and set an
 agenda that would occupy the field for decades.
 
 For the next two decades, progress was incremental at best and heavily reliant on hand-crafted feature representations.
@@ -107,7 +106,7 @@ processes everything indiscriminately. For active perception to work we need to 
 The idea that perception systems should be active has been around since the early days of embodied computer vision.
 The active perception~\cite{bajcsy1988active}, active vision~\cite{aloimonos1988active}, and animate vision~\cite{ballard1991animate} proponents argued decades ago that a perceiver
 which controls its own sensing can turn otherwise ill-posed problems into tractable ones, and this perspective has been revisited in the modern learning
-era \cite{bajcsy2018revisiting}. The inspiration is deeply biological. Human vision is highly foveated, concentrating acuity at the centre of gaze. Therefore we
+era~\cite{bajcsy2018revisiting}. The inspiration is deeply biological. Human vision is highly foveated, concentrating acuity at the centre of gaze. Therefore we
 explore scenes through rapid saccadic eye movements that direct this fovea to informative regions~\cite{yarbus1967eye,hayhoe2005eye}.
 
 Machine learning approaches to active vision followed the broader deep learning progress.
@@ -118,14 +117,14 @@ localisation and mapping (SLAM)~\cite{cadena2016past}, where an agent must build
 More recently, the task of embodied visual exploration~\cite{ramakrishnan2021exploration} studied how an agent should build an internal model of an unfamiliar space to support downstream tasks such as reconstruction, localisation, and navigation.
  Another recent line of work on active visual exploration specifically studies how a model equipped with a
 limited field of view should select successive glimpses to reconstruct,
-classify, or segment a scene \cite{seifi2021glimpse}. These threads share a common conviction: that intelligent sensing is a decision problem.
+classify, or segment a scene~\cite{seifi2021glimpse}. These threads share a common conviction: that intelligent sensing is a decision problem.
 
 \subsection{Why general exploration is still unsolved}
 
 \begin{figure}[t]
     \centering
     \input{img/main/fig_local_global.tex}
-    \caption[The two scales of active exploration]{\textbf{The two scales of active exploration.} At the local scale, a sationary agent (e.g. a pan-tilt-zoom camera, or robot's head) remains at a fixed position and redirects its gaze towards different regions of the surrounding scene. At the global scale, a mobile agent (e.g. a robot or a UAV) relocates itself through three-dimensional space.}
+    \caption[The two scales of active exploration]{\textbf{The two scales of active exploration.} At the local scale, a stationary agent (e.g. a pan-tilt-zoom camera, or robot's head) remains at a fixed position and redirects its gaze towards different regions of the surrounding scene. At the global scale, a mobile agent (e.g. a robot or a UAV) relocates itself through three-dimensional space.}
     \label{fig:local-global}
 \end{figure}
 

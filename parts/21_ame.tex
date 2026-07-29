@@ -59,7 +59,7 @@ Since transformers compute multiple attention maps in parallel (multi-head atten
     H_t[i] = \sum_h H\!\left(A_{h,t}[i]\right),
     \label{eq:ame-entropy-map}
 \end{equation}
-where $A_{h,t}[i]$ is the $i$-th row of head $h$'s attention matrix at step $t$, and $H(\cdot)$ is the Shannon entropy of Equation~\ref{eq:shannon-entropy}. Entries corresponding to already-known patches are set to zero so that they are never re-selected, and the next glimpse is placed following a gready selection strategy, i.e. at the position of maximal remaining entropy,
+where $A_{h,t}[i]$ is the $i$-th row of head $h$'s attention matrix at step $t$, and $H(\cdot)$ is the Shannon entropy of Equation~\ref{eq:shannon-entropy}. Entries corresponding to already-known patches are set to zero so that they are never re-selected, and the next glimpse is placed following a greedy selection strategy, i.e. at the position of maximal remaining entropy,
 \begin{equation}
     i^* = \operatorname*{arg\,max}_i H_t[i].
     \label{eq:ame-argmax}
@@ -197,4 +197,4 @@ The publication summarised in this chapter makes the following contributions to 
     \item It provides, to the best of the authors' knowledge, the first published empirical evaluation coupling transformer-based active visual exploration with retina-like glimpses, mimicking a foveated sensor.
 \end{itemize}
 
-I was the primary author of this paper, and contributed to the conception of the idea, as well as majority of the experimental design and implementation. Furthemore, I conducted more than half of the experiments presented in the paper. I have presented this research at the  International Joint Conferences on Artificial Intelligence 2023 held in Macau. The code, data and futher visualisations are available on my website at \url{https://io.pardyl.com/AME/}.
+I was the primary author of this paper, and contributed to the conception of the idea, as well as majority of the experimental design and implementation. Furthermore, I conducted more than half of the experiments presented in the paper. I have presented this research at the International Joint Conferences on Artificial Intelligence 2023 held in Macau. The code, data and further visualisations are available on my website at \url{https://io.pardyl.com/AME/}.
