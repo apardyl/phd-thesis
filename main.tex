@@ -19,6 +19,11 @@
 \usepackage{xurl} % allow long URLs in the bibliography to break across lines
 \usepackage[numbers]{natbib}
 \usepackage{bibentry}
+% \bibentry re-typesets a bibliography entry, which also re-creates that entry's
+% hyperref destination (cite.<key>). The duplicate is ignored by the PDF backend,
+% so \cite links would point at the first copy (the publication list or Chapter 5)
+% instead of the bibliography. \bibentrynl suppresses the inner anchor.
+\newcommand{\bibentrynl}[1]{\NoHyper\bibentry{#1}\endNoHyper}
 \usepackage[final]{pdfpages}
 \let\CheckCommand\providecommand
 \usepackage{microtype}
@@ -50,6 +55,7 @@
 \pagenumbering{roman}
 
 \input{parts/00_title}
+\setcounter{page}{2} % the titlepage environment resets the counter; count it as page i
 \input{parts/01_dedication}
 \input{parts/02_abstract_pl}
 \input{parts/03_abstract_en}
@@ -91,10 +97,10 @@
 This chapter contains the publications described in the main thesis text, including all written appendices. Any additional supplementary materials (such as interactive content) are provided via links in the corresponding sections of the publications.
 
 \begin{enumerate}
-    \item \hyperref[paper:ave]{\bibentry{pardyl2023active}}
-    \item \hyperref[paper:beyond]{\bibentry{pardyl2023grids}}
-    \item \hyperref[paper:adaglimpse]{\bibentry{pardyl2024adaglimpse}}
-    \item \hyperref[paper:flysearch]{\bibentry{pardyl2025flysearch}}
+    \item \hyperref[paper:ave]{\bibentrynl{pardyl2023active}}
+    \item \hyperref[paper:beyond]{\bibentrynl{pardyl2023grids}}
+    \item \hyperref[paper:adaglimpse]{\bibentrynl{pardyl2024adaglimpse}}
+    \item \hyperref[paper:flysearch]{\bibentrynl{pardyl2025flysearch}}
 \end{enumerate}
 
 \includepdf[pages=-,addtotoc={1,section,2,Active Visual Exploration Based on Attention-Map Entropy,paper:ave}]{papers/ave_comp.pdf}
