@@ -9,16 +9,7 @@ As described in Section~\ref{sec:prelim-pos-enc}, a standard ViT relies on learn
 \subsection{Formalising input elasticity}
 \label{sec:beyond-elasticity}
 
-The publication introduces the concept of \emph{input elasticity} as resilience to particular
-forms of input data configurations that can occur in real-life applications. Three distinct types of elasticity are defined, each corresponding to a perturbation commonly encountered in embodied AI applications and illustrated in Figure~\ref{fig:beyond-perturbations}.
-
-\textbf{Scale elasticity} measures resilience when individual patches are sampled at a scale different from the native $16\times16$ pixel resolution. Each patch $p = (x, y, s)$ is characterised by the pixel coordinates of its top-left corner $(x, y)$ and a relative scale $s$. The patch covers a $16s \times 16s$ pixel region in the original image, which is then resampled to the standard $16\times16$ input size. A scale of $s = 2$ means the patch covers four times the usual area at half the resolution, $s = 0.5$ covers one quarter the area at twice the resolution, potentially leaving uncovered gaps between adjacent patches. This corresponds to the zoom ability of a camera.
-
-\textbf{Positional elasticity} (also called \emph{patch shake}) measures resilience when patch positions are displaced from the regular grid. The coordinates $(x, y)$ of each patch are independently perturbed by an offset drawn uniformly from $[-r \cdot q,\, r \cdot q]$, where $r$ is the patch size and $q$ is the shake magnitude as a fraction of the patch size. This simulates the non-grid-aligned sampling that arises whenever an image is captured at a position that does not correspond exactly to a discrete training configuration, e.g. due to imperfect camera alignment or agent drift in real space.
-
-\textbf{Missing-data elasticity} measures resilience when a fraction $d$ of patches are simply removed from the input, leaving the corresponding image regions unobserved. This is the most directly relevant perturbation for active visual exploration, where an agent has only observed a subset of the scene, or has lost parts of it due to, e.g., occlusion or communication failure.
-
-\begin{figure}[t]
+\begin{figure}[th]
     \centering
     \begin{small}
     \begin{tabular}{r@{\hspace{6pt}}c@{\hspace{4pt}}c@{\hspace{4pt}}c@{\hspace{4pt}}c}
@@ -43,6 +34,15 @@ forms of input data configurations that can occur in real-life applications. Thr
     \label{fig:beyond-perturbations}
 \end{figure}
 
+The publication introduces the concept of \emph{input elasticity} as resilience to particular
+forms of input data configurations that can occur in real-life applications. Three distinct types of elasticity are defined, each corresponding to a perturbation commonly encountered in embodied AI applications and illustrated in Figure~\ref{fig:beyond-perturbations}.
+
+\textbf{Scale elasticity} measures resilience when individual patches are sampled at a scale different from the native $16\times16$ pixel resolution. Each patch $p = (x, y, s)$ is characterised by the pixel coordinates of its top-left corner $(x, y)$ and a relative scale $s$. The patch covers a $16s \times 16s$ pixel region in the original image, which is then resampled to the standard $16\times16$ input size. A scale of $s = 2$ means the patch covers four times the usual area at half the resolution, $s = 0.5$ covers one quarter the area at twice the resolution, potentially leaving uncovered gaps between adjacent patches. This corresponds to the zoom ability of a camera.
+
+\textbf{Positional elasticity} (also called \emph{patch shake}) measures resilience when patch positions are displaced from the regular grid. The coordinates $(x, y)$ of each patch are independently perturbed by an offset drawn uniformly from $[-r \cdot q,\, r \cdot q]$, where $r$ is the patch size and $q$ is the shake magnitude as a fraction of the patch size. This simulates the non-grid-aligned sampling that arises whenever an image is captured at a position that does not correspond exactly to a discrete training configuration, e.g. due to imperfect camera alignment or agent drift in real space.
+
+\textbf{Missing-data elasticity} measures resilience when a fraction $d$ of patches are simply removed from the input, leaving the corresponding image regions unobserved. This is the most directly relevant perturbation for active visual exploration, where an agent has only observed a subset of the scene, or has lost parts of it due to, e.g., occlusion or communication failure.
+
 The three perturbations are composed into a pipeline. For image $I$, an initial patch set $P$ (standard grid, $s=1$, no displacement) is processed by
 \begin{equation}
     P' = \mathcal{E}_{\mathrm{miss}(d)} \circ \mathcal{E}_{\mathrm{pos}(q)} \circ \mathcal{E}_{\mathrm{scale}(s_1, s_2)}(P),
@@ -52,6 +52,13 @@ where $\mathcal{E}_{\mathrm{scale}(s_1,s_2)}$ samples each patch's scale indepen
 
 \subsection{ElasticViT}
 \label{sec:beyond-elasticvit}
+
+\begin{figure}[th]
+    \centering
+    \includegraphics[width=.75\linewidth]{papers_src/BeyondGrids/figures/patchmix/patchmix.png}
+    \caption[PatchMix augmentation compared to CutMix and TokenMix]{\textbf{PatchMix.} Unlike CutMix, which replaces a rectangular region of one image with another, PatchMix operates on individually sampled patches and mixes them at the token level. Unlike TokenMix, it does not assume grid-aligned patches, making it compatible with elastic sampling. Reproduced from~\cite{pardyl2023grids}.}
+    \label{fig:patchmix}
+\end{figure}
 
 The modifications proposed in this publication to increase input elasticity are two-fold: a new continuous positional encoding that can represent patches at any position and scale, and a change to the training augmentation regime.
 
@@ -65,13 +72,6 @@ where $\mathrm{pe}(\cdot)$ is the 1D sine-cosine encoding and $\|$ denotes vecto
 \textbf{Elastic training augmentations.} The baseline training regime follows DeiT~III~\cite{touvron2022deitiii}. To this, the publication adds the elasticity functions as augmentations during training. Patch scales are drawn uniformly from $[1, 3]$, i.e.\ each patch covers a random region of between $16\times16$ and $48\times48$ pixels, resampled to the $16\times16$ token size, and patch positions are randomly displaced with no upper bound on the shift magnitude. This forces the model to generalise across a wide distribution of patch configurations, rather than overfitting to the regular grid it would otherwise always see.
 
 \textbf{PatchMix augmentation.} The standard CutMix augmentation, which mixes two images by replacing a rectangular region of one image with the corresponding region from another, is incompatible with variable-scale patch sampling. The mixing ratios used to blend the class labels assume a fixed spatial layout that no longer holds when patches can overlap or leave gaps. The publication introduces PatchMix, an alternative that performs mixing at the level of individual \emph{patches after sampling}. Patches from two images are randomly interleaved in the token sequence, and the label blending ratio is computed from the actual proportion of patches drawn from each image. Unlike the previously proposed TokenMix~\cite{liu2022tokenmix}, PatchMix does not assume grid-aligned sampling and is therefore fully compatible with the elastic augmentation regime (see Figure~\ref{fig:patchmix}).
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=.75\linewidth]{papers_src/BeyondGrids/figures/patchmix/patchmix.png}
-    \caption[PatchMix augmentation compared to CutMix and TokenMix]{\textbf{PatchMix.} Unlike CutMix, which replaces a rectangular region of one image with another, PatchMix operates on individually sampled patches and mixes them at the token level. Unlike TokenMix, it does not assume grid-aligned patches, making it compatible with elastic sampling. Reproduced from~\cite{pardyl2023grids}.}
-    \label{fig:patchmix}
-\end{figure}
 
 \subsection{Experimental results}
 \label{sec:beyond-results}

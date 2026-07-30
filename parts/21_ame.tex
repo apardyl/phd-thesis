@@ -1,10 +1,7 @@
 \section{Active Visual Exploration Based on Attention-Map Entropy}
 \label{sec:ame}
 
-\subsection{Motivation}
-\label{sec:motivation-ame}
-
-\begin{figure}[t]
+\begin{figure}[th]
     \centering
     \begin{minipage}{0.6\linewidth}
         \centering
@@ -23,20 +20,23 @@
     \label{fig:ame-teaser}
 \end{figure}
 
+\subsection{Motivation}
+\label{sec:motivation-ame}
+
 As established in Section~\ref{sec:uncertainty-scope}, prior work on glimpse-based active exploration relies on a dedicated network component, trained separately from and in parallel to the target task, to decide where to look next. This \emph{dual-objective} design has a tangible cost -- it increases the number of network components, raises the memory footprint, and complicates training, since two training objectives (one for the perceptual task, one for exploration) may pull in opposite directions.
 
 The key hypothesis driving this work is that such a dedicated decision mechanism may not be necessary at all in this setting. A transformer-based masked autoencoder processing a partial view of a scene already produces a rich description of what it is uncertain about as the entropy of its self-attention maps. The question this publication asks is whether that signal alone is sufficient to drive effective glimpse selection, and whether eliminating the second objective actually improves rather than harms performance (see Figure~\ref{fig:ame-teaser}).
 
 \subsection{Attention Map Entropy}
 
-The proposed method, named \emph{Attention-Map Entropy (AME)}, builds upon a masked autoencoder (Section~\ref{sec:prelim-vit-mae}) with a ViT-L encoder (24 transformer blocks, embedding size 1024) and a lightweight 8-block decoder (embedding size 512). At every step $t$, the encoder processes the $t$ glimpses observed so far, and the decoder combines their latent representations with mask tokens standing in for the unobserved patches, producing an output for the target task. Figure~\ref{fig:ame-architecture} illustrates this process for the reconstruction task. For other tasks, the architecture is similar, with the exception of the output head.
-
-\begin{figure}[t]
+\begin{figure}[th]
     \centering
     \includegraphics[width=\linewidth]{papers_src/AME/architecture.png}
     \caption[AME architecture for the reconstruction task]{\textbf{Architecture for reconstruction.} The agent has observed two patches of the image, which are processed by the encoder to produce their feature representations (orange rectangles). These outputs are combined with the masked patches (grey rectangles) and passed through the decoder, which reconstructs the missing image patches. In addition, the method computes the entropy map for one of the decoder's multi-head self-attention layers and uses it to select the location of the third glimpse. The process repeats until the assumed number of glimpses is reached. Reproduced from~\cite{pardyl2023active}.}
     \label{fig:ame-architecture}
 \end{figure}
+
+The proposed method, named \emph{Attention-Map Entropy (AME)}, builds upon a masked autoencoder (Section~\ref{sec:prelim-vit-mae}) with a ViT-L encoder (24 transformer blocks, embedding size 1024) and a lightweight 8-block decoder (embedding size 512). At every step $t$, the encoder processes the $t$ glimpses observed so far, and the decoder combines their latent representations with mask tokens standing in for the unobserved patches, producing an output for the target task. Figure~\ref{fig:ame-architecture} illustrates this process for the reconstruction task. For other tasks, the architecture is similar, with the exception of the output head.
 
 The key idea is to reuse the decoder's own self-attention maps to decide on the next action, instead of training a separate module for this purpose. Each row of a self-attention map is produced by a softmax and therefore defines a probability distribution describing how strongly the corresponding token attends to every other token when computing its representation. High entropy in a row indicates that the model cannot commit to any particular token as informative, which in turn signals that the underlying image region is poorly understood and would benefit from being observed. Because these distributions arise as a by-product of the target task's own forward pass, their entropy provides an uncertainty signal at no extra computational cost, with no additional parameters or training objective required.
 
@@ -47,7 +47,7 @@ Concretely, given the patches $p_1, \dots, p_t$ observed so far, the decoder ope
 \end{equation}
 where $Q$ and $K$ pack together the query and key projections of all $M$ token embeddings produced by that layer. Row $i$ of $A$ is the probability distribution used to compute a weighted average of all patch representations when producing the updated representation of patch $i$. A peaked row means the model relies on a few already well-understood patches, while a flat row means it must combine evidence from many patches because none of them alone provides a confident answer. Figure~\ref{fig:ame-entropy} illustrates this on a toy $2\times2$ example.
 
-\begin{figure}[t]
+\begin{figure}[th]
     \centering
     \includegraphics[width=0.75\linewidth]{papers_src/AME/fig/shannon.png}
     \caption[Illustration of an attention-derived entropy map]{\textbf{Entropy map.} Consider an image divided into four patches ($2\times2$), shown on the left. Its attention map is a $4\times4$ matrix, each row of which holds the attention weights used to compute the output of the corresponding patch in the next transformer layer. Computing the Shannon entropy (Equation~\ref{eq:shannon-entropy}) of each row yields a $2\times2$ entropy map; the patch with the highest entropy value is selected as the next glimpse. Figure reproduced from~\cite{pardyl2023active}.}
@@ -134,7 +134,8 @@ Figure~\ref{fig:ame-steps} visualises the process step by step: as additional gl
 
 \begin{figure}[t]
     \centering
-    \newcommand{\amestepimg}[1]{\includegraphics[width=2.5cm]{#1}}
+    % raised by half their height so the row labels sit vertically centred
+    \newcommand{\amestepimg}[1]{\raisebox{-.5\height}{\includegraphics[width=2.5cm]{#1}}}
     \begin{tabular}{r c@{\hspace{1pt}}c@{\hspace{1pt}}c@{\hspace{1pt}}c c}
         \toprule
         Step & 1 & 3 & 5 & 8 & Ground truth \\
@@ -143,13 +144,15 @@ Figure~\ref{fig:ame-steps} visualises the process step by step: as additional gl
             \amestepimg{papers_src/AME/fig/steps/1_masked.jpg} &
             \amestepimg{papers_src/AME/fig/steps/3_masked.jpg} &
             \amestepimg{papers_src/AME/fig/steps/5_masked.jpg} &
-            \amestepimg{papers_src/AME/fig/steps/8_masked.jpg} &
-            \multirow{2}{*}{\amestepimg{papers_src/AME/fig/steps/0_input.jpg}} \\
+            \amestepimg{papers_src/AME/fig/steps/8_masked.jpg} & \\
+        \addlinespace[1pt]
         Prediction &
             \amestepimg{papers_src/AME/fig/steps/1_out.jpg} &
             \amestepimg{papers_src/AME/fig/steps/3_out.jpg} &
             \amestepimg{papers_src/AME/fig/steps/5_out.jpg} &
-            \amestepimg{papers_src/AME/fig/steps/8_out.jpg} & \\
+            \amestepimg{papers_src/AME/fig/steps/8_out.jpg} &
+            \amestepimg{papers_src/AME/fig/steps/0_input.jpg} \\
+        \addlinespace[1pt]
         Entropy &
             \amestepimg{papers_src/AME/fig/steps/1_entropy.jpg} &
             \amestepimg{papers_src/AME/fig/steps/3_entropy.jpg} &
