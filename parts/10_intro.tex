@@ -130,7 +130,7 @@ classify, or segment a scene~\cite{seifi2021glimpse}. These threads share a comm
 
 Despite this long history of research and recent rapid progress, the problem of exploration in the general case remains far from solved.
 The difficulty is easy to underestimate because existing methods achieve strong performance within simplified settings.
-For example, some active-vision methods operate in small search spaces, where even a random strategy can achieve strong performance~\cite{seifi2021glimpse}.
+For example, some active-vision methods operate in small search spaces~\cite{seifi2021glimpse}, where even random glimpse selection was found to perform on par with attention-based selection~\cite{Jha2023WACV}.
 Moreover, the exploration is often limited to a grid game, where an agent uncovers a fixed area at each move~\cite{rangrej2022consistency},
  a simplification that mirrors the grid input format of vision transformers rather than the continuous movements of real-world agents. Embodied navigation is most often studied in constrained indoor simulators~\cite{savva2019habitat,kolve2017ai2,xia2018gibson},
 where the agent can map the entire environment explicitly, without having to deal with the complexity and vast size of real-world environments.

@@ -35,7 +35,7 @@ Entropy is maximised when $p$ is uniform, i.e. when all outcomes are equally lik
 \subsection{The glimpse-based exploration protocol}
 \label{sec:prelim-glimpse-protocol}
 
-Throughout this chapter, an image is partitioned into a fixed grid of $N$ candidate patches, or small groups of patches referred to as \emph{glimpses}. An agent is given a fixed budget of $T \ll N$ steps. At step $t$, it has already observed $t$ glimpses and must select the position of the $(t+1)$-th glimpse from among the $N - t$ still-unseen positions; once the glimpse is revealed, the model performing the target task (reconstruction, classification, or segmentation) is run again, conditioned on all $t+1$ known glimpses. This process repeats until the budget $T$ is exhausted, at which point the final prediction is produced.
+Throughout this chapter, an image is partitioned into a fixed grid of $N$ candidate \emph{glimpse positions}. A glimpse is the unit an agent acquires in a single step. Depending on the sensor regime, it is either a single patch or a small, fixed group of neighbouring patches. An agent is given a fixed budget of $T \ll N$ steps. At step $t$, it has already observed $t$ glimpses and must select the position of the $(t+1)$-th glimpse from among the $N - t$ still-unseen positions; once the glimpse is revealed, the model performing the target task (reconstruction, classification, or segmentation) is run again, conditioned on all $t+1$ known glimpses. This process repeats until the budget $T$ is exhausted, at which point the final prediction is produced.
 
 
 \subsection{Retina-like foveated sensing}

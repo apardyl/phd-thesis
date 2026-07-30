@@ -16,6 +16,7 @@
 \usepackage{enumitem}
 \usepackage{calc}
 \usepackage[hidelinks]{hyperref}
+\usepackage{xurl} % allow long URLs in the bibliography to break across lines
 \usepackage[numbers]{natbib}
 \usepackage{bibentry}
 \usepackage[final]{pdfpages}
@@ -40,12 +41,13 @@
 \title{Learning to explore:\\Towards efficient embodied vision}
 \author{Adam Pardyl}
 \date{2026}
-\makeatletter
 
 \begin{document}
 
 \bibliographystyle{apalike}
 \nobibliography*
+
+\pagenumbering{roman}
 
 \input{parts/00_title}
 \input{parts/01_dedication}
@@ -58,6 +60,8 @@
 \listoftables
 
 \newpage
+
+\pagenumbering{arabic}
 
 \input{parts/10_intro}
 
@@ -73,6 +77,10 @@
 
 \input{parts/60_conclusion}
 
+\input{parts/05_acknowledgements}
+
+\clearpage
+\phantomsection
 \addcontentsline{toc}{chapter}{Bibliography}
 
 \bibliography{main}

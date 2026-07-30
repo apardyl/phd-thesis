@@ -8,25 +8,35 @@ This chapter opens with a brief overview of other papers I co-authored during my
     \item \textbf{\bibentry{kargin2026sparrta}~\cite{kargin2026sparrta}}
     
     Abstract:
+    \begin{quote}\small
     Visual Foundation Models (VFMs), such as DINO and CLIP, excel in semantic understanding of images but exhibit limited spatial reasoning capabilities, which limits their applicability to embodied systems. As a result, recent work incorporates some 3D tasks (such as depth estimation) into VFM training. However, VFM performance remains inconsistent across other spatial tasks, raising the question of whether these models truly have spatial awareness or overfit to specific 3D objectives. To address this question, we introduce the Spatial Relation Recognition Task (SpaRRTa) benchmark, which evaluates the ability of VFMs to identify relative positions of objects in the image. Unlike traditional 3D objectives that focus on precise metric prediction (e.g., surface normal estimation), SpaRRTa probes a fundamental capability underpinning more advanced forms of human-like spatial understanding. SpaRRTa generates an arbitrary number of photorealistic images with diverse scenes and fully controllable object arrangements, along with freely accessible spatial annotations. Evaluating a range of state-of-the-art VFMs, we reveal significant disparities between their spatial reasoning abilities. Through our analysis, we provide insights into the mechanisms that support or hinder spatial awareness in modern VFMs. We hope that SpaRRTa will serve as a useful tool for guiding the development of future spatially aware visual models.
+    \end{quote}
     \item \textbf{\bibentry{sroka2025ai}~\cite{sroka2025ai}}
     
     Abstract:
+    \begin{quote}\small
     Sepsis is a life-threatening condition which requires rapid diagnosis and treatment. Traditional microbiological methods are time-consuming and expensive. In response to these challenges, deep learning algorithms were developed to identify 14 bacteria species and 3 yeast-like fungi from microscopic images of Gram-stained smears of positive blood samples from sepsis patients.
 A total of 16,637 Gram-stained microscopic images were used in the study. The analysis used the Cellpose 3 model for segmentation and Attention-based Deep Multiple Instance Learning for classification. Our model achieved an accuracy of 77.15\% for bacteria and 71.39\% for fungi, with ROC AUC of 0.97 and 0.88, respectively. The highest values, reaching up to 96.2\%, were obtained for Cutibacterium acnes, Enterococcus faecium, Stenotrophomonas maltophilia and Nakaseomyces glabratus. Classification difficulties were observed in closely related species, such as Staphylococcus hominis and Staphylococcus haemolyticus, due to morphological similarity, and within Candida albicans due to high morphotic diversity.
 The study confirms the potential of our model for microbial classification, but it also indicates the need for further optimisation and expansion of the training data set. In the future, this technology could support microbial diagnosis, reducing diagnostic time and improving the effectiveness of sepsis treatment due to its simplicity and accessibility. Part of the results presented in this publication was covered by a patent application at the European Patent Office EP24461637.1 "A computer implemented method for identifying a microorganism in a blood and a data processing system therefor".
+    \end{quote}
     \item \textbf{\bibentry{pardyl2023complung}~\cite{pardyl2023complung}}
     
     Abstract:
+    \begin{quote}\small
     Lung cancer is a leading cause of cancer-related deaths, and early diagnosis is crucial for its effective treatment. That is why computer-aided tools have been developed to support particular steps of CT scan analysis, including lung segmentation, suspicious region detection, and patient-level diagnosis. However, none of the previous approaches addressed this process comprehensively. To fill this gap, we introduce CompLung, a comprehensive tool for lung cancer diagnosis that performs all of the above-listed steps in an end-to-end manner. We have trained the CompLung architecture using the publicly available LIDC-IDRI dataset extended with lung segmentation masks obtained from our internal radiologists, which we make publicly available to boost the research on this emerging topic. Finally, we conduct extensive experiments and demonstrate the superior performance and interpretability of CompLung compared to existing methods for lung cancer diagnosis.
+    \end{quote}
     \item \textbf{\bibentry{struski2023propml}~\cite{struski2023propml}}
     
     Abstract:
+    \begin{quote}\small
     Partial Multi-label Learning (PML) is a type of weakly supervised learning where each training instance corresponds to a set of candidate labels, among which only some are true. In this paper, we introduce ProPML, a novel probabilistic approach to this problem that extends the binary cross entropy to the PML setup. In contrast to existing methods, it does not require suboptimal disambiguation and, as such, can be applied to any deep architecture. Furthermore, experiments conducted on artificial and real-world datasets indicate that ProPML outperforms existing approaches, especially for high noise in a candidate set.
+    \end{quote}
     \item \textbf{\bibentry{pardyl2022automating}~\cite{pardyl2022automating}}
 
     Abstract:
+    \begin{quote}\small
     As the leading cause of cancer-related mortality, lung cancer is responsible for more deaths than colon, breast, and prostate cancer put together. Screening with low-dose computed tomography detects cancer at an early stage and reduces mortality. However, it requires the tedious work of radiologists to obtain malignancy scores, which additionally are very subjective. That is why many researchers worked on methods automating lung cancer classification, usually using the publicly available LIDC-IDRI dataset for training. However, most of those methods consider only node-level classification and provide poor results for patient-level diagnosis. In this paper, we fill this gap by introducing an end-to-end methods with a CT scan on the input and the patient-level diagnosis on the output. We consider three approaches for three different data regimes to examine how stronger and weaker supervision influences the model performance.
+    \end{quote}
 \end{itemize}
 
 \section{Patents}
@@ -57,21 +67,26 @@ The study confirms the potential of our model for microbial classification, but 
 \end{itemize}
 
 \section{Scientific grants}
+% Grant numbers are long and unbreakable; \sloppy avoids overfull lines here.
+\begingroup
+\sloppy
 \subsection{As a principal investigator}
 \begin{itemize}
-    \item \textbf{National Science Centre Preludium} ``Where to look next - guiding active visual exploration with
+    \item \textbf{National Science Centre Preludium} ``Where to look next -- guiding active visual exploration with
     internal model uncertainty'', 2024-2025. Grant number: 2023/49/N/ST6/02465.
     \item \textbf{Foundation for Polish Science START scholarship}, 2026-2027, Grant number: 59.2026.
 \end{itemize}
 
 \subsection{As a participant / co-investigator}
 \begin{itemize}
-    \item \textbf{National Science Centre Sonata bis} ``Sustainable computer vision for autonomous machines'', 2024-2027. Grant number: 2023/50/E/ST6/00469. Principal investigator: Bartosz Zieliński.
+    \item \textbf{National Science Centre Sonata Bis} ``Sustainable computer vision for autonomous machines'', 2024-2027. Grant number: 2023/50/E/ST6/00469. Principal investigator: Bartosz Zieliński.
     \item \textbf{Foundation for Polish Science Proof of Concept} ``Intelligent Fight Against Sepsis - Innovative Use of Artificial Intelligence in Rapid Microbiological Diagnosis of Sepsis'', 2024-2025. Grant number: FENG.02.07-IP.05-0068/23. Principal investigator: Monika Brzychczy-Włoch.
     \item \textbf{European Commission Horizon Europe} ``European Lighthouse of AI for Sustainability (ELIAS)'', 2024-2027. Grant number: 101120237. Principal investigator: Massimiliano Pontil.
     \item \textbf{Foundation for Polish Science Team-Net} ``Bio-inspired artificial neural networks'', 2022-2023. Grant number: POIR.04.04.00-00-14DE/18-00. Principal investigator: Jacek Tabor.
-    \item \textbf{National Centre for Research and Development Fast Track} ``X-rAI: Diagnostic viewer for computer-assisted radiology using Artificial Intelligence'', 2021-2023. Grant number: POIR.01.01.01-00-1666/20. Principal investigator: Zbisław Tabor.
+    \item \textbf{National Centre for Research and Development Fast Track} ``X-rAI: Diagnostic viewer for computer-assisted radiology using Artificial Intelligence'', 2021-2023. Grant number: POIR.01.01.01-\allowbreak 00-\allowbreak 1666/20. Principal investigator: Zbisław Tabor.
 \end{itemize}
+
+\endgroup
 
 \section{Acting as a reviewer}
 \begin{itemize}

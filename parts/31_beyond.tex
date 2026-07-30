@@ -10,15 +10,15 @@ As described in Section~\ref{sec:prelim-pos-enc}, a standard ViT relies on learn
 \label{sec:beyond-elasticity}
 
 The publication introduces the concept of \emph{input elasticity} as resilience to particular
-forms of input data configurations that can occur in real-life applications. Three distinct types of elasticity are defined, each corresponding to a perturbation commonly encountered in embodied AI applications.
+forms of input data configurations that can occur in real-life applications. Three distinct types of elasticity are defined, each corresponding to a perturbation commonly encountered in embodied AI applications and illustrated in Figure~\ref{fig:beyond-perturbations}.
 
-\textbf{Scale elasticity} measures resilience when individual patches are sampled at a scale different from the native $16\times16$ pixel resolution. Each patch $p = (x, y, s)$ is characterised by its top-left grid coordinates $(x, y)$ and a relative scale $s$. The patch covers a $16s \times 16s$ pixel region in the original image, which is then resampled to the standard $16\times16$ input size. A scale of $s = 2$ means the patch covers four times the usual area at half the resolution, $s = 0.5$ covers one quarter the area at twice the resolution, potentially leaving uncovered gaps between adjacent patches. This corresponds to the zoom ability of a camera.
+\textbf{Scale elasticity} measures resilience when individual patches are sampled at a scale different from the native $16\times16$ pixel resolution. Each patch $p = (x, y, s)$ is characterised by the pixel coordinates of its top-left corner $(x, y)$ and a relative scale $s$. The patch covers a $16s \times 16s$ pixel region in the original image, which is then resampled to the standard $16\times16$ input size. A scale of $s = 2$ means the patch covers four times the usual area at half the resolution, $s = 0.5$ covers one quarter the area at twice the resolution, potentially leaving uncovered gaps between adjacent patches. This corresponds to the zoom ability of a camera.
 
-\textbf{Positional elasticity} (also called \emph{patch shake}) measures resilience when patch centres are displaced from their grid positions. The coordinates $(x, y)$ of each patch are independently perturbed by an offset drawn uniformly from $[-r \cdot q,\, r \cdot q]$, where $r$ is the patch size and $q$ is the shake magnitude as a fraction of the patch size. This simulates the non-grid-aligned sampling that arises whenever an image is captured at a position that does not correspond exactly to a discrete training configuration, e.g. due to imperfect camera alignment or agent drift in real space.
+\textbf{Positional elasticity} (also called \emph{patch shake}) measures resilience when patch positions are displaced from the regular grid. The coordinates $(x, y)$ of each patch are independently perturbed by an offset drawn uniformly from $[-r \cdot q,\, r \cdot q]$, where $r$ is the patch size and $q$ is the shake magnitude as a fraction of the patch size. This simulates the non-grid-aligned sampling that arises whenever an image is captured at a position that does not correspond exactly to a discrete training configuration, e.g. due to imperfect camera alignment or agent drift in real space.
 
 \textbf{Missing-data elasticity} measures resilience when a fraction $d$ of patches are simply removed from the input, leaving the corresponding image regions unobserved. This is the most directly relevant perturbation for active visual exploration, where an agent has only observed a subset of the scene, or has lost parts of it due to, e.g., occlusion or communication failure.
 
-\begin{figure}[H]
+\begin{figure}[t]
     \centering
     \begin{small}
     \begin{tabular}{r@{\hspace{6pt}}c@{\hspace{4pt}}c@{\hspace{4pt}}c@{\hspace{4pt}}c}
@@ -48,7 +48,7 @@ The three perturbations are composed into a pipeline. For image $I$, an initial 
     P' = \mathcal{E}_{\mathrm{miss}(d)} \circ \mathcal{E}_{\mathrm{pos}(q)} \circ \mathcal{E}_{\mathrm{scale}(s_1, s_2)}(P),
     \label{eq:elasticity-pipeline}
 \end{equation}
-where $\mathcal{E}_{\mathrm{scale}(s_1,s_2)}$ samples each patch's scale independently from $[s_1, s_2]$, $\mathcal{E}_{\mathrm{pos}(q)}$ shifts each patch centre by at most $q$ patch-widths in each direction, and $\mathcal{E}_{\mathrm{miss}(d)}$ removes $d$ patches at random. Elasticity is high if the model's predictions for the perturbed set $P'$ match those for the original $P$.
+where $\mathcal{E}_{\mathrm{scale}(s_1,s_2)}$ samples each patch's scale independently from $[s_1, s_2]$, $\mathcal{E}_{\mathrm{pos}(q)}$ shifts each patch's top-left corner by at most $q$ patch-widths in each direction, and $\mathcal{E}_{\mathrm{miss}(d)}$ removes a fraction $d$ of the patches at random. Elasticity is high if the model's predictions for the perturbed set $P'$ match those for the original $P$.
 
 \subsection{ElasticViT}
 \label{sec:beyond-elasticvit}
@@ -62,11 +62,11 @@ The modifications proposed in this publication to increase input elasticity are 
 \end{equation}
 where $\mathrm{pe}(\cdot)$ is the 1D sine-cosine encoding and $\|$ denotes vector concatenation. Because this function is defined over the reals, it generalises without modification to any position-scale combination at inference, including configurations never seen during training. The ViT input is also modified accordingly. Instead of a full rasterised image, the model receives a list of cropped patches together with their corresponding coordinate tuples, which are fed into the positional encoding rather than looked up in a table.
 
-\textbf{Elastic training augmentations.} The baseline training regime follows DeiT~III~\cite{touvron2022deitiii}. To this, the publication adds the elasticity functions as augmentations during training. Patch scales are drawn uniformly from $[1/3, 1]$ (i.e.\ random sizes between $16\times16$ and $48\times48$ pixels) and patch positions are randomly displaced with no upper bound on the shift magnitude. This forces the model to generalise across a wide distribution of patch configurations, rather than overfitting to the regular grid it would otherwise always see.
+\textbf{Elastic training augmentations.} The baseline training regime follows DeiT~III~\cite{touvron2022deitiii}. To this, the publication adds the elasticity functions as augmentations during training. Patch scales are drawn uniformly from $[1, 3]$, i.e.\ each patch covers a random region of between $16\times16$ and $48\times48$ pixels, resampled to the $16\times16$ token size, and patch positions are randomly displaced with no upper bound on the shift magnitude. This forces the model to generalise across a wide distribution of patch configurations, rather than overfitting to the regular grid it would otherwise always see.
 
 \textbf{PatchMix augmentation.} The standard CutMix augmentation, which mixes two images by replacing a rectangular region of one image with the corresponding region from another, is incompatible with variable-scale patch sampling. The mixing ratios used to blend the class labels assume a fixed spatial layout that no longer holds when patches can overlap or leave gaps. The publication introduces PatchMix, an alternative that performs mixing at the level of individual \emph{patches after sampling}. Patches from two images are randomly interleaved in the token sequence, and the label blending ratio is computed from the actual proportion of patches drawn from each image. Unlike the previously proposed TokenMix~\cite{liu2022tokenmix}, PatchMix does not assume grid-aligned sampling and is therefore fully compatible with the elastic augmentation regime (see Figure~\ref{fig:patchmix}).
 
-\begin{figure}[H]
+\begin{figure}[t]
     \centering
     \includegraphics[width=.75\linewidth]{papers_src/BeyondGrids/figures/patchmix/patchmix.png}
     \caption[PatchMix augmentation compared to CutMix and TokenMix]{\textbf{PatchMix.} Unlike CutMix, which replaces a rectangular region of one image with another, PatchMix operates on individually sampled patches and mixes them at the token level. Unlike TokenMix, it does not assume grid-aligned patches, making it compatible with elastic sampling. Reproduced from~\cite{pardyl2023grids}.}
@@ -77,9 +77,9 @@ where $\mathrm{pe}(\cdot)$ is the 1D sine-cosine encoding and $\|$ denotes vecto
 \label{sec:beyond-results}
 
 
-Figure~\ref{fig:beyond-elasticity} shows the three single-perturbation elasticity curves, comparing ElasticViT against ViT, MAE, Swin-B, and PVT-v2-B5, all ViT-B scale trained on ImageNet-1k.
+Figure~\ref{fig:beyond-elasticity} shows the three single-perturbation elasticity curves, comparing ElasticViT against ViT, MAE, Swin-B, and PVT-v2-B5, all of comparable size and trained on ImageNet-1k.
 
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{center}
 \begin{small}
 \begin{subfigure}[b]{0.32\textwidth}
@@ -223,7 +223,7 @@ Figure~\ref{fig:beyond-elasticity} shows the three single-perturbation elasticit
 \end{subfigure}
 \end{small}
 \end{center}
-\caption[Elasticity curves for individual perturbations on ImageNet-1k]{\textbf{Elasticity under isolated perturbations} (ImageNet-1k top-1 accuracy). \textbf{(a)}~Scale elasticity: all baselines degrade sharply when patches deviate from scale~1; ElasticViT maintains near-constant accuracy across the measured spectrum and outperforms all baselines at extreme scales. \textbf{(b)}~Missing-data elasticity: ElasticViT surpasses MAE beyond 75\% dropout, despite never being trained with patch dropout. \textbf{(c)}~Positional elasticity: ElasticViT is nearly immune to patch shake and outperforms all but MAE at the largest perturbations. Adapted from~\cite{pardyl2023grids}.}
+\caption[Elasticity curves for individual perturbations on ImageNet-1k]{\textbf{Elasticity under isolated perturbations} (ImageNet-1k top-1 accuracy). \textbf{(a)}~Scale elasticity: all baselines degrade sharply when patches deviate from scale~1; ElasticViT maintains near-constant accuracy across the measured spectrum and outperforms all baselines at extreme scales. \textbf{(b)}~Missing-data elasticity: ElasticViT surpasses MAE from 70\% dropout onward, despite never being trained with patch dropout. \textbf{(c)}~Positional elasticity: ElasticViT is nearly immune to patch shake and outperforms all but MAE at the largest perturbations. Adapted from~\cite{pardyl2023grids}.}
 \label{fig:beyond-elasticity}
 \end{figure}
 
@@ -231,7 +231,7 @@ Under standard conditions (centre of each curve, scale~1, no dropout, no shake),
 
 \textbf{Adaptive sampling.} To test the usefulness of ElasticViT for visual exploration problems, the publication proposes two simple, non-learnable baseline sampling strategies: CENTRAL (retina-like sampling) and EDGE (edge-detection-based sampling), illustrated in Figure~\ref{fig:beyond-edge-vis}. Figure~\ref{fig:beyond-adaptive} shows their effect on accuracy as a function of the number of input patches.
 
-\begin{figure}[H]
+\begin{figure}[t]
 \centering
 \begin{tikzpicture}[node distance=0.3cm, auto]
 \tikzstyle{pict} = [inner xsep=4px]
@@ -249,7 +249,7 @@ Under standard conditions (centre of each curve, scale~1, no dropout, no shake),
 \label{fig:beyond-edge-vis}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{center}
 \begin{small}
 \begin{tikzpicture}

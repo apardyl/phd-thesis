@@ -49,6 +49,7 @@ _minted*
 .DS_Store
 *.swp
 *~
+.idea/
 
 # Python (scripts/)
 __pycache__/

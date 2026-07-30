@@ -1,4 +1,8 @@
-\begin{abstract}
+\clearpage
+\begin{center}
+    {\large\bfseries Abstract}
+\end{center}
+\vspace{1em}
 
 Modern computer vision rests on a quiet assumption that a model is handed all the visual information it needs in advance, as a complete, static, sufficiently high-resolution image. This assumption is reasonable for tasks such as classification or segmentation, but it breaks down the moment a model is placed inside an embodied agent, such as a robot or an unmanned aerial vehicle. An embodied agent perceives the world through a narrow window, with a limited field of view and resolution, must move physically to acquire each new observation, and operates under tight constraints on time, energy, and computation. Capturing and processing an entire environment at full resolution is then not merely wasteful but often infeasible. Under these conditions the central question is no longer only \emph{what we currently see}, but \emph{what we should observe} in the first place. An agent that chooses its observations wisely can match the performance of one that senses everything indiscriminately, at a fraction of the cost.
 
@@ -10,9 +14,8 @@ The first three papers progressively generalise \emph{local-scale} exploration, 
 
 Taken together, these works trace an arc from deciding where to look within a single reachable scene to deciding where to move through an open world. They support the central claim of the thesis at the local scale, showing that exploration can be learned, can be efficient, and need not rely on sensing abstractions that diverge from current vision hardware. At the global scale, they chart the frontier rather than close it, mapping out the failure modes that define the research agenda that follows from this work.
 
-All four publications appeared at leading venues, three at CORE A* (200 MNiSW points) conferences and one at a CORE A (140 MNiSW points) conference, and I am the first author of each. The research was supported in part by the National Science Centre Preludium grant \emph{Where to look next -- guiding active visual exploration with internal model uncertainty}, of which I was the principal investigator, and was recognised with the START scholarship of the Foundation for Polish Science. During my doctoral studies I completed a research internship at the Computer Vision group of the Max Planck Institute for Informatics under the supervision of Prof.\ Bernt Schiele. Beyond the main line of research, I contributed to work on AI-assisted medical diagnostics, which led to a European patent application, on partial multi-label learning, and on benchmarking the spatial reasoning of vision foundation models. I also served as a reviewer for NeurIPS, WACV, and KDD, and co-organised three editions of the Machine Learning Summer School in Kraków and the ELLIS Doctoral Symposium.
+All four publications appeared at leading venues, three at CORE A* (200 MNiSW points) conferences and one at a CORE A (140 MNiSW points) conference, and I am the first author of each. The research was supported in part by the National Science Centre Preludium grant \emph{Where to look next -- guiding active visual exploration with internal model uncertainty}, of which I was the principal investigator, and was recognised with the START scholarship of the Foundation for Polish Science. During my doctoral studies I completed a research internship at the Computer Vision group of the Max Planck Institute for Informatics under the supervision of Prof.\ Bernt Schiele. Beyond the main line of research, I contributed to work on AI-assisted medical diagnostics, which led to a European patent application, on partial multi-label learning, and on benchmarking the spatial reasoning of vision foundation models. I also served as a reviewer for NeurIPS, IJCV, WACV, and KDD, and co-organised three editions of the Machine Learning Summer School in Kraków and the ELLIS Doctoral Symposium.
 
 \vspace{1em}
 \noindent\textbf{Keywords:} active visual exploration, embodied vision, active perception, vision transformers, reinforcement learning, vision-language models, object goal navigation, aerial visual search.
 
-\end{abstract}

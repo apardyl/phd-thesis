@@ -14,7 +14,7 @@ Despite the rapid development of vision-language models as zero-shot tools acros
 \subsection{Benchmark design}
 \label{sec:flysearch-benchmark}
 
-\textbf{Task formulation.} In \flysearch{}, the agent controls a simulated multirotor UAV equipped with a downward-facing camera. The UAV serves as a proxy for evaluation of spatial exploration capability, rather than low-level control of a physical robot, and is therefore controllable with high-level relative movement commands, resembling autopilot inputs. The agent is tasked with finding a target object described in natural language or with a visual example. The interaction follows a fixed protocol designed to be equally natural for human testers and VLMs.
+\textbf{Task formulation.} In \flysearch{}, the agent controls a simulated multirotor UAV equipped with a downward-facing camera. The UAV serves as a proxy for evaluation of spatial exploration capability, rather than low-level control of a physical robot, and is therefore controllable with high-level relative movement commands, resembling autopilot inputs. The agent is tasked with finding a target object described in natural language or with a visual example. The interaction follows a fixed protocol designed to be equally natural for human testers and VLMs, outlined in Figure~\ref{fig:flysearch-teaser}.
 
 At the start of each episode, the model receives a \emph{starting prompt} that contains a brief textual description of the object to be located (e.g.\ \emph{a red pickup truck}) and in some cases a visual example of the target object. The starting prompt also specifies the communication format, and an instruction that the model may preface each response with a chain of reasoning before issuing its action. This allows the model to ``think aloud'' before committing to a movement~\cite{wei2022chain}.
 
@@ -24,25 +24,25 @@ The agent responds with an \emph{action}: a text command \texttt{<action>(X, Y, 
 
 An episode is considered successful if, at the moment the agent issues \texttt{FOUND}, the object's centre point lies within the camera's field of view \emph{and} the agent is at most $10\,\mathrm{m}$ above the object's highest point. This metric, adapted from the standard ObjectNav criterion~\cite{batra2020objectnav}, requires the agent to be close enough for meaningful visual confirmation rather than merely in the neighbourhood of the target.
 
-\begin{figure*}[t]
+\begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth, trim={.7cm .2cm .7cm .2cm}, clip]{papers_src/FlySearch/figs/teaser/avebench.pdf}
     \caption[FlySearch task overview]{\textbf{\flysearch{}} evaluates exploration capabilities of vision-language models in a realistic outdoor setting. The agent controls a UAV by observing images captured from successive positions and providing text commands describing the next movement. To complete each scenario, the model must locate an object specified in natural language and signal success with a \texttt{FOUND} command. Reproduced from~\cite{pardyl2025flysearch}.}
     \label{fig:flysearch-teaser}
-\end{figure*}
+\end{figure}
 
-\textbf{Evaluation pipeline.} The \flysearch{} system consists of two main components: a simulator and an evaluation controller. The \emph{simulator} is built on Unreal Engine 5~\cite{unrealengine}, which provides near-photorealistic graphics through real-time ray tracing and dynamic global illumination. Large, open-world maps are supported natively, and the procedural content generation system can place tens of thousands of object meshes in seconds at runtime, enabling an unlimited number of distinct evaluation scenarios. The \emph{evaluation controller} is implemented in Python and handles the full lifecycle of the benchmarking process: generating scenarios, managing the communication between the simulator and the VLM under test, enforcing episode termination conditions, and computing performance metrics. The controller supports a wide range of VLMs through a simple adapter interface, and additional models can be integrated using the open-source vLLM inference server~\cite{kwon2023efficient}.
+\textbf{Evaluation pipeline.} The \flysearch{} system, shown in Figure~\ref{fig:flysearch-pipeline}, consists of two main components: a simulator and an evaluation controller. The \emph{simulator} is built on Unreal Engine 5~\cite{unrealengine}, which provides near-photorealistic graphics through real-time ray tracing and dynamic global illumination. Large, open-world maps are supported natively, and the procedural content generation system can place tens of thousands of object meshes in seconds at runtime, enabling an unlimited number of distinct evaluation scenarios. The \emph{evaluation controller} is implemented in Python and handles the full lifecycle of the benchmarking process: generating scenarios, managing the communication between the simulator and the VLM under test, enforcing episode termination conditions, and computing performance metrics. The controller supports a wide range of VLMs through a simple adapter interface, and additional models can be integrated using the open-source vLLM inference server~\cite{kwon2023efficient}.
 
-\begin{figure*}[t]
+\begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{papers_src/FlySearch/figs/arch/avebencharch.pdf}
     \caption[FlySearch evaluation pipeline]{\textbf{Evaluation pipeline.} \flysearch{} consists of three main components: the Unreal Engine 5 simulator that renders near-photorealistic views of the open-world map, the evaluation controller that manages communication between the VLM and the simulator, and the scenario generator that procedurally creates new evaluation scenarios. Reproduced from~\cite{pardyl2025flysearch}.}
     \label{fig:flysearch-pipeline}
-\end{figure*}
+\end{figure}
 
 \textbf{Environments.} The benchmark provides two distinct evaluation environments. The \emph{forest environment} is based on the Electric Dreams UE5 demo~\cite{electridreams} and features sparse forest scenery with randomly placed rock formations, procedurally generated vegetation, and dynamic wind. The entire map is generated at runtime, ensuring that no two scenarios share the same layout. The \emph{city environment} is based on the City Sample UE5 demo~\cite{citysample}, a large, semi-procedurally generated American-style city of approximately $4\times4\,\mathrm{km}$, populated at runtime with random distractor assets (parked cars, walking pedestrians) drawn from Unreal's asset marketplace. The visual complexity of the city environment is substantially higher than the forest, with many objects of similar appearance and strong visual clutter. Figure~\ref{fig:flysearch-environments} shows example scenes from both environments.
 
-\begin{figure}[H]
+\begin{figure}[t]
     \centering
     \begin{subfigure}[b]{0.48\linewidth}
         \centering
@@ -82,7 +82,7 @@ An episode is considered successful if, at the moment the agent issues \texttt{F
 \subsection{Results}
 \label{sec:flysearch-results}
 
-\textbf{Models evaluated.} Ten VLMs are benchmarked across the three challenge sets. Three proprietary models are included: GPT-4o~\cite{achiam2023gpt}, Claude 3.5 Sonnet~\cite{Anthropic_2024}, and Gemini 2.0 Flash~\cite{Google_2024}. Three large open-weight models (above 11B parameters) are evaluated: Qwen2-VL-72B~\cite{Qwen2VL}, Llava-Onevision-72B~\cite{li2024llavaonevisioneasyvisualtask}, and Pixtral-Large-124B~\cite{Mistral_2025}. Four small open-weight models (below 11B parameters) round out the evaluation: Phi-3.5-vision, InternVL2.5-8B-MPO, Llava-Interleave-7B, and Qwen2.5-VL-7B~\cite{bai2025qwen2}. Human baselines are collected via an online study, comprising 111 recorded episodes for \challenge{} City and 51 for \hardchallenge{}.
+\textbf{Models evaluated.} Ten VLMs are benchmarked across the three challenge sets. Three proprietary models are included: GPT-4o~\cite{achiam2023gpt}, Claude 3.5 Sonnet~\cite{Anthropic_2024}, and Gemini 2.0 Flash~\cite{Google_2024}. Three large open-weight models (above 11B parameters) are evaluated: Qwen2-VL-72B~\cite{Qwen2VL}, Llava-Onevision-72B~\cite{li2024llavaonevisioneasyvisualtask}, and Pixtral-Large-124B~\cite{Mistral_2025}. Four small open-weight models (below 11B parameters) round out the evaluation: Phi-3.5-vision~\cite{abdin2024phi3technicalreporthighly}, InternVL2.5-8B-MPO~\cite{wang2024enhancingreasoningabilitymultimodal}, Llava-Interleave-7B~\cite{li2024llavanextinterleavetacklingmultiimagevideo}, and Qwen2.5-VL-7B~\cite{bai2025qwen2}. Human baselines are collected via an online study, comprising 111 recorded episodes for \challenge{} City and 51 for \hardchallenge{}.
 
 \textbf{\challenge{} results.} Table~\ref{tab:flysearch-main-results} reports success rates for \challenge{} and \hardchallenge{}. On \challenge{}, the best-performing model is Gemini 2.0 Flash at 42.0\%, closely followed by Claude 3.5 Sonnet at 41.2\% and GPT-4o at 39.5\%. Human participants, evaluated on the city environment, achieve 66.7\%, approximately 25 percentage points above the best VLM on the same split. Among large open-weight models, Pixtral-Large performs best at 29.8\%, with Qwen2-VL-72B at 17.2\% and Llava-Onevision-72B at 9.5\%. The small open-weight models essentially fail, with no model exceeding 4\%. Investigation reveals that small models largely fail to follow the instruction format, often neglecting to issue the \texttt{FOUND} command even when the target is within view at the end of an episode.
 
@@ -124,7 +124,7 @@ This collapse cannot be attributed solely to the harder detection conditions. Th
 
 \textbf{Qualitative analysis.} Manual inspection of failure trajectories reveals consistent failure modes across all models. When a model loses sight of an object it was tracking, it often backtracks or begins hallucinating the object's presence at an incorrect location, rather than reasoning about where the object was last seen and moving towards it. Collision handling is universally poor, with all models occasionally attempting to repeat an action that was rejected by the collision avoidance system, rather than navigating around the obstacle. In several recorded trajectories, Gemini 2.0 Flash abandons the task entirely after a collision, noting ``I am unable to navigate without hitting the building.'' Figure~\ref{fig:flysearch-trajectory} shows an example of a successful trajectory, illustrating the descent-and-approach strategy that works well on \challenge{} but is insufficient when the target is not visible from the starting position in \hardchallenge{}.
 
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{center}
 \begin{small}
 \begin{tabular}{c@{\hskip4pt}c@{\hskip4pt}c}
