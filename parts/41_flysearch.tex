@@ -81,7 +81,7 @@ An episode is considered successful if, at the moment the agent issues \texttt{F
 
 \textbf{\hardchallenge{}} contains 200 harder city scenes in which the starting altitude is raised to 100--125~m and dynamic lighting simulates different times of day. Most importantly, the target object may be completely outside the initial field of view. The agent may also move beyond its current field of view at each step. This setting requires the agent to form and execute a systematic multi-step search strategy, exploring the environment methodically until the target is found.
 
-\subsection{Results}
+\subsection{Experimental results}
 \label{sec:flysearch-results}
 
 \textbf{Models evaluated.} Ten VLMs are benchmarked across the three challenge sets. Three proprietary models are included: GPT-4o~\cite{achiam2023gpt}, Claude 3.5 Sonnet~\cite{Anthropic_2024}, and Gemini 2.0 Flash~\cite{Google_2024}. Three large open-weight models (above 11B parameters) are evaluated: Qwen2-VL-72B~\cite{Qwen2VL}, Llava-Onevision-72B~\cite{li2024llavaonevisioneasyvisualtask}, and Pixtral-Large-124B~\cite{Mistral_2025}. Four small open-weight models (below 11B parameters) round out the evaluation: Phi-3.5-vision~\cite{abdin2024phi3technicalreporthighly}, InternVL2.5-8B-MPO~\cite{wang2024enhancingreasoningabilitymultimodal}, Llava-Interleave-7B~\cite{li2024llavanextinterleavetacklingmultiimagevideo}, and Qwen2.5-VL-7B~\cite{bai2025qwen2}. Human baselines are collected via an online study, comprising 111 recorded episodes for \challenge{} City and 51 for \hardchallenge{}.
