@@ -1,3 +1,4 @@
+% Compile with latexmk -pdflua
 \documentclass[a4paper,oneside,11pt]{report}
 \usepackage[a4paper, top=2.54cm, bottom=2.54cm, left=2.54cm, right=2.54cm]{geometry}
 \usepackage{graphicx}
@@ -22,8 +23,42 @@
 % \bibentry re-typesets a bibliography entry, which also re-creates that entry's
 % hyperref destination (cite.<key>). The duplicate is ignored by the PDF backend,
 % so \cite links would point at the first copy (the publication list or Chapter 5)
-% instead of the bibliography. \bibentrynl suppresses the inner anchor.
-\newcommand{\bibentrynl}[1]{\NoHyper\bibentry{#1}\endNoHyper}
+% instead of the bibliography. Suppress only that anchor while retaining links
+% contained in the entry, such as its DOI.
+\makeatletter
+\newcommand{\bibentrynl}[1]{%
+    \begingroup
+    \let\hyper@natanchorstart\@gobble
+    \let\hyper@natanchorend\relax
+    \bibentry{#1}%
+    \endgroup
+}
+\makeatother
+% plainnat reads doi directly from main.bib; render it as a full URL.
+\DeclareRobustCommand{\doi}[1]{%
+    \textnormal{\href{https://doi.org/#1}{\nolinkurl{https://doi.org/#1}}}%
+}
+% Publications constituting the thesis use a separate Roman-numeral citation
+% sequence. Their full entries remain in the conventional numbered bibliography
+% below so bibliographic indexers can still recognise them as references.
+\expandafter\def\csname thesispublication@pardyl2023active\endcsname{I}
+\expandafter\def\csname thesispublication@pardyl2023grids\endcsname{II}
+\expandafter\def\csname thesispublication@pardyl2024adaglimpse\endcsname{III}
+\expandafter\def\csname thesispublication@pardyl2025flysearch\endcsname{IV}
+\DeclareRobustCommand{\pubcite}[1]{%
+    \ifcsname thesispublication@#1\endcsname
+        \hyperref[thesis-publication:#1]{[\csname thesispublication@#1\endcsname]}%
+    \else
+        \PackageError{phd-thesis}{Unknown thesis publication key '#1'}%
+            {Declare the key before using \string\pubcite.}%
+    \fi
+}
+\DeclareRobustCommand{\pubentry}[1]{%
+    \bibentrynl{#1}%
+}
+\DeclareRobustCommand{\otherpubentry}[1]{%
+    \textbf{\bibentrynl{#1}}%
+}
 \usepackage[final]{pdfpages}
 \let\CheckCommand\providecommand
 \usepackage{microtype}
@@ -50,7 +85,7 @@
 
 \begin{document}
 
-\bibliographystyle{apalike}
+\bibliographystyle{plainnat}
 \nobibliography*
 
 \pagenumbering{roman}
@@ -90,6 +125,9 @@
 \phantomsection
 \addcontentsline{toc}{chapter}{Bibliography}
 
+\nocite{pardyl2023active,pardyl2023grids,pardyl2024adaglimpse,pardyl2025flysearch,
+        kargin2026sparrta,sroka2025ai,pardyl2023complung,struski2023propml,
+        pardyl2022automating}
 \bibliography{main}
 
 
@@ -97,11 +135,11 @@
 \chapter{Full texts of the Publications}
 This chapter contains the publications described in the main thesis text, including all written appendices. Any additional supplementary materials (such as interactive content) are provided via links in the corresponding sections of the publications.
 
-\begin{enumerate}
-    \item \hyperref[paper:ave]{\bibentrynl{pardyl2023active}}
-    \item \hyperref[paper:beyond]{\bibentrynl{pardyl2023grids}}
-    \item \hyperref[paper:adaglimpse]{\bibentrynl{pardyl2024adaglimpse}}
-    \item \hyperref[paper:flysearch]{\bibentrynl{pardyl2025flysearch}}
+\begin{enumerate}[label={[\Roman*]},widest=IV]
+    \item \pubentry{pardyl2023active}.
+    \item \pubentry{pardyl2023grids}.
+    \item \pubentry{pardyl2024adaglimpse}.
+    \item \pubentry{pardyl2025flysearch}.
 \end{enumerate}
 
 \includepdf[pages=-,addtotoc={1,section,2,Active Visual Exploration Based on Attention-Map Entropy,paper:ave}]{papers/ave_comp.pdf}

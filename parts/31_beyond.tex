@@ -30,7 +30,7 @@ As described in Section~\ref{sec:prelim-pos-enc}, a standard ViT relies on learn
                       & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{papers_src/BeyondGrids/figures/elasticities/dropout/80.png}} \\
     \end{tabular}
     \end{small}
-    \caption[The three types of input elasticity evaluated in BeyondGrids]{\textbf{Elasticity perturbations.} Each row illustrates one type of perturbation applied to an example image at increasing intensity. \emph{Scale}: patches are sampled at sizes ranging from 50\% to 200\% of the native $16\times16$ size; undersampling introduces gaps while oversampling introduces overlap. \emph{Position}: patches are displaced from their grid positions by up to 50\% of the patch size (patch shake). \emph{Missing data}: an increasing fraction of patches is dropped from the input. Adapted from~\cite{pardyl2023grids}.}
+    \caption[The three types of input elasticity evaluated in BeyondGrids]{\textbf{Elasticity perturbations.} Each row illustrates one type of perturbation applied to an example image at increasing intensity. \emph{Scale}: patches are sampled at sizes ranging from 50\% to 200\% of the native $16\times16$ size; undersampling introduces gaps while oversampling introduces overlap. \emph{Position}: patches are displaced from their grid positions by up to 50\% of the patch size (patch shake). \emph{Missing data}: an increasing fraction of patches is dropped from the input. Adapted from~\pubcite{pardyl2023grids}.}
     \label{fig:beyond-perturbations}
 \end{figure}
 
@@ -56,7 +56,7 @@ where $\mathcal{E}_{\mathrm{scale}(s_1,s_2)}$ samples each patch's scale indepen
 \begin{figure}[th]
     \centering
     \includegraphics[width=.75\linewidth]{papers_src/BeyondGrids/figures/patchmix/patchmix.png}
-    \caption[PatchMix augmentation compared to CutMix and TokenMix]{\textbf{PatchMix.} Unlike CutMix, which replaces a rectangular region of one image with another, PatchMix operates on individually sampled patches and mixes them at the token level. Unlike TokenMix, it does not assume grid-aligned patches, making it compatible with elastic sampling. Reproduced from~\cite{pardyl2023grids}.}
+    \caption[PatchMix augmentation compared to CutMix and TokenMix]{\textbf{PatchMix.} Unlike CutMix, which replaces a rectangular region of one image with another, PatchMix operates on individually sampled patches and mixes them at the token level. Unlike TokenMix, it does not assume grid-aligned patches, making it compatible with elastic sampling. Reproduced from~\pubcite{pardyl2023grids}.}
     \label{fig:patchmix}
 \end{figure}
 
@@ -223,7 +223,7 @@ Figure~\ref{fig:beyond-elasticity} shows the three single-perturbation elasticit
 \end{subfigure}
 \end{small}
 \end{center}
-\caption[Elasticity curves for individual perturbations on ImageNet-1k]{\textbf{Elasticity under isolated perturbations} (ImageNet-1k top-1 accuracy). \textbf{(a)}~Scale elasticity: all baselines degrade sharply when patches deviate from scale~1; ElasticViT maintains near-constant accuracy across the measured spectrum and outperforms all baselines at extreme scales. \textbf{(b)}~Missing-data elasticity: ElasticViT surpasses MAE from 70\% dropout onward, despite never being trained with patch dropout. \textbf{(c)}~Positional elasticity: ElasticViT is nearly immune to patch shake and outperforms all but MAE at the largest perturbations. Adapted from~\cite{pardyl2023grids}.}
+\caption[Elasticity curves for individual perturbations on ImageNet-1k]{\textbf{Elasticity under isolated perturbations} (ImageNet-1k top-1 accuracy). \textbf{(a)}~Scale elasticity: all baselines degrade sharply when patches deviate from scale~1; ElasticViT maintains near-constant accuracy across the measured spectrum and outperforms all baselines at extreme scales. \textbf{(b)}~Missing-data elasticity: ElasticViT surpasses MAE from 70\% dropout onward, despite never being trained with patch dropout. \textbf{(c)}~Positional elasticity: ElasticViT is nearly immune to patch shake and outperforms all but MAE at the largest perturbations. Adapted from~\pubcite{pardyl2023grids}.}
 \label{fig:beyond-elasticity}
 \end{figure}
 
@@ -245,7 +245,7 @@ Under standard conditions (centre of each curve, scale~1, no dropout, no shake),
 \draw [arrow] (input) -- (central);
 \draw [arrow] (input) -- (edge);
 \end{tikzpicture}
-\caption[CENTRAL and EDGE adaptive patch sampling strategies]{\textbf{Adaptive sampling strategies.} CENTRAL iteratively subdivides patches closest to the image centre into four smaller ones, producing higher resolution in the foveal region (analogous to retinal sampling). EDGE uses a Canny edge detector~\cite{canny1986computational} to concentrate small patches on high-frequency regions. Reproduced from~\cite{pardyl2023grids}.}
+\caption[CENTRAL and EDGE adaptive patch sampling strategies]{\textbf{Adaptive sampling strategies.} CENTRAL iteratively subdivides patches closest to the image centre into four smaller ones, producing higher resolution in the foveal region (analogous to retinal sampling). EDGE uses a Canny edge detector~\cite{canny1986computational} to concentrate small patches on high-frequency regions. Reproduced from~\pubcite{pardyl2023grids}.}
 \label{fig:beyond-edge-vis}
 \end{figure}
 
@@ -302,18 +302,18 @@ Under standard conditions (centre of each curve, scale~1, no dropout, no shake),
 \end{tikzpicture}
 \end{small}
 \end{center}
-\caption[Accuracy vs.\ patch count for adaptive sampling strategies]{\textbf{Adaptive sampling strategies vs.\ standard grid} (ImageNet-1k accuracy). At 16 patches, ElasticViT with EDGE sampling achieves 52.6\%, versus 40.6\% for ElasticViT on a grid (+12 pp) and 19.8\% for ViT on a grid (+32 pp). The rigid ViT does not benefit from CENTRAL sampling because it cannot interpret non-grid patch positions. Adapted from~\cite{pardyl2023grids}.}
+\caption[Accuracy vs.\ patch count for adaptive sampling strategies]{\textbf{Adaptive sampling strategies vs.\ standard grid} (ImageNet-1k accuracy). At 16 patches, ElasticViT with EDGE sampling achieves 52.6\%, versus 40.6\% for ElasticViT on a grid (+12 pp) and 19.8\% for ViT on a grid (+32 pp). The rigid ViT does not benefit from CENTRAL sampling because it cannot interpret non-grid patch positions. Adapted from~\pubcite{pardyl2023grids}.}
 \label{fig:beyond-adaptive}
 \end{figure}
 
 At 16 input patches (a severely limited observation budget directly analogous to the earliest stages of active visual exploration), EDGE sampling with ElasticViT achieves 52.6\%, compared to 40.6\% for the same model on a standard grid and only 19.8\% for rigid ViT on a grid. The rigid ViT does not benefit from CENTRAL sampling in this low-patch regime, because its learnable positional embeddings cannot generalise to the non-grid-aligned positions CENTRAL produces. ElasticViT, by contrast, handles these positions natively through its continuous positional encoding.
 
-Further experimental results are presented in the original paper~\cite{pardyl2023grids}.
+Further experimental results are presented in the original paper~\pubcite{pardyl2023grids}.
 
 \subsection{Contributions}
 \label{sec:contributions-beyond}
 
-The publication ``Beyond Grids: Exploring Elastic Input Sampling for Vision Transformers''~\cite{pardyl2023grids} makes the following contributions to the field:
+The publication ``Beyond Grids: Exploring Elastic Input Sampling for Vision Transformers''~\pubcite{pardyl2023grids} makes the following contributions to the field:
 
 \begin{itemize}
     \item It formalises the notion of \emph{input elasticity} for vision transformers across three dimensions (scale, position, and missing data) and introduces an evaluation protocol that enables direct comparison of models on each dimension and demonstrates empirically that standard ViTs are fragile under these perturbations, with accuracy dropping sharply even for moderate scale or dropout levels.

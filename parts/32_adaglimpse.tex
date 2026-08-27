@@ -18,7 +18,7 @@ As reviewed in Section~\ref{sec:adaptive-scope}, prior AVE methods, whether they
 \begin{figure}[th]
     \centering
     \includegraphics[width=0.9\linewidth]{papers_src/AdaGlimpse/figures/rlglimpse.pdf}
-    \caption[AdaGlimpse: coarse-to-fine glimpse selection]{\textbf{AdaGlimpse in action.} The agent first captures a wide, low-resolution view of the entire scene (scale~$\approx 1$). Since no confident prediction can be made from this overview alone, it selects a second, smaller glimpse at a higher zoom level focusing on the most informative region. This coarse-to-fine process continues until a class probability exceeds a confidence threshold. Reproduced from~\cite{pardyl2024adaglimpse}.}
+    \caption[AdaGlimpse: coarse-to-fine glimpse selection]{\textbf{AdaGlimpse in action.} The agent first captures a wide, low-resolution view of the entire scene (scale~$\approx 1$). Since no confident prediction can be made from this overview alone, it selects a second, smaller glimpse at a higher zoom level focusing on the most informative region. This coarse-to-fine process continues until a class probability exceeds a confidence threshold. Reproduced from~\pubcite{pardyl2024adaglimpse}.}
     \label{fig:adaglimpse-teaser}
 \end{figure}
 
@@ -30,7 +30,7 @@ AdaGlimpse consists of two interacting components: a vision transformer backbone
 \begin{figure}[th]
     \centering
     \includegraphics[width=\linewidth]{papers_src/AdaGlimpse/figures/rlarch.pdf}
-    \caption[AdaGlimpse architecture overview]{\textbf{Architecture.} AdaGlimpse combines an ElasticViT encoder with a task-specific decoder (top) and a Soft Actor-Critic RL agent (bottom). At each step, the RL agent selects the position and scale of the next glimpse from the encoder's output, their coordinates, importance scores, and latent representations. Reproduced from~\cite{pardyl2024adaglimpse}.}
+    \caption[AdaGlimpse architecture overview]{\textbf{Architecture.} AdaGlimpse combines an ElasticViT encoder with a task-specific decoder (top) and a Soft Actor-Critic RL agent (bottom). At each step, the RL agent selects the position and scale of the next glimpse from the encoder's output, their coordinates, importance scores, and latent representations. Reproduced from~\pubcite{pardyl2024adaglimpse}.}
     \label{fig:adaglimpse-arch}
 \end{figure}
 
@@ -43,7 +43,7 @@ AdaGlimpse consists of two interacting components: a vision transformer backbone
 \begin{figure}[th]
     \centering
     \includegraphics[width=0.75\linewidth]{papers_src/AdaGlimpse/figures/rlrl.pdf}
-    \caption[AdaGlimpse RL agent: actor and critic]{\textbf{RL agent.} The actor selects the next glimpse position and scale $(x, y, z)$ from state $s_t = (\widehat{G}_t, \widehat{C}_t, \widehat{I}_t, \widehat{H}_t)$; the critic estimates the expected cumulative reward $Q(s_t, a_t)$ for that action. Actor and critic share the same input encoding architecture but have separate parameters. Reproduced from~\cite{pardyl2024adaglimpse}.}
+    \caption[AdaGlimpse RL agent: actor and critic]{\textbf{RL agent.} The actor selects the next glimpse position and scale $(x, y, z)$ from state $s_t = (\widehat{G}_t, \widehat{C}_t, \widehat{I}_t, \widehat{H}_t)$; the critic estimates the expected cumulative reward $Q(s_t, a_t)$ for that action. Actor and critic share the same input encoding architecture but have separate parameters. Reproduced from~\pubcite{pardyl2024adaglimpse}.}
     \label{fig:adaglimpse-rl}
 \end{figure}
 
@@ -57,7 +57,7 @@ AdaGlimpse consists of two interacting components: a vision transformer backbone
 \label{sec:adaglimpse-results}
 
 \begin{table}[th]
-    \caption[Reconstruction results across datasets and pixel budgets]{\textbf{Reconstruction results.} RMSE (lower is better) for AdaGlimpse against baselines across four datasets at three pixel budgets. Pixel~\% denotes the fraction of scene pixels seen by the model. $\dag$: reproduced result not published in the relevant paper. *: zero-shot performance (trained on ImageNet-1k only). AdaGlimpse outperforms all baselines at every pixel budget. Adapted from~\cite{pardyl2024adaglimpse}.}
+    \caption[Reconstruction results across datasets and pixel budgets]{\textbf{Reconstruction results.} RMSE (lower is better) for AdaGlimpse against baselines across four datasets at three pixel budgets. Pixel~\% denotes the fraction of scene pixels seen by the model. $\dag$: reproduced result not published in the relevant paper. *: zero-shot performance (trained on ImageNet-1k only). AdaGlimpse outperforms all baselines at every pixel budget. Adapted from~\pubcite{pardyl2024adaglimpse}.}
     \label{tab:adaglimpse-reconstruction}
     \begin{center}
     \begin{small}
@@ -83,12 +83,12 @@ AdaGlimpse consists of two interacting components: a vision transformer backbone
     \end{center}
 \end{table}
 
-\textbf{Reconstruction.} Table~\ref{tab:adaglimpse-reconstruction} compares AdaGlimpse with AME~\cite{pardyl2023active}, AttSeg~\cite{seifi2020segment}, GlAtEx~\cite{seifi2021glimpse}, and SimGlim~\cite{Jha2023WACV} on image reconstruction (RMSE, lower is better) across four datasets (ImageNet-1k, SUN360~\cite{xiao2012recognizing}, ADE20K~\cite{zhou2017scene}, and MS COCO~\cite{lin2014microsoft}) at three pixel budgets. A notable property of AdaGlimpse is that it is trained on ImageNet-1k only; the SUN360, ADE20K, and COCO results represent zero-shot transfer without any per-dataset fine-tuning.
+\textbf{Reconstruction.} Table~\ref{tab:adaglimpse-reconstruction} compares AdaGlimpse with AME~\pubcite{pardyl2023active}, AttSeg~\cite{seifi2020segment}, GlAtEx~\cite{seifi2021glimpse}, and SimGlim~\cite{Jha2023WACV} on image reconstruction (RMSE, lower is better) across four datasets (ImageNet-1k, SUN360~\cite{xiao2012recognizing}, ADE20K~\cite{zhou2017scene}, and MS COCO~\cite{lin2014microsoft}) at three pixel budgets. A notable property of AdaGlimpse is that it is trained on ImageNet-1k only; the SUN360, ADE20K, and COCO results represent zero-shot transfer without any per-dataset fine-tuning.
 
 At the $\approx$6\% pixel budget, AdaGlimpse achieves a lower RMSE (17.6--21.5 across datasets) than AME does at $\approx$18\% pixels (23.4--28.6). The coarse-to-fine strategy allows the model to first establish a global scene context with a single wide glimpse and then concentrate remaining observations on the most informative regions, which is impossible with a fixed-scale policy.
 
 \begin{table}[th]
-    \caption[Classification results on ImageNet-1k]{\textbf{Classification results.} Top-1 accuracy on ImageNet-1k. AdaGlimpse achieves the best accuracy at the same pixel budget as STAM (28.57\%), and with early stopping at 85\% confidence, reaches STAM-level accuracy using $\sim$40\% fewer pixels. Adapted from~\cite{pardyl2024adaglimpse}.}
+    \caption[Classification results on ImageNet-1k]{\textbf{Classification results.} Top-1 accuracy on ImageNet-1k. AdaGlimpse achieves the best accuracy at the same pixel budget as STAM (28.57\%), and with early stopping at 85\% confidence, reaches STAM-level accuracy using $\sim$40\% fewer pixels. Adapted from~\pubcite{pardyl2024adaglimpse}.}
     \label{tab:adaglimpse-classification}
     \begin{center}
     \begin{small}
@@ -194,7 +194,7 @@ coordinates {
 \end{small}
 \end{center}
 \vspace{-.2cm}
-\caption[Pixel efficiency curves for AdaGlimpse vs.\ baselines]{\textbf{Pixel \% vs.\ performance.} \emph{Left}: SUN360 reconstruction RMSE (lower is better) as a function of the fraction of pixels observed. AdaGlimpse surpasses all baselines at any pixel budget and achieves better reconstruction with 5\% of pixels than AME achieves with 25\%. \emph{Right}: ImageNet-1k classification accuracy; AdaGlimpse exceeds STAM at every budget, and the early-stopping variant matches STAM's accuracy using $\sim$40\% fewer pixels. Adapted from~\cite{pardyl2024adaglimpse}.}
+\caption[Pixel efficiency curves for AdaGlimpse vs.\ baselines]{\textbf{Pixel \% vs.\ performance.} \emph{Left}: SUN360 reconstruction RMSE (lower is better) as a function of the fraction of pixels observed. AdaGlimpse surpasses all baselines at any pixel budget and achieves better reconstruction with 5\% of pixels than AME achieves with 25\%. \emph{Right}: ImageNet-1k classification accuracy; AdaGlimpse exceeds STAM at every budget, and the early-stopping variant matches STAM's accuracy using $\sim$40\% fewer pixels. Adapted from~\pubcite{pardyl2024adaglimpse}.}
 \label{fig:adaglimpse-nglimpses}
 \end{figure}
 
@@ -210,7 +210,7 @@ coordinates {
     \end{small}
     \end{center}
     \vspace{-.1cm}
-    \caption[Glimpse selection step-by-step for ImageNet classification]{\textbf{Glimpse selection step-by-step.} AdaGlimpse explores $224\times224$ ImageNet images using $32\times32$ glimpses of variable scale, stopping once the predicted probability exceeds 75\% (a lower threshold than the 85\% used for the quantitative results in Table~\ref{tab:adaglimpse-classification}, chosen here to keep the illustrated episodes short). The vertical bar separates two independent examples. Row A: glimpse locations overlaid on the original image. Row B: pixels visible to the model (interpolated for display). Row C: current predicted label. Row D: prediction confidence (green = correct and above threshold). Reproduced from~\cite{pardyl2024adaglimpse}.}
+    \caption[Glimpse selection step-by-step for ImageNet classification]{\textbf{Glimpse selection step-by-step.} AdaGlimpse explores $224\times224$ ImageNet images using $32\times32$ glimpses of variable scale, stopping once the predicted probability exceeds 75\% (a lower threshold than the 85\% used for the quantitative results in Table~\ref{tab:adaglimpse-classification}, chosen here to keep the illustrated episodes short). The vertical bar separates two independent examples. Row A: glimpse locations overlaid on the original image. Row B: pixels visible to the model (interpolated for display). Row C: current predicted label. Row D: prediction confidence (green = correct and above threshold). Reproduced from~\pubcite{pardyl2024adaglimpse}.}
     \label{fig:adaglimpse-qualitative}
     \end{figure}
 
@@ -222,12 +222,12 @@ coordinates {
 
 \textbf{Qualitative glimpse sequences.} Figure~\ref{fig:adaglimpse-qualitative} shows two representative classification sequences. The policy takes an initial wide-field glimpse, then progressively zooms in on discriminative regions, and halts as soon as the confidence threshold is exceeded, illustrating the coarse-to-fine strategy emerging from the learned policy without any explicit inductive bias towards it.
 
-Further experimental results are presented in the original paper~\cite{pardyl2024adaglimpse}.
+Further experimental results are presented in the original paper~\pubcite{pardyl2024adaglimpse}.
 
 \subsection{Contributions}
 \label{sec:contributions-adaglimpse}
 
-The publication ``AdaGlimpse: Active Visual Exploration with Arbitrary Glimpse Position and Scale''~\cite{pardyl2024adaglimpse} makes the following contributions to the field of active visual exploration:
+The publication ``AdaGlimpse: Active Visual Exploration with Arbitrary Glimpse Position and Scale''~\pubcite{pardyl2024adaglimpse} makes the following contributions to the field of active visual exploration:
 
 \begin{itemize}
     \item It introduces AdaGlimpse, a novel AVE method that selects glimpses in a fully continuous three-dimensional position-scale action space, overcoming the grid constraint shared by prior approaches. AdaGlimpse is able to learn the coarse-to-fine exploration without any explicit inductive bias towards it.

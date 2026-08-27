@@ -151,16 +151,16 @@ Second, they are \emph{flexible}, in the sense of exploiting the true continuous
 Finally, they are \emph{scalable} toward the demands of real embodied agents operating in the open world, spanning both the local scale of choosing where to look and the global scale of choosing where to move, contrasted in Figure~\ref{fig:local-global}.
 The four publications that make up this thesis form a deliberate progression along this path, each dismantling a limitation left standing by the previous one.
 
-The first contribution, ``Active Visual Exploration Based on Attention-Map Entropy''~\cite{pardyl2023active}, asks how an agent should decide where to look
+The first contribution, ``Active Visual Exploration Based on Attention-Map Entropy''~\pubcite{pardyl2023active}, asks how an agent should decide where to look
 next without the machinery of a separate decision network. It shows that the internal uncertainty of a transformer, read directly from the entropy of its
 attention maps, is itself an effective signal for selecting the most informative next glimpse, simplifying training while improving reconstruction,
 classification, and segmentation from partial observations. This work operates, however, within the familiar setting of glimpses drawn from a fixed grid.
 
-The second contribution, ``Beyond Grids: Exploring Elastic Input Sampling for Vision Transformers''~\cite{pardyl2023grids}, addresses that constraint.
+The second contribution, ``Beyond Grids: Exploring Elastic Input Sampling for Vision Transformers''~\pubcite{pardyl2023grids}, addresses that constraint.
 It formalises the notion of input \emph{elasticity}, the resilience of a model to patches of varying scale, position, and coverage, introduces a protocol to
 measure it, and proposes architectural and training modifications that let a vision transformer ingest patches sampled freely from an image. This turns the rigid grid into a continuous sampling space.
 
-The third contribution, ``AdaGlimpse: Active Visual Exploration with Arbitrary Glimpse Position and Scale''~\cite{pardyl2024adaglimpse}, closes the gap between
+The third contribution, ``AdaGlimpse: Active Visual Exploration with Arbitrary Glimpse Position and Scale''~\pubcite{pardyl2024adaglimpse}, closes the gap between
 software and hardware. Building on an input-elastic transformer, it casts exploration as a Markov decision process and uses the Soft Actor-Critic
 reinforcement learning algorithm to select glimpses of arbitrary continuous position and scale, exactly the degrees of freedom offered by optical zoom or by
 changing a UAV's altitude. The resulting agent rapidly establishes a coarse awareness of a scene before zooming in on detail, matching or surpassing prior
@@ -169,7 +169,7 @@ methods while observing far fewer pixels.
 The first three papers progressively generalise \emph{local-scale} exploration: deciding
 where to look within a scene the agent can already sense, moving from a fixed grid (AME), to
 elastic patch geometry (Beyond Grids), to arbitrary continuous zoom and pan (AdaGlimpse). The
-fourth contribution, ``FlySearch: Exploring how vision-language models explore''~\cite{pardyl2025flysearch}, turns to the complementary \emph{global-scale} problem: deciding where
+fourth contribution, ``FlySearch: Exploring how vision-language models explore''~\pubcite{pardyl2025flysearch}, turns to the complementary \emph{global-scale} problem: deciding where
 to move next in a large, open, three-dimensional world in order to find something. The environment
 is no longer a bounded scene from which glimpses can be sampled, but an unbounded outdoor space
 that the agent, a simulated UAV, must physically traverse to acquire each new observation. FlySearch introduces a photorealistic benchmark for goal-driven object search in such

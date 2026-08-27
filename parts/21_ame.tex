@@ -16,7 +16,7 @@
         \small\textit{Our approach based on internal MAE uncertainty}\\[3pt]
         \includegraphics[width=\linewidth]{papers_src/AME/fig/teaser/2.png}
     \end{minipage}
-    \caption[Attention-Map Entropy contrasted with auxiliary-loss glimpse selection]{\textbf{Attention-Map Entropy (AME).} The proposed approach chooses the most informative observations by reusing the internal uncertainty already coded in the attention maps of the target-task model. In contrast to existing methods, it does not require any auxiliary loss function dedicated to active exploration, so that training can concentrate entirely on the target-task loss. Figure reproduced from~\cite{pardyl2023active}.}
+    \caption[Attention-Map Entropy contrasted with auxiliary-loss glimpse selection]{\textbf{Attention-Map Entropy (AME).} The proposed approach chooses the most informative observations by reusing the internal uncertainty already coded in the attention maps of the target-task model. In contrast to existing methods, it does not require any auxiliary loss function dedicated to active exploration, so that training can concentrate entirely on the target-task loss. Figure reproduced from~\pubcite{pardyl2023active}.}
     \label{fig:ame-teaser}
 \end{figure}
 
@@ -32,7 +32,7 @@ The key hypothesis driving this work is that such a dedicated decision mechanism
 \begin{figure}[th]
     \centering
     \includegraphics[width=\linewidth]{papers_src/AME/architecture.png}
-    \caption[AME architecture for the reconstruction task]{\textbf{Architecture for reconstruction.} The agent has observed two patches of the image, which are processed by the encoder to produce their feature representations (orange rectangles). These outputs are combined with the masked patches (grey rectangles) and passed through the decoder, which reconstructs the missing image patches. In addition, the method computes the entropy map for one of the decoder's multi-head self-attention layers and uses it to select the location of the third glimpse. The process repeats until the assumed number of glimpses is reached. Reproduced from~\cite{pardyl2023active}.}
+    \caption[AME architecture for the reconstruction task]{\textbf{Architecture for reconstruction.} The agent has observed two patches of the image, which are processed by the encoder to produce their feature representations (orange rectangles). These outputs are combined with the masked patches (grey rectangles) and passed through the decoder, which reconstructs the missing image patches. In addition, the method computes the entropy map for one of the decoder's multi-head self-attention layers and uses it to select the location of the third glimpse. The process repeats until the assumed number of glimpses is reached. Reproduced from~\pubcite{pardyl2023active}.}
     \label{fig:ame-architecture}
 \end{figure}
 
@@ -50,7 +50,7 @@ where $Q$ and $K$ pack together the query and key projections of all $M$ token e
 \begin{figure}[th]
     \centering
     \includegraphics[width=0.75\linewidth]{papers_src/AME/fig/shannon.png}
-    \caption[Illustration of an attention-derived entropy map]{\textbf{Entropy map.} Consider an image divided into four patches ($2\times2$), shown on the left. Its attention map is a $4\times4$ matrix, each row of which holds the attention weights used to compute the output of the corresponding patch in the next transformer layer. Computing the Shannon entropy (Equation~\ref{eq:shannon-entropy}) of each row yields a $2\times2$ entropy map; the patch with the highest entropy value is selected as the next glimpse. Figure reproduced from~\cite{pardyl2023active}.}
+    \caption[Illustration of an attention-derived entropy map]{\textbf{Entropy map.} Consider an image divided into four patches ($2\times2$), shown on the left. Its attention map is a $4\times4$ matrix, each row of which holds the attention weights used to compute the output of the corresponding patch in the next transformer layer. Computing the Shannon entropy (Equation~\ref{eq:shannon-entropy}) of each row yields a $2\times2$ entropy map; the patch with the highest entropy value is selected as the next glimpse. Figure reproduced from~\pubcite{pardyl2023active}.}
     \label{fig:ame-entropy}
 \end{figure}
 
@@ -126,7 +126,7 @@ As shown in Table~\ref{tab:ame-reconstruction}, AME achieves the best reconstruc
         \qualimg{papers_src/AME/fig/sun360/5/atseg.png} \\
         \bottomrule
     \end{tabular}
-    \caption[Reconstruction quality comparison on SUN360]{\textbf{Reconstruction quality for SUN360.} Qualitative reconstruction results comparing AME against AttSeg~\cite{seifi2020segment} and GlAtEx~\cite{seifi2021glimpse} on the SUN360 dataset using $8\times48^2$ retinal glimpses. Reconstructions produced by our method are visibly sharper and better preserve scene structure. Reproduced from~\cite{pardyl2023active}.}
+    \caption[Reconstruction quality comparison on SUN360]{\textbf{Reconstruction quality for SUN360.} Qualitative reconstruction results comparing AME against AttSeg~\cite{seifi2020segment} and GlAtEx~\cite{seifi2021glimpse} on the SUN360 dataset using $8\times48^2$ retinal glimpses. Reconstructions produced by our method are visibly sharper and better preserve scene structure. Reproduced from~\pubcite{pardyl2023active}.}
     \label{fig:ame-qualitative-retinal}
 \end{figure}
 
@@ -160,7 +160,7 @@ Figure~\ref{fig:ame-steps} visualises the process step by step: as additional gl
             -- & \\
         \bottomrule
     \end{tabular}
-    \caption[Step-by-step AME glimpse selection on a sample scene]{\textbf{Glimpse-based reconstruction step by step.} Selected steps of an $8\times32^2$ glimpse-selection process on a sample $256\times128$ image from ADE20K, showing the model input (known glimpses), its prediction, and the decoder attention entropy driving the choice of the next glimpse (known areas are explicitly set to zero). The model explores the image where its own reconstruction is still uncertain. Adapted from~\cite{pardyl2023active}.}
+    \caption[Step-by-step AME glimpse selection on a sample scene]{\textbf{Glimpse-based reconstruction step by step.} Selected steps of an $8\times32^2$ glimpse-selection process on a sample $256\times128$ image from ADE20K, showing the model input (known glimpses), its prediction, and the decoder attention entropy driving the choice of the next glimpse (known areas are explicitly set to zero). The model explores the image where its own reconstruction is still uncertain. Adapted from~\pubcite{pardyl2023active}.}
     \label{fig:ame-steps}
 \end{figure}
 
@@ -183,7 +183,7 @@ Classification results on SUN360 are summarised in Table~\ref{tab:ame-classifica
     \end{tabular}
     \end{sc}
     \end{footnotesize}
-    \caption[Classification accuracy on SUN360]{\textbf{Classification results.} Multi-class classification accuracy on the SUN360 dataset using $8\times48^2$ retinal glimpses. \textit{Train-all} trains the entire model jointly; \textit{head-only} freezes the autoencoder weights and trains only the classification head on top. Our method outperforms competitive methods in both regimes. Reproduced from~\cite{pardyl2023active}.}
+    \caption[Classification accuracy on SUN360]{\textbf{Classification results.} Multi-class classification accuracy on the SUN360 dataset using $8\times48^2$ retinal glimpses. \textit{Train-all} trains the entire model jointly; \textit{head-only} freezes the autoencoder weights and trains only the classification head on top. Our method outperforms competitive methods in both regimes. Reproduced from~\pubcite{pardyl2023active}.}
     \label{tab:ame-classification}
 \end{table}
 
