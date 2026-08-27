@@ -8,6 +8,8 @@ Beyond Grids (Section~\ref{sec:beyond}) established that a ViT can be made elast
 
 As reviewed in Section~\ref{sec:adaptive-scope}, prior AVE methods, whether they pick glimpses directly from a full-scene grid or refine a low-resolution overview with fixed-scale crops, are constrained to discrete, grid-aligned action spaces and cannot exploit variable-scale observations even on hardware that natively supports zoom. AdaGlimpse bridges this gap by formulating glimpse selection over a fully continuous three-dimensional action space of position and scale, and training a Soft Actor-Critic agent~\cite{haarnoja2018soft} to navigate it.
 
+It thereby investigates Hypothesis~\ref{hyp:adaglimpse}: an agent can learn to select both the position and scale of each observation in a continuous space, discovering an efficient coarse-to-fine exploration strategy that reduces the number of pixels it needs to observe.
+
 \subsection{Adaptive glimpse sampling}
 \label{sec:adaglimpse-formulation}
 
@@ -234,5 +236,7 @@ The publication ``AdaGlimpse: Active Visual Exploration with Arbitrary Glimpse P
     \item It formulates AVE as a Markov Decision Process with a four-component state space $(\widehat{G}_t, \widehat{C}_t, \widehat{I}_t, \widehat{H}_t)$ and trains it with the Soft Actor-Critic algorithm, whose maximum-entropy objective encourages diverse, exploratory policies. The policy operates on a single task-agnostic transformer backbone, in which only the decoder head changes between reconstruction, classification, and segmentation.
     \item It demonstrates state-of-the-art performance across three visual tasks and four datasets. In reconstruction, AdaGlimpse achieves better results with 6\% of pixels than competing methods achieve with 18\%. In classification, it surpasses the best prior method (STAM) in absolute accuracy and can match STAM's accuracy using 40\% fewer pixels with early stopping. In segmentation, it matches AME while observing 35\% fewer pixels.
 \end{itemize}
+
+The learned coarse-to-fine behaviour and the improvements in pixel efficiency across reconstruction, classification, and segmentation confirm Hypothesis~\ref{hyp:adaglimpse} within the evaluated settings.
 
 I was the primary author of this paper, and contributed to the conception of the idea, as well as majority of the experimental design and implementation. Furthermore, I conducted more than half of the experiments presented in the paper. I have presented this research at the European Conference on Computer Vision -- ECCV 2024, held in Milan, Italy. The code, data and further visualisations are available on my website at \url{https://io.pardyl.com/AdaGlimpse/}.

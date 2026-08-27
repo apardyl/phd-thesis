@@ -145,22 +145,27 @@ Finally, it is not clear whether methods designed for simplified simulation envi
 
 \section{Learning to explore efficiently}
 
-The central thesis of this dissertation is that \emph{active visual exploration} (AVE) should be treated as a learning problem in its own right.
-Doing so yields agents which, first of all, are \emph{efficient}, in the sense of understanding an environment from as few observations as possible.
-Second, they are \emph{flexible}, in the sense of exploiting the true continuous capabilities of real sensors rather than artificial grids.
-Finally, they are \emph{scalable} toward the demands of real embodied agents operating in the open world, spanning both the local scale of choosing where to look and the global scale of choosing where to move, contrasted in Figure~\ref{fig:local-global}.
-The four publications that make up this thesis form a deliberate progression along this path, each dismantling a limitation left standing by the previous one.
+This dissertation investigates how active visual exploration (AVE) can become more \emph{efficient}, understanding an environment from as few observations as possible; more \emph{flexible}, exploiting the continuous capabilities of real sensors rather than artificial grids; and more \emph{scalable} toward the demands of embodied agents operating in the open world. It considers both the local scale of choosing where to look and the global scale of choosing where to move, contrasted in Figure~\ref{fig:local-global}. The four publications that make up the thesis form a progression along this path, each investigating one of the following research hypotheses.
 
-The first contribution, ``Active Visual Exploration Based on Attention-Map Entropy''~\pubcite{pardyl2023active}, asks how an agent should decide where to look
+\subsection{Research hypotheses}
+
+\begin{enumerate}[label=\textbf{H\arabic*.},ref=H\arabic*]
+    \item \label{hyp:ame} The uncertainty already encoded in a visual model's attention maps can be used to decide where to look next, without training a separate component for observation selection.
+    \item \label{hyp:beyond} A vision transformer can be made resilient to input patches sampled at varying positions and scales or providing incomplete coverage, allowing it to process observations that do not follow a rigid grid.
+    \item \label{hyp:adaglimpse} An agent can learn to select both the position and scale of each observation in a continuous space, discovering an efficient coarse-to-fine exploration strategy that reduces the number of pixels it needs to observe.
+    \item \label{hyp:flysearch} Current vision-language models can perform short-horizon visual navigation, but cannot reliably form and execute consistent multi-step search strategies in large, open, three-dimensional environments.
+\end{enumerate}
+
+The first contribution, ``Active Visual Exploration Based on Attention-Map Entropy''~\pubcite{pardyl2023active}, investigates Hypothesis~\ref{hyp:ame} by asking how an agent should decide where to look
 next without the machinery of a separate decision network. It shows that the internal uncertainty of a transformer, read directly from the entropy of its
 attention maps, is itself an effective signal for selecting the most informative next glimpse, simplifying training while improving reconstruction,
 classification, and segmentation from partial observations. This work operates, however, within the familiar setting of glimpses drawn from a fixed grid.
 
-The second contribution, ``Beyond Grids: Exploring Elastic Input Sampling for Vision Transformers''~\pubcite{pardyl2023grids}, addresses that constraint.
+The second contribution, ``Beyond Grids: Exploring Elastic Input Sampling for Vision Transformers''~\pubcite{pardyl2023grids}, investigates Hypothesis~\ref{hyp:beyond} and addresses that constraint.
 It formalises the notion of input \emph{elasticity}, the resilience of a model to patches of varying scale, position, and coverage, introduces a protocol to
 measure it, and proposes architectural and training modifications that let a vision transformer ingest patches sampled freely from an image. This turns the rigid grid into a continuous sampling space.
 
-The third contribution, ``AdaGlimpse: Active Visual Exploration with Arbitrary Glimpse Position and Scale''~\pubcite{pardyl2024adaglimpse}, closes the gap between
+The third contribution, ``AdaGlimpse: Active Visual Exploration with Arbitrary Glimpse Position and Scale''~\pubcite{pardyl2024adaglimpse}, investigates Hypothesis~\ref{hyp:adaglimpse} and closes the gap between
 software and hardware. Building on an input-elastic transformer, it casts exploration as a Markov decision process and uses the Soft Actor-Critic
 reinforcement learning algorithm to select glimpses of arbitrary continuous position and scale, exactly the degrees of freedom offered by optical zoom or by
 changing a UAV's altitude. The resulting agent rapidly establishes a coarse awareness of a scene before zooming in on detail, matching or surpassing prior
@@ -169,7 +174,7 @@ methods while observing far fewer pixels.
 The first three papers progressively generalise \emph{local-scale} exploration: deciding
 where to look within a scene the agent can already sense, moving from a fixed grid (AME), to
 elastic patch geometry (Beyond Grids), to arbitrary continuous zoom and pan (AdaGlimpse). The
-fourth contribution, ``FlySearch: Exploring how vision-language models explore''~\pubcite{pardyl2025flysearch}, turns to the complementary \emph{global-scale} problem: deciding where
+fourth contribution, ``FlySearch: Exploring how vision-language models explore''~\pubcite{pardyl2025flysearch}, investigates Hypothesis~\ref{hyp:flysearch} and turns to the complementary \emph{global-scale} problem: deciding where
 to move next in a large, open, three-dimensional world in order to find something. The environment
 is no longer a bounded scene from which glimpses can be sampled, but an unbounded outdoor space
 that the agent, a simulated UAV, must physically traverse to acquire each new observation. FlySearch introduces a photorealistic benchmark for goal-driven object search in such

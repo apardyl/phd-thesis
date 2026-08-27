@@ -25,7 +25,7 @@
 
 As established in Section~\ref{sec:uncertainty-scope}, prior work on glimpse-based active exploration relies on a dedicated network component, trained separately from and in parallel to the target task, to decide where to look next. This \emph{dual-objective} design has a tangible cost -- it increases the number of network components, raises the memory footprint, and complicates training, since two training objectives (one for the perceptual task, one for exploration) may pull in opposite directions.
 
-The key hypothesis driving this work is that such a dedicated decision mechanism may not be necessary at all in this setting. A transformer-based masked autoencoder processing a partial view of a scene already produces a rich description of what it is uncertain about as the entropy of its self-attention maps. The question this publication asks is whether that signal alone is sufficient to drive effective glimpse selection, and whether eliminating the second objective actually improves rather than harms performance (see Figure~\ref{fig:ame-teaser}).
+This publication investigates Hypothesis~\ref{hyp:ame}: the uncertainty already encoded in a visual model's attention maps can be used to decide where to look next, without training a separate component for observation selection. A transformer-based masked autoencoder processing a partial view of a scene already produces a rich description of what it is uncertain about as the entropy of its self-attention maps. The question is whether that signal alone is sufficient to drive effective glimpse selection, and whether eliminating the second objective actually improves rather than harms performance (see Figure~\ref{fig:ame-teaser}).
 
 \subsection{Attention Map Entropy}
 
@@ -201,5 +201,7 @@ The publication summarised in this chapter makes the following contributions to 
     \item It shows that a single, task-only training objective is sufficient to obtain a strong exploration policy, simplifying the training procedure and reducing the memory footprint of the resulting system compared to dual-objective designs.
     \item It provides, to the best of the authors' knowledge, the first published empirical evaluation coupling transformer-based active visual exploration with retina-like glimpses, mimicking a foveated sensor.
 \end{itemize}
+
+The task results and sampling-rule ablations confirm Hypothesis~\ref{hyp:ame} within the evaluated settings.
 
 I was the primary author of this paper, and contributed to the conception of the idea, as well as majority of the experimental design and implementation. Furthermore, I conducted more than half of the experiments presented in the paper. I have presented this research at the International Joint Conferences on Artificial Intelligence 2023 held in Macau. The code, data and further visualisations are available on my website at \url{https://io.pardyl.com/AME/}.

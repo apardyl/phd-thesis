@@ -11,6 +11,8 @@
 
 Despite the rapid development of vision-language models as zero-shot tools across a wide range of perception and reasoning tasks, their ability to perform goal-directed exploration in open three-dimensional environments has received little systematic attention. The existing benchmarks that come closest each fall short of the goal as shown in Section~\ref{sec:openworld-scope}. FlySearch addresses these gaps directly -- it provides a simulated photorealistic outdoor environment with a three-dimensional action space, a zero-shot language-conditioned search task, and a suite of standardised challenges that isolate distinct aspects of exploration capability. By evaluating VLMs directly rather than as components within a larger navigation system, it measures spatial exploration capability in isolation.
 
+The evaluation investigates Hypothesis~\ref{hyp:flysearch}: current vision-language models can perform short-horizon visual navigation, but cannot reliably form and execute consistent multi-step search strategies in large, open, three-dimensional environments.
+
 \subsection{Benchmark design}
 \label{sec:flysearch-benchmark}
 
@@ -190,7 +192,8 @@ The publication ``FlySearch: Exploring how vision-language models explore''~\pub
     \item It demonstrates through GRPO fine-tuning that surface-level failures (instruction following, spatial grounding) are correctable with synthetic data, but that the deeper inability to form and execute multi-step exploration strategies persists after fine-tuning, identifying this as an open problem for current VLMs.
 \end{itemize}
 
+The widening gap to human performance as the tasks require longer strategies, and the persistence of systematic-search failures after fine-tuning, confirm Hypothesis~\ref{hyp:flysearch} within the evaluated settings.
+
 FlySearch makes the problem of open-world exploration precise. By characterising where current models fail and under what conditions the gap to human performance is largest, it establishes a concrete set of open problems and a reproducible benchmark against which future progress can be measured.
 
 I was the primary author of this paper, and contributed to the conception of the idea, as well as the majority of the experimental design and implementation of the simulator. Furthermore, I conducted most of the experiments presented in the paper. I have presented this research at the Thirty-Ninth Conference on Neural Information Processing Systems (NeurIPS 2025), held in San Diego, USA. The code, data and further visualisations are available on the project website at \url{https://flysearch.gmum.net/}.
-
