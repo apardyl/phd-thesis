@@ -2,7 +2,7 @@
 
 \section{Motivation}
 
-\subsection{Do humans dream of electric sheep?}
+\subsection{The enduring dream of intelligent machines}
 
 The dream of creating artificial beings that perceive and act like us is far older than the invention of the semiconductor.
 From the ancient Greek myth of the bronze automaton Talos~\cite{mayor2018gods},
@@ -16,19 +16,20 @@ presented a vision of highly intelligent anthropomorphic machines that reason ba
 Stanisław Lem's stories~\cite{lem1965cyberiada} went a step further, giving them personalities, flaws, and desires,
 showcasing the complexity of artificial civilisations and their potential ethical dilemmas.
 Movies such as Forbidden Planet (1956)~\cite{wilcox1956forbidden} and Star Wars (1977)~\cite{lucas1977starwars}
-presented robots as beings with an almost human psychology and thinking capabilities, albeit clumsier and more limited in their actions, bringing the idea to the mainstream.
-On a philosophical level, the discourse shifted from Descartes' reflections that the
-human living body might be nothing but an intricate machine~\cite{descartes1664homme} to Turing's question of whether we can actually determine if a machine is intelligent or not~\cite{turing1950computing}.
-At the time, the founders of artificial intelligence confidently predicted that
-human-level perception and reasoning were only a few years away~\cite{mccarthy1955proposal}.
+presented robots as beings with an almost human psychology and thinking capabilities, but clumsier and more limited in their actions, bringing the idea to the mainstream. By the mid-20th century, the dream of intelligent machines was also becoming a
+scientific research programme. At that time Alan Turing reframed the question of whether machines can think in operational terms~\cite{turing1950computing}. A few years later the founders of artificial intelligence proceeded from the optimistic premise that the
+essential features of intelligence could be described precisely enough to be
+simulated by a computer algorithm~\cite{mccarthy1955proposal}.
+
+\subsection{The Moravec's paradox}
 
 Reality proved to be quite different and more humbling. Tasks that were regarded as the pinnacle of human intellect, such as playing chess~\cite{campbell2002deep} 
 or proving mathematical theorems~\cite{davis1960computing,de2008z3}, turned out to be relatively easy for machines to master at a level surpassing even the best human experts.
 At the same time, everyday competences such as finding a path in a cluttered room, locating and moving objects from one place to another, or even just looking for a familiar face in a crowd, turned out to be surprisingly
 hard to reproduce even at the animal level. This inversion, known as Moravec's paradox~\cite{moravec1988mind}, has a compelling explanation in evolutionary
 terms. Those abilities are a product of hundreds of millions of years of natural selection. The sudden emergence of eyes is even
-credited with igniting the Cambrian explosion of animal life~\cite{parker2003blink,land2012animal}, and a large fraction of the
-primate cerebral cortex is dedicated to processing what we see~\cite{felleman1991distributed}. We are, in effect, expert visual explorers by nature. What our brains do
+credited with starting the Cambrian expansion of animal life~\cite{parker2003blink,land2012animal}, and a large fraction of the
+primate cerebral cortex is dedicated to processing what we see~\cite{felleman1991distributed}. We are, as a consequence, expert visual explorers by nature, able to efficiently use our limited perceptual and computational resources in a complex and dynamic world. What our brains do
 almost subconsciously -- allocating gaze and gathering just enough visual evidence
 to act -- remains as of today one of the hardest open problems in artificial intelligence~\cite{dreyfus1992computers}.
 
@@ -37,18 +38,18 @@ to act -- remains as of today one of the hardest open problems in artificial int
 Every agent that acts in the physical world, whether it is a human, an animal, or a machine, does so through a narrow window.
 An eagle circling above a meadow searching for prey, a person looking for a familiar face in a crowded corridor, or a robot inspecting a factory floor for defects,
 never perceives its surroundings all at once and in perfect detail. Instead, it is limited by its perceptual capabilities and environmental constraints. Furthermore,
-the environment is not static, but changes constantly, making it impossible to map and analyse it in its entirety.
-Therefore, the agent must be able to reason based on partial information, while actively pointing its senses where they matter to gather more data as needed.
+the environment is not static, but changes constantly, making it impossible to map and analyse it part by part.
+Therefore, the agent must be able to reason based on partial information, while actively pointing its sensors toward most informative regions to gather more data as needed.
 The perception process is not a passive act of reception, but rather an active, goal-driven process of exploration~\cite{bajcsy1988active,aloimonos1988active,ballard1991animate}, illustrated in Figure~\ref{fig:passive-active}.
 Human studies have shown that this exploration process happens on both a local and a global scale.
 On the local scale, we are experts at scanning our surroundings with our eyes, moving our gaze in a task-driven manner~\cite{yarbus1967eye,hayhoe2005eye}.
 On the global scale, we excel at exploring our environment by moving our body to different locations, navigating through complex scenes and avoiding obstacles without much effort~\cite{fajen2003behavioral}.
-The main motivation of this thesis is to enable machines to do the same: to \emph{learn to actively explore} their environment efficiently, perceiving only what they need in order to act on their goals.
+The main motivation of this thesis is to enable machines to do the same: to \emph{learn to actively explore} their environment efficiently, perceiving only what they need in order to fulfil their goals.
 
 \begin{figure}[t]
 \centering
 \input{img/main/fig_passive_active.tex}
-\caption[Passive perception versus active embodied vision]{\textbf{Passive perception versus active embodied vision.} A passive perception system is handed a complete, static view of the scene to produce a prediction. An active embodied agent instead senses only a narrow window onto a scene it is surrounded by, and closes the loop by acting, choosing where to move and where to look.}
+\caption[Passive perception versus active embodied vision]{\textbf{Passive perception versus active embodied vision.} A passive perception system is handed a complete, static view of the scene to produce a prediction. An active embodied agent instead senses only a narrow window onto a scene it is surrounded by, and creates the loop by actively choosing where to move for the next observation.}
 \label{fig:passive-active}
 \end{figure}
 
@@ -56,8 +57,8 @@ The gap between this goal and the current state of machine learning and computer
 accuracy in passive perception tasks~\cite{krizhevsky2012imagenet,dosovitskiy2021image,achiam2023gpt},
 yet the very assumption of complete access to visual information~\cite{girdhar2022omnivore} breaks down the moment
 a model is placed inside an embodied agent with a limited field of view, a
-finite time budget, and a world that refuses to wait~\cite{ramakrishnan2021exploration,wenzel2021four}. Understanding how an agent
-should efficiently acquire visual information, rather than merely how it should process information it has already
+finite time budget, and a world that constantly changes~\cite{ramakrishnan2021exploration,wenzel2021four}. Understanding how an agent
+should efficiently acquire visual information, rather than just how it should process information it has already
 captured, remains an open problem~\cite{ramakrishnan2021exploration,bajcsy2018revisiting,duan2022survey,liu2025embodied}. The remainder of this chapter traces how the field arrived at this point, explains why general-purpose exploration is
 still unsolved, and introduces the research direction pursued across the four publications that constitute this thesis.
 
@@ -67,10 +68,9 @@ still unsolved, and introduces the research direction pursued across the four pu
 
 Computer vision is almost as old as computing itself, with the first works on machine perception dating back to the 1960s~\cite{roberts1963machine},
 epitomised by the so-called ``blocks world'' of simple polyhedral scenes. First attempts to apply machine vision to real-world robotics problems followed
-soon after, with the SRI Shakey project~\cite{nilsson1984shakey}, developed already in the late 1960s and early 1970s, and, roughly a decade later, with
-Moravec's stereo-vision-guided Stanford Cart~\cite{moravec1980obstacle}. These early systems were built on hand-crafted geometry and operated in carefully prepared evaluation environments.
-Their brittleness outside such controlled settings exposed how hard vision really is. Marr's influential computational theory of vision~\cite{marr1982vision} reframed the problem as one of recovering explicit representations of the world through successive stages of processing, and set an
-agenda that would occupy the field for decades.
+soon after, with the SRI Shakey project~\cite{nilsson1984shakey}, developed in the late 1960s and early 1970s. Roughly a decade later, Moravec's stereo-vision-guided Stanford Cart~\cite{moravec1980obstacle} continued this path. These early systems were built on hand-crafted geometry and operated in carefully prepared evaluation environments.
+Their inability to operate reliably outside such controlled settings highlighted
+the difficulty of real-world visual perception.
 
 For the next two decades, progress was incremental at best and heavily reliant on hand-crafted feature representations.
 The turning point came with the resurgence of neural networks, driven by the
