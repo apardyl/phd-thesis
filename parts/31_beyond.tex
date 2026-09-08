@@ -4,7 +4,7 @@
 \subsection{Motivation}
 \label{sec:motivation-beyond}
 
-As described in Section~\ref{sec:prelim-pos-enc}, a standard ViT relies on learnable positional embeddings indexed by grid position. This design choice is valid in standard benchmarks where every image is processed by the same fixed (most commonly) $14\times14$ grid of $16\times16$ patches, but it creates a fundamental brittleness in any deployment where the patch positions or sizes deviate from those seen during training. Consider a model trained on a uniform grid. When evaluated with a patch that is $48\times48$ pixels instead of $16\times16$, the patch is bilinearly resampled to the expected input size before being fed to the network. However, its positional embedding still corresponds to a $16\times16$ grid cell, representing a spatial extent that is nine times smaller than the actual patch. The model has no way to distinguish this patch from a standard one at that grid position, yet the two carry fundamentally different information about the scene. The same problem arises when patches are displaced by even a single pixel from their expected grid positions (e.g. due to position shift or imperfect camera alignment). The nearest learnable embedding is used as an approximation, but embeddings are only trained to be meaningful at exact grid locations. In real-world settings, a PTZ camera may not snap to discrete zoom levels, and a UAV may fly at an altitude that does not correspond to any training configuration. More importantly, an active vision system may benefit from being able to select a glimpse at a position not aligned to a pixel grid. This publication asks, as an empirical question, how fragile standard ViTs are under such conditions, and what architectural and training changes are needed to make them robust.
+As described in Section~\ref{sec:prelim-pos-enc}, a standard ViT relies on learnable positional embeddings indexed by grid position. This design choice is valid in standard benchmarks where every image is processed by the same fixed (most commonly) $14\times14$ grid of $16\times16$ patches, but it creates a fundamental brittleness in any deployment where the patch positions or sizes deviate from those seen during training. In real-world settings, a PTZ camera may not snap to discrete zoom levels, and a UAV may fly at an altitude that does not correspond to any training configuration. More importantly, an active vision system may benefit from being able to select a glimpse at a position not aligned to a pixel grid. This publication asks, as an empirical question, how fragile standard ViTs are under such conditions, and what architectural and training changes are needed to make them robust.
 
 It thereby investigates Hypothesis~\ref{hyp:beyond}: a vision transformer can be made resilient to input patches sampled at varying positions and scales or providing incomplete coverage, allowing it to process observations that do not follow a rigid grid.
 
@@ -32,7 +32,7 @@ It thereby investigates Hypothesis~\ref{hyp:beyond}: a vision transformer can be
                       & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{papers_src/BeyondGrids/figures/elasticities/dropout/80.png}} \\
     \end{tabular}
     \end{small}
-    \caption[The three types of input elasticity evaluated in BeyondGrids]{\textbf{Elasticity perturbations.} Each row illustrates one type of perturbation applied to an example image at increasing intensity. \emph{Scale}: patches are sampled at sizes ranging from 50\% to 200\% of the native $16\times16$ size; undersampling introduces gaps while oversampling introduces overlap. \emph{Position}: patches are displaced from their grid positions by up to 50\% of the patch size (patch shake). \emph{Missing data}: an increasing fraction of patches is dropped from the input. Adapted from~\pubcite{pardyl2023grids}.}
+    \caption[The three types of input elasticity evaluated in BeyondGrids]{\textbf{Elasticity perturbations.} Each row illustrates one type of perturbation applied to an example image at increasing intensity. \emph{Scale}: patches are sampled at sizes ranging from 50\% to 200\% of the native $16\times16$ size (undersampling introduces gaps while oversampling introduces overlap). \emph{Position}: patches are displaced from their grid positions by up to 50\% of the patch size (patch shake). \emph{Missing data}: an increasing fraction of patches is dropped from the input. Adapted from~\pubcite{pardyl2023grids}.}
     \label{fig:beyond-perturbations}
 \end{figure}
 
@@ -64,7 +64,7 @@ where $\mathcal{E}_{\mathrm{scale}(s_1,s_2)}$ samples each patch's scale indepen
 
 The modifications proposed in this publication to increase input elasticity are two-fold: a new continuous positional encoding that can represent patches at any position and scale, and a change to the training augmentation regime.
 
-\textbf{Continuous positional encoding.} As established in Section~\ref{sec:prelim-pos-enc}, both learnable and standard sinusoidal positional embeddings map from a finite, discrete set of grid positions. Neither can represent a patch sampled at an arbitrary pixel-level position or at a variable scale. The publication addresses this by replacing the learnable embeddings of standard ViT with a deterministic \emph{four-dimensional} sine-cosine encoding. Each patch $p$ is characterised by the pixel coordinates of its upper-left corner $(x, y)$ and its relative scale $s$ (where $s = 1$ corresponds to the native $16\times16$ patch size). The lower-right corner of the patch is then at $(x + 16s,\, y + 16s)$, and the full spatial extent of $p$ is described by the four scalar values $(x,\, y,\, x+16s,\, y+16s)$. Each of these four values is encoded independently with a 1D sine-cosine encoding (Equation~\ref{eq:sincos-enc}), and the resulting vectors are concatenated to form the patch's positional embedding:
+\textbf{Continuous positional encoding.} As established in Section~\ref{sec:prelim-pos-enc}, both learnable and standard sinusoidal positional embeddings operate on a finite, discrete set of grid positions. Hence, they cannot represent a patch sampled at an arbitrary pixel-level position or at a variable scale. Our publication addresses this by replacing the learnable embeddings of standard ViT with a deterministic \emph{four-dimensional} sine-cosine encoding. Each patch $p$ is characterised by the pixel coordinates of its upper-left corner $(x, y)$ and its relative scale $s$ (where $s = 1$ corresponds to the native $16\times16$ patch size). The lower-right corner of the patch is then at $(x + 16s,\, y + 16s)$, and the full spatial extent of $p$ is described by the four scalar values $(x,\, y,\, x+16s,\, y+16s)$. Each of these four values is encoded independently with a 1D sine-cosine encoding (Equation~\ref{eq:sincos-enc}), and the resulting vectors are concatenated to form the patch's positional embedding:
 \begin{equation}
     \mathrm{PE}(p) = \bigl[\mathrm{pe}(x)\;\|\;\mathrm{pe}(y)\;\|\;\mathrm{pe}(x+16s)\;\|\;\mathrm{pe}(y+16s)\bigr],
     \label{eq:pos-enc}
@@ -79,7 +79,7 @@ where $\mathrm{pe}(\cdot)$ is the 1D sine-cosine encoding and $\|$ denotes vecto
 \label{sec:beyond-results}
 
 
-Figure~\ref{fig:beyond-elasticity} shows the three single-perturbation elasticity curves, comparing ElasticViT against ViT, MAE, Swin-B, and PVT-v2-B5, all of comparable size and trained on ImageNet-1k.
+Figure~\ref{fig:beyond-elasticity} shows the three single-perturbation elasticity curves, comparing our ElasticViT against ViT, MAE, Swin-B, and PVT-v2-B5, all of comparable size and trained on ImageNet-1k.
 
 \begin{figure}[t]
 \begin{center}
@@ -129,7 +129,7 @@ Figure~\ref{fig:beyond-elasticity} shows the three single-perturbation elasticit
     coordinates {
     (-8,80.552)(-7,81.186)(-6,81.422)(-5,81.684)(-4,81.896)(-3,81.974)(-2, 82.016)(-1, 81.944)(0,82.036)(1, 81.780)(2, 81.240)(3, 80.790)(4, 79.742)(5, 79.594)(6, 78.898)(7, 78.244)(8, 77.504)
     };
-    \addlegendentry{ElasticViT}
+    \addlegendentry{ElasticViT (ours)}
 \end{axis}
 \end{tikzpicture}
 \caption{}
@@ -225,11 +225,11 @@ Figure~\ref{fig:beyond-elasticity} shows the three single-perturbation elasticit
 \end{subfigure}
 \end{small}
 \end{center}
-\caption[Elasticity curves for individual perturbations on ImageNet-1k]{\textbf{Elasticity under isolated perturbations} (ImageNet-1k top-1 accuracy). \textbf{(a)}~Scale elasticity: all baselines degrade sharply when patches deviate from scale~1; ElasticViT maintains near-constant accuracy across the measured spectrum and outperforms all baselines at extreme scales. \textbf{(b)}~Missing-data elasticity: ElasticViT surpasses MAE from 70\% dropout onward, despite never being trained with patch dropout. \textbf{(c)}~Positional elasticity: ElasticViT is nearly immune to patch shake and outperforms all but MAE at the largest perturbations. Adapted from~\pubcite{pardyl2023grids}.}
+\caption[Elasticity curves for individual perturbations on ImageNet-1k]{\textbf{Elasticity under isolated perturbations} (ImageNet-1k top-1 accuracy). \textbf{(a)}~Scale elasticity: all baselines degrade sharply when patches deviate from scale~1, while our ElasticViT maintains near-constant accuracy across the measured spectrum and outperforms all baselines at extreme scales. \textbf{(b)}~Missing-data elasticity: ElasticViT surpasses MAE from 70\% dropout onward, despite never being trained with patch dropout. \textbf{(c)}~Positional elasticity: ElasticViT is nearly immune to patch shake and outperforms all but MAE at the largest perturbations. Adapted from~\pubcite{pardyl2023grids}.}
 \label{fig:beyond-elasticity}
 \end{figure}
 
-Under standard conditions (centre of each curve, scale~1, no dropout, no shake), ElasticViT trails ViT by $\approx$1.8 pp. However, as perturbation intensity increases, the gap reverses and widens considerably. At 2$\times$ scale, ElasticViT outperforms ViT by $\approx$3.7 pp; at 80\% missing data, it outperforms MAE (the strongest baseline in that regime) by $\approx$1.7 pp. When perturbations are combined, the advantage grows even further: under simultaneous scale and position perturbation at their maxima, ElasticViT leads ViT by nearly 20 percentage points. Standard ViTs, in effect, overfit to the specific grid configuration used during training; ElasticViT trades a small amount of peak accuracy on that configuration for robustness across the whole spectrum of input perturbations.
+Under standard conditions (centre of each curve, scale~1, no dropout, no shake), ElasticViT trails ViT by $\approx$1.8 pp. However, as perturbation intensity increases, the gap reverses and widens considerably. At 2$\times$ scale, ElasticViT outperforms ViT by $\approx$3.7 pp and at 80\% missing data, it outperforms MAE (the strongest baseline in that regime) by $\approx$1.7 pp. When perturbations are combined, the advantage grows even further: under simultaneous scale and position perturbation at their maxima, ElasticViT leads ViT by nearly 20 percentage points. Standard ViTs, in effect, overfit to the specific grid configuration used during training, while our ElasticViT trades a small amount of peak accuracy on that configuration for robustness across the whole spectrum of input perturbations.
 
 \textbf{Adaptive sampling.} To test the usefulness of ElasticViT for visual exploration problems, the publication proposes two simple, non-learnable baseline sampling strategies: CENTRAL (retina-like sampling) and EDGE (edge-detection-based sampling), illustrated in Figure~\ref{fig:beyond-edge-vis}. Figure~\ref{fig:beyond-adaptive} shows their effect on accuracy as a function of the number of input patches.
 
@@ -289,17 +289,17 @@ Under standard conditions (centre of each curve, scale~1, no dropout, no shake),
     coordinates {
     (16,40.6)(25,58.1)(36,67.4)(49,73.2)(64,75.4)(81,77.8)(100,78.5)(121,79.7)(144,80.6)(169,81.3)(196,82.0)(225,82.3)(256,82.4)(324,82.8)(361,82.8)(441,83.0)(529,83.1)(625,83.2)(784,83.1)
     };
-    \addlegendentry{ElasticViT, grid}
+    \addlegendentry{ElasticViT (ours), grid}
     \addplot[color=steelblue31119180]
     coordinates {
     (16,40.6)(24,59.8)(28,65.1)(40,70.3)(49,73.2)(54,74.8)(76,78.5)(124,80.9)(196,82.0)(208,82.2)(244,82.5)(302,82.7)(388,82.8)(496,82.9)(628,83.1)(784,83.1)
     };
-    \addlegendentry{ElasticViT, central}
+    \addlegendentry{ElasticViT (ours), central}
     \addplot[color=forestgreen4416044]
     coordinates {
     (16,52.6)(25,64.5)(36,70.4)(49,74.6)(64,77.1)(81,78.6)(100,79.7)(121,80.2)(144,80.9)(169,81.2)(196,81.4)(225,81.6)(256,81.9)(324,81.9)(361,82.1)(441,82.1)(529,82.3)(625,82.4)(784,83.1)
     };
-    \addlegendentry{ElasticViT, edge}
+    \addlegendentry{ElasticViT (ours), edge}
 \end{axis}
 \end{tikzpicture}
 \end{small}

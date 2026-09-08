@@ -9,36 +9,36 @@
 ]
 
 % ---------- left: local scale (PTZ camera) ----------
-\node[imgnode] (ptz) {\includegraphics[width=6.6cm]{img/main/three/renders/ptz_scene.png}};
+\node[imgnode] (ptz) {\includegraphics[width=6.6cm]{img/main/three/renders/two_scales_ptz.png}};
 
 % Pan wraps beneath the camera base, clear of the background buildings.
-\draw[actionarr, <->] ($(ptz.center)+(-0.8,-0.65)$)
-  .. controls ($(ptz.center)+(-0.8,-1.2)$) and ($(ptz.center)+(0.8,-1.2)$)
-  .. node[actionlabel, below] {pan} ($(ptz.center)+(0.8,-0.65)$);
+\draw[actionarr, <->] ($(ptz.center)+(-1.43,-1.52)$)
+  .. controls ($(ptz.center)+(-1.43,-2.0)$) and ($(ptz.center)+(0.27,-2.0)$)
+  .. node[actionlabel, below] {pan} ($(ptz.center)+(0.27,-1.52)$);
 % Tilt follows the camera head's height, beside its rear pivot.
-\draw[actionarr, <->] ($(ptz.center)+(0.65,1.0)$)
-  .. controls ($(ptz.center)+(1.1,0.85)$) and ($(ptz.center)+(1.1,0.15)$)
-  .. node[actionlabel, right] {tilt} ($(ptz.center)+(0.65,0.0)$);
-% zoom: short in/out arrows along the actual lens direction (upper-left,
-% matching where the dark lens cap points in the render)
-\draw[actionarr, <->] ($(ptz.center)+(-0.4,0.2)$) -- node[actionlabel, below, sloped] {zoom} ($(ptz.center)+(-1.45,0.55)$);
+\draw[actionarr, <->] ($(ptz.center)+(0.1,0.58)$)
+  .. controls ($(ptz.center)+(0.57,0.43)$) and ($(ptz.center)+(0.57,-0.27)$)
+  .. node[actionlabel, right] {tilt} ($(ptz.center)+(0.1,-0.42)$);
+% Zoom runs parallel to the lens direction, below the viewing cone.
+\draw[actionarr, <->] ($(ptz.center)+(-1.3,-0.62)$) -- node[actionlabel, below, sloped] {zoom} ($(ptz.center)+(-2.45,-0.3325)$);
 
 \node[titletext, above=1.0cm of ptz] (lefttitle) {Local scale exploration};
 \node[captiontext, below=0.15cm of lefttitle] (leftsubtitle) {where to look};
 \node[captiontext, below=0.35cm of ptz] (leftcap) {fixed position, redirects gaze};
 
 % ---------- right: global scale (UAV) ----------
-\node[imgnode, right=2.6cm of ptz] (uav) {\includegraphics[width=6.6cm]{img/main/three/renders/uav_scene.png}};
+\node[imgnode, right=2.6cm of ptz] (uav) {\includegraphics[width=6.6cm]{img/main/three/renders/two_scales_uav.png}};
 
-% A shared origin and steeper ground-plane diagonals make the 3D axes clear.
+% Place the shared origin in clear foreground to the left of the UAV.
+% Steep ground-plane diagonals keep all three directions distinct.
 % Opposite directions are dashed; z has exactly the same x at both ends.
-\coordinate (axesorigin) at ($(uav.center)+(0.85,-0.85)$);
+\coordinate (axesorigin) at ($(uav.center)+(-1.65,-1.25)$);
 \draw[actionarr, dashed] (axesorigin) -- ($(axesorigin)+(-0.63,0.51)$);
 \draw[actionarr, dashed] (axesorigin) -- ($(axesorigin)+(0.675,0.35)$);
 \draw[actionarr, dashed] (axesorigin) -- ($(axesorigin)+(0,-0.95)$);
-\draw[actionarr] (axesorigin) -- node[actionlabel, right, pos=1] {z} ($(axesorigin)+(0,1.3)$);
-\draw[actionarr] (axesorigin) -- node[actionlabel, below right, pos=1] {x} ($(axesorigin)+(1.05,-0.85)$);
-\draw[actionarr] (axesorigin) -- node[actionlabel, below left, pos=1] {y} ($(axesorigin)+(-1.35,-0.70)$);
+\draw[actionarr] (axesorigin) -- node[actionlabel, left, pos=0.75] {z} ($(axesorigin)+(0,1.3)$);
+\draw[actionarr] (axesorigin) -- node[actionlabel, below left, pos=0.7] {x} ($(axesorigin)+(1.05,-0.85)$);
+\draw[actionarr] (axesorigin) -- node[actionlabel, below, pos=0.7] {y} ($(axesorigin)+(-1.35,-0.70)$);
 \fill[steelblue31119180!70!black] (axesorigin) circle[radius=1.2pt];
 
 \node[titletext, above=1.0cm of uav] (righttitle) {Global scale exploration};

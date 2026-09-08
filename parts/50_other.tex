@@ -5,65 +5,66 @@ This chapter opens with a brief overview of other papers I co-authored during my
 \section{Publications and preprints}
 
 \begin{itemize}
-    \item \otherpubentry{kargin2026sparrta}.
+    \item \otherpubentry{kargin2026sparrta}
     
-    Abstract:
-    \begin{quote}\small
-    Visual Foundation Models (VFMs), such as DINO and CLIP, excel in semantic understanding of images but exhibit limited spatial reasoning capabilities, which limits their applicability to embodied systems. As a result, recent work incorporates some 3D tasks (such as depth estimation) into VFM training. However, VFM performance remains inconsistent across other spatial tasks, raising the question of whether these models truly have spatial awareness or overfit to specific 3D objectives. To address this question, we introduce the Spatial Relation Recognition Task (SpaRRTa) benchmark, which evaluates the ability of VFMs to identify relative positions of objects in the image. Unlike traditional 3D objectives that focus on precise metric prediction (e.g., surface normal estimation), SpaRRTa probes a fundamental capability underpinning more advanced forms of human-like spatial understanding. SpaRRTa generates an arbitrary number of photorealistic images with diverse scenes and fully controllable object arrangements, along with freely accessible spatial annotations. Evaluating a range of state-of-the-art VFMs, we reveal significant disparities between their spatial reasoning abilities. Through our analysis, we provide insights into the mechanisms that support or hinder spatial awareness in modern VFMs. We hope that SpaRRTa will serve as a useful tool for guiding the development of future spatially aware visual models.
+    Summary:
+    \begin{quote}
+    Visual foundation models recognise semantic content in images, but their ability to represent spatial relations between objects remains less well understood. The study introduces the Spatial Relation Recognition Task (SpaRRTa), a benchmark that evaluates this ability independently of semantic classification and precise geometric prediction. A controllable synthetic data pipeline generates photorealistic scenes with varied object arrangements and spatial annotations. The evaluation compares visual foundation models using different probing methods to assess how spatial information can be extracted from their representations. Results show that spatial relations are primarily encoded in patch-level features and can be obscured by global pooling, causing standard linear evaluation to underestimate spatial awareness. Relations defined relative to another object remain challenging across model families. These findings establish SpaRRTa as a diagnostic benchmark for distinguishing limitations of visual representations from limitations of the methods used to read out spatial information.
     \end{quote}
-    \item \otherpubentry{sroka2025ai}.
+    \item \otherpubentry{sroka2025ai}
     
-    Abstract:
-    \begin{quote}\small
-    Sepsis is a life-threatening condition which requires rapid diagnosis and treatment. Traditional microbiological methods are time-consuming and expensive. In response to these challenges, deep learning algorithms were developed to identify 14 bacteria species and 3 yeast-like fungi from microscopic images of Gram-stained smears of positive blood samples from sepsis patients.
-A total of 16,637 Gram-stained microscopic images were used in the study. The analysis used the Cellpose 3 model for segmentation and Attention-based Deep Multiple Instance Learning for classification. Our model achieved an accuracy of 77.15\% for bacteria and 71.39\% for fungi, with ROC AUC of 0.97 and 0.88, respectively. The highest values, reaching up to 96.2\%, were obtained for Cutibacterium acnes, Enterococcus faecium, Stenotrophomonas maltophilia and Nakaseomyces glabratus. Classification difficulties were observed in closely related species, such as Staphylococcus hominis and Staphylococcus haemolyticus, due to morphological similarity, and within Candida albicans due to high morphotic diversity.
-The study confirms the potential of our model for microbial classification, but it also indicates the need for further optimisation and expansion of the training data set. In the future, this technology could support microbial diagnosis, reducing diagnostic time and improving the effectiveness of sepsis treatment due to its simplicity and accessibility. Part of the results presented in this publication was covered by a patent application at the European Patent Office EP24461637.1 "A computer implemented method for identifying a microorganism in a blood and a data processing system therefor".
+    Summary:
+    \begin{quote}
+    Identifying pathogens from blood samples is an important step in sepsis diagnosis, but conventional microbiological procedures can be time-consuming. The study develops a deep learning pipeline for species-level identification from microscopic images of Gram-stained smears of positive blood samples. It combines Cellpose 3 for microbial cell segmentation with attention-based deep multiple instance learning for classification, allowing information from multiple cells to contribute to each prediction. The evaluation uses 16,637 images covering 14 bacterial and three yeast-like fungal species. The model achieves classification accuracies of 77.15\% for bacteria and 71.39\% for fungi. Errors are associated with morphological similarities between species and variation within individual species. The results support the potential of microscopy-based microbial identification as an aid to diagnosis, while indicating that further optimisation and more diverse training data are needed to improve classification reliability.
     \end{quote}
-    \item \otherpubentry{pardyl2023complung}.
+    \item \otherpubentry{pardyl2023complung}
     
-    Abstract:
-    \begin{quote}\small
-    Lung cancer is a leading cause of cancer-related deaths, and early diagnosis is crucial for its effective treatment. That is why computer-aided tools have been developed to support particular steps of CT scan analysis, including lung segmentation, suspicious region detection, and patient-level diagnosis. However, none of the previous approaches addressed this process comprehensively. To fill this gap, we introduce CompLung, a comprehensive tool for lung cancer diagnosis that performs all of the above-listed steps in an end-to-end manner. We have trained the CompLung architecture using the publicly available LIDC-IDRI dataset extended with lung segmentation masks obtained from our internal radiologists, which we make publicly available to boost the research on this emerging topic. Finally, we conduct extensive experiments and demonstrate the superior performance and interpretability of CompLung compared to existing methods for lung cancer diagnosis.
+    Summary:
+    \begin{quote}
+    Computer-aided analysis of lung computed tomography (CT) scans often addresses individual processing stages, leaving their integration into patient-level assessment unresolved. The study introduces CompLung, a pipeline combining lung segmentation, suspicious-region detection, patch representation learning, and patient-level classification. It uses multiple instance learning to aggregate information from candidate regions into a prediction for the complete scan. The evaluation uses LIDC-IDRI, extended with radiologist-produced lung segmentation masks made available for further research. For patient-level classification using a malignancy-score threshold greater than three, CompLung achieves an area under the receiver operating characteristic curve of 0.90, compared with 0.83 for the strongest reported baselines. Qualitative analyses also examine the regions contributing to predictions. The study demonstrates the benefit of integrating the processing stages for prediction of radiologist-derived labels and provides segmentation annotations to support subsequent work on automated CT analysis.
     \end{quote}
-    \item \otherpubentry{struski2023propml}.
+    \item \otherpubentry{struski2023propml}
     
-    Abstract:
-    \begin{quote}\small
-    Partial Multi-label Learning (PML) is a type of weakly supervised learning where each training instance corresponds to a set of candidate labels, among which only some are true. In this paper, we introduce ProPML, a novel probabilistic approach to this problem that extends the binary cross entropy to the PML setup. In contrast to existing methods, it does not require suboptimal disambiguation and, as such, can be applied to any deep architecture. Furthermore, experiments conducted on artificial and real-world datasets indicate that ProPML outperforms existing approaches, especially for high noise in a candidate set.
+    Summary:
+    \begin{quote}
+    Partial multi-label learning addresses training data in which each instance has a candidate label set containing both correct and incorrect labels. Existing approaches often require a separate procedure to identify the relevant labels, increasing training complexity. The study introduces ProPML, a probabilistic loss that adapts binary cross-entropy to this setting. It encourages predictions within the candidate set while penalising predictions outside it, and can be used with deep networks through a change to the training objective. The evaluation covers datasets with naturally ambiguous labels and artificially corrupted labels, including image classification on VOC2007 and COCO2014, across several noise levels. ProPML compares favourably with existing methods, with particularly strong results when candidate sets contain more incorrect labels. These findings support a simple loss-based approach to learning from ambiguous annotations without a separate label-disambiguation procedure.
     \end{quote}
-    \item \otherpubentry{pardyl2022automating}.
+    \item \otherpubentry{pardyl2022automating}
 
-    Abstract:
-    \begin{quote}\small
-    As the leading cause of cancer-related mortality, lung cancer is responsible for more deaths than colon, breast, and prostate cancer put together. Screening with low-dose computed tomography detects cancer at an early stage and reduces mortality. However, it requires the tedious work of radiologists to obtain malignancy scores, which additionally are very subjective. That is why many researchers worked on methods automating lung cancer classification, usually using the publicly available LIDC-IDRI dataset for training. However, most of those methods consider only node-level classification and provide poor results for patient-level diagnosis. In this paper, we fill this gap by introducing an end-to-end methods with a CT scan on the input and the patient-level diagnosis on the output. We consider three approaches for three different data regimes to examine how stronger and weaker supervision influences the model performance.
+    Summary:
+    \begin{quote}
+    Patient-level diagnostics from lung computed tomography (CT) scans requires models that can operate with different amounts of annotation. The study introduces MilLung and AutoLung and compares them with existing DeepLung baseline to examine the effect of supervision on automated assessment. DeepLung uses nodule locations and malignancy annotations, MilLung combines nodule-level supervision with multiple instance learning, while AutoLung learns representations with an autoencoder and requires only patient-level malignancy labels. The evaluation uses LIDC-IDRI under two malignancy thresholds. At a threshold greater than three, the best MilLung variant matches DeepLung's mean area under the receiver operating characteristic curve of 0.83, while AutoLung reaches 0.80. AutoLung performs less well at the lower threshold, showing that the effect of reduced supervision depends on the task. The study clarifies the trade-off between annotation requirements and predictive performance when selecting a patient-level screening approach.
     \end{quote}
 \end{itemize}
 
 \section{Patents}
 
 \begin{itemize}
-    \item \textbf{European Patent application EP24461637.1} ``A computer implemented method for identifying a microorganism in a blood and a data processing system therefor''. European Patent Office, 2024, patent pending.
+    \item \textbf{European Patent application EP24461637.1} ``A computer implemented method for identifying a microorganism in a blood and a data processing system therefor''. European Patent Office, 2024, patent pending
 \end{itemize}
 
 \section{Ongoing research}
 
 \begin{itemize}
-    \item \textbf{Reinforcement learning for visual exploration in real-world environments.} A. Pardyl, J. Mikołajczyk, J. Matusiak, H. Zientata, D. Gaweł, I. Alwasiak, B. Zieliński, M. Cygan, M. Wołczyk.
+    \item \textbf{Reinforcement learning for visual exploration in real-world environments.} A. Pardyl, J. Mikołajczyk, J. Matusiak, H. Zientata, D. Gaweł, I. Alwasiak, B. Zieliński, M. Cygan, M. Wołczyk
     
-    Abstract: This research project is a direct follow-up of our FlySearch~\pubcite{pardyl2025flysearch} benchmark.
-    We aim to develop a reinforcement learning framework for training vision-language model-based agents to navigate and explore real-world environments.
-    Building upon the GRPO algorithm~\cite{shao2024deepseekmath}, we will fine-tune 4-11B parameter models on a simplified FlySearch benchmark (FlySearch-RealTime), and a collection of Gaussian splat scenes generated from real-world flight data. Such a setup will allow us to
-    train the model on diverse navigation tasks (procedurally generated with FlySearch-RealTime), while minimising the sim-to-real gap by including real-world visual data in the training set. We will then evaluate the performance of the trained models on the original FlySearch benchmark, and in a real-world setting with a physical UAV.
+    Summary:
+    \begin{quote}
+    Training agents for visual exploration requires diverse navigation experience and a way to transfer learned behaviour to physical environments. This project extends the FlySearch~\pubcite{pardyl2025flysearch} benchmark towards reinforcement learning for vision-language model-based agents operating in the real world. The planned approach uses the GRPO algorithm~\cite{shao2024deepseekmath} to fine-tune models with 4--11 billion parameters on FlySearch-RealTime, a simplified version of the benchmark, and Gaussian splat scenes reconstructed from real-world flight data. Procedurally generated tasks will provide varied navigation experience, while the reconstructed scenes are intended to reduce the visual gap between simulation and deployment. Evaluation will use the original FlySearch benchmark and a physical UAV in a real-world setting. The intended contribution is a training framework for learning exploration policies that transfer from simulated tasks to physical navigation.
+    \end{quote}
 
-    \item \textbf{Self-supervised concept discovery.} A. Pardyl, S. Gairola, S. Rao, B. Schiele, B. Zieliński, D. Rymarczyk.
+    \item \textbf{Self-supervised concept discovery.} A. Pardyl, S. Gairola, S. Rao, B. Schiele, B. Zieliński, D. Rymarczyk
     
-    Abstract: The idea of this project is to create a model that will learn a set of discrete, spatially grounded concepts using only self-supervised learning. Each of the learned concepts represents a single well-defined visual feature, e.g. a semantic part of an object or a texture pattern. Inspired by PDiscoFormer~\cite{aniraj2024pdiscoformer}, the project builds upon the DINOv2 family~\cite{oquab2024dinov2}, extending it with a dedicated attention-based concept learning pathway and a VAE-based quantization stack. The resulting embedding is a drop-in replacement for the ViT CLS token, providing an interpretable backbone for multiple downstream tasks.
+    Summary:
+    \begin{quote}
+    Self-supervised visual representations support a range of downstream tasks, but their features can be difficult to interpret. This project aims to learn discrete, spatially grounded concepts corresponding to visual features such as object parts or texture patterns without manual concept annotations. Inspired by PDiscoFormer~\cite{aniraj2024pdiscoformer} and CFM~\cite{wittenmayer2026cfm}, the proposed approach extends the DINOv2 family~\cite{oquab2024dinov2} with an spatial concept learning pathway and a concept attribute quantisation stack to represent both general object characteristics and their variations. The resulting decoded concept embedding is intended to replace the cls token of a vision transformer in downstream tasks. The project will examine whether the learned concepts capture coherent visual features while retaining useful information for downstream. Its intended contribution is an interpretable vision foundation backbone that connects image-level representations to discrete concepts and their spatial locations.
+    \end{quote}
     
 \end{itemize}
 
 \section{International research internships}
 \begin{itemize}
-    \item \textbf{Max Planck Institute for Informatics}, June--September 2026, Computer Vision Group, supervised by Prof. Dr. Bernt Schiele.
+    \item \textbf{Max Planck Institute for Informatics}, June--September 2026, Computer Vision Group, supervised by Prof. Dr. Bernt Schiele
 \end{itemize}
 
 \section{Scientific grants}
@@ -73,17 +74,17 @@ The study confirms the potential of our model for microbial classification, but 
 \subsection{As a principal investigator}
 \begin{itemize}
     \item \textbf{National Science Centre Preludium} ``Where to look next -- guiding active visual exploration with
-    internal model uncertainty'', 2024-2025. Grant number: 2023/49/N/ST6/02465.
-    \item \textbf{Foundation for Polish Science START scholarship}, 2026-2027, Grant number: 59.2026.
+    internal model uncertainty'', 2024-2025, grant number: 2023/49/N/ST6/02465
+    \item \textbf{Foundation for Polish Science START scholarship}, 2026-2027, grant number: 59.2026
 \end{itemize}
 
 \subsection{As a participant / co-investigator}
 \begin{itemize}
-    \item \textbf{National Science Centre Sonata Bis} ``Sustainable computer vision for autonomous machines'', 2024-2027. Grant number: 2023/50/E/ST6/00469. Principal investigator: Bartosz Zieliński.
-    \item \textbf{Foundation for Polish Science Proof of Concept} ``Intelligent Fight Against Sepsis - Innovative Use of Artificial Intelligence in Rapid Microbiological Diagnosis of Sepsis'', 2024-2025. Grant number: FENG.02.07-IP.05-0068/23. Principal investigator: Monika Brzychczy-Włoch.
-    \item \textbf{European Commission Horizon Europe} ``European Lighthouse of AI for Sustainability (ELIAS)'', 2024-2027. Grant number: 101120237. Principal investigator: Massimiliano Pontil.
-    \item \textbf{Foundation for Polish Science Team-Net} ``Bio-inspired artificial neural networks'', 2022-2023. Grant number: POIR.04.04.00-00-14DE/18-00. Principal investigator: Jacek Tabor.
-    \item \textbf{National Centre for Research and Development Fast Track} ``X-rAI: Diagnostic viewer for computer-assisted radiology using Artificial Intelligence'', 2021-2023. Grant number: POIR.01.01.01-\allowbreak 00-\allowbreak 1666/20. Principal investigator: Zbisław Tabor.
+    \item \textbf{National Science Centre Sonata Bis} ``Sustainable computer vision for autonomous machines'', 2024-2027, grant number: 2023/50/E/ST6/00469 (principal investigator: Bartosz Zieliński)
+    \item \textbf{Foundation for Polish Science Proof of Concept} ``Intelligent Fight Against Sepsis - Innovative Use of Artificial Intelligence in Rapid Microbiological Diagnosis of Sepsis'', 2024-2025, grant number: FENG.02.07-IP.05-0068/23 (principal investigator: Monika Brzychczy-Włoch)
+    \item \textbf{European Commission Horizon Europe} ``European Lighthouse of AI for Sustainability (ELIAS)'', 2024-2027, grant number: 101120237 (principal investigator: Massimiliano Pontil)
+    \item \textbf{Foundation for Polish Science Team-Net} ``Bio-inspired artificial neural networks'', 2022-2023, grant number: POIR.04.04.00-00-14DE/18-00 (Principal investigator: Jacek Tabor)
+    \item \textbf{National Centre for Research and Development Fast Track} ``X-rAI: Diagnostic viewer for computer-assisted radiology using Artificial Intelligence'', 2021-2023, grant number: POIR.01.01.01-\allowbreak 00-\allowbreak 1666/20 (principal investigator: Zbisław Tabor)
 \end{itemize}
 
 \endgroup
@@ -92,6 +93,8 @@ The study confirms the potential of our model for microbial classification, but 
 \begin{itemize}
     \item {Annual Conference on Neural Information Processing Systems (NeurIPS) 2026}
     \item {International Journal of Computer Vision (IJCV) 2026}
+    \item {IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI) 2026}
+    \item {IEEE Robotics and Automation Letters (RA-L) 2026}
     \item {CVPR 2025 Workshop on Computer Vision for Drug Discovery (CVDD) 2025}
     \item {IEEE/CVF Winter Conference on Applications of Computer Vision (WACV) 2025}
     \item {ACM International Conference on Knowledge Discovery and Data Mining (KDD) 2024}
@@ -101,10 +104,10 @@ The study confirms the potential of our model for microbial classification, but 
 \section{Doctoral schools and scientific events}
 \subsection{As an organiser}
 \begin{itemize}
-    \item Machine Learning Summer School on Reliability \& Safety (MLSS$^{R\&S}$ 2026), Kraków, Poland
+    \item Machine Learning Summer School on Reliability \& Safety (MLSS$^{R\&S}$) 2026, Kraków, Poland
     \item ELLIS Doctoral Symposium (EDS) on Robust AI 2025, Warsaw, Poland
-    \item Machine Learning Summer School on Drug and Materials Discovery (MLSS$^{D}$ 2025), Kraków, Poland
-    \item Machine Learning Summer School on Applications in Science (MLSS$^{S}$ 2023), Kraków, Poland
+    \item Machine Learning Summer School on Drug and Materials Discovery (MLSS$^{D}$) 2025, Kraków, Poland
+    \item Machine Learning Summer School on Applications in Science (MLSS$^{S}$) 2023, Kraków, Poland
 \end{itemize}
 
 \subsection{As a presenter}
@@ -125,8 +128,8 @@ The study confirms the potential of our model for microbial classification, but 
 
 \section{Other activities}
 \begin{itemize}
-    \item Member of the Audit Committee of the PhD Student Association of the Jagiellonian University (2025-2026)
-    \item Member of the PhD Student Council of the Doctoral School of Exact and Natural Sciences of the Jagiellonian University (2024-2026)
-    \item PhD Student Representative to the Standing Rector's Committee on Statutory and Legal Affairs (2022-2026)
-    \item PhD Student Representative to the Council of the Faculty of Mathematics and Computer Science of the Jagiellonian University (2025-2026)
+    \item Member of the Audit Committee of the PhD Student Association of the Jagiellonian University, 2025-2026
+    \item Member of the PhD Student Council of the Doctoral School of Exact and Natural Sciences of the Jagiellonian University, 2024-2026
+    \item PhD Student Representative to the Standing Rector's Committee on Statutory and Legal Affairs, 2022-2026
+    \item PhD Student Representative to the Council of the Faculty of Mathematics and Computer Science of the Jagiellonian University, 2025-2026
 \end{itemize}

@@ -18,7 +18,7 @@
 \usepackage{calc}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl} % allow long URLs in the bibliography to break across lines
-\usepackage[numbers]{natbib}
+\usepackage[numbers,sort]{natbib}
 \usepackage{bibentry}
 % \bibentry re-typesets a bibliography entry, which also re-creates that entry's
 % hyperref destination (cite.<key>). The duplicate is ignored by the PDF backend,
@@ -57,7 +57,7 @@
     \bibentrynl{#1}%
 }
 \DeclareRobustCommand{\otherpubentry}[1]{%
-    \textbf{\bibentrynl{#1}}%
+    {\bibentrynl{#1}}%
 }
 \usepackage[final]{pdfpages}
 \let\CheckCommand\providecommand
@@ -76,7 +76,7 @@
 \newcommand{\smallestimg}{1.1cm}
 \newcommand{\smallerimg}{1.55cm}
 \newcommand{\tabfigure}[2]{\raisebox{-.5\height}{\includegraphics[#1]{#2}}}
-\usepackage[firstpage]{draftwatermark}
+%\usepackage[firstpage]{draftwatermark}
 \setcounter{tocdepth}{1}
 
 \title{Learning to explore:\\Towards efficient embodied vision}
@@ -133,7 +133,7 @@
 
 \appendix
 \chapter{Full texts of the Publications}
-This chapter contains the publications described in the main thesis text, including all written appendices. Any additional supplementary materials (such as interactive content) are provided via links in the corresponding sections of the publications.
+This chapter contains the publications described in the main thesis text, including written appendices. Any additional supplementary materials (such as interactive content) are provided via links in the corresponding sections of the publications.
 
 \begin{enumerate}[label={[\Roman*]},widest=IV]
     \item \pubentry{pardyl2023active}.
