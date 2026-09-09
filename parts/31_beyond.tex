@@ -4,7 +4,7 @@
 \subsection{Motivation}
 \label{sec:motivation-beyond}
 
-As described in Section~\ref{sec:prelim-pos-enc}, a standard ViT relies on learnable positional embeddings indexed by grid position. This design choice is valid in standard benchmarks where every image is processed by the same fixed (most commonly) $14\times14$ grid of $16\times16$ patches, but it creates a fundamental brittleness in any deployment where the patch positions or sizes deviate from those seen during training. In real-world settings, a PTZ camera may not snap to discrete zoom levels, and a UAV may fly at an altitude that does not correspond to any training configuration. More importantly, an active vision system may benefit from being able to select a glimpse at a position not aligned to a pixel grid. This publication asks, as an empirical question, how fragile standard ViTs are under such conditions, and what architectural and training changes are needed to make them robust.
+As described in Section~\ref{sec:prelim-pos-enc}, a standard ViT relies on learnable positional embeddings indexed by grid position. This design choice is valid in standard benchmarks where every image is processed by the same fixed (most commonly) $14\times14$ grid of $16\times16$ patches, but it creates a fundamental brittleness in any deployment where the patch positions or sizes deviate from those seen during training. In real-world settings, a PTZ camera may not snap to discrete zoom levels, and a UAV may fly at an altitude that does not correspond to any training configuration. More importantly, an active vision system may benefit from being able to select a glimpse at a position not aligned to the standard patch grid. This publication asks, as an empirical question, how fragile standard ViTs are under such conditions, and what architectural and training changes are needed to make them robust.
 
 It thereby investigates Hypothesis~\ref{hyp:beyond}: a vision transformer can be made resilient to input patches sampled at varying positions and scales or providing incomplete coverage, allowing it to process observations that do not follow a rigid grid.
 
@@ -32,7 +32,7 @@ It thereby investigates Hypothesis~\ref{hyp:beyond}: a vision transformer can be
                       & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{papers_src/BeyondGrids/figures/elasticities/dropout/80.png}} \\
     \end{tabular}
     \end{small}
-    \caption[The three types of input elasticity evaluated in BeyondGrids]{\textbf{Elasticity perturbations.} Each row illustrates one type of perturbation applied to an example image at increasing intensity. \emph{Scale}: patches are sampled at sizes ranging from 50\% to 200\% of the native $16\times16$ size (undersampling introduces gaps while oversampling introduces overlap). \emph{Position}: patches are displaced from their grid positions by up to 50\% of the patch size (patch shake). \emph{Missing data}: an increasing fraction of patches is dropped from the input. Adapted from~\pubcite{pardyl2023grids}.}
+    \caption[The three types of input elasticity evaluated in Beyond Grids]{\textbf{Elasticity perturbations.} Each row illustrates one type of perturbation applied to an example image at increasing intensity. \emph{Scale}: patches are sampled at sizes ranging from 50\% to 200\% of the native $16\times16$ size (undersampling introduces gaps while oversampling introduces overlap). \emph{Position}: patches are displaced from their grid positions by up to 50\% of the patch size (patch shake). \emph{Missing data}: an increasing fraction of patches is dropped from the input. Adapted from~\pubcite{pardyl2023grids}.}
     \label{fig:beyond-perturbations}
 \end{figure}
 
@@ -50,7 +50,7 @@ The three perturbations are composed into a pipeline. For image $I$, an initial 
     P' = \mathcal{E}_{\mathrm{miss}(d)} \circ \mathcal{E}_{\mathrm{pos}(q)} \circ \mathcal{E}_{\mathrm{scale}(s_1, s_2)}(P),
     \label{eq:elasticity-pipeline}
 \end{equation}
-where $\mathcal{E}_{\mathrm{scale}(s_1,s_2)}$ samples each patch's scale independently from $[s_1, s_2]$, $\mathcal{E}_{\mathrm{pos}(q)}$ shifts each patch's top-left corner by at most $q$ patch-widths in each direction, and $\mathcal{E}_{\mathrm{miss}(d)}$ removes a fraction $d$ of the patches at random. Elasticity is high if the model's predictions for the perturbed set $P'$ match those for the original $P$.
+where $\mathcal{E}_{\mathrm{scale}(s_1,s_2)}$ samples each patch's scale independently from $[s_1, s_2]$, $\mathcal{E}_{\mathrm{pos}(q)}$ shifts each patch's top-left corner by at most $q$ patch-widths in each direction, and $\mathcal{E}_{\mathrm{miss}(d)}$ removes a fraction $d$ of the patches at random. Elasticity is high if predictive performance on the perturbed set $P'$ remains close to that on the original $P$.
 
 \subsection{ElasticViT}
 \label{sec:beyond-elasticvit}
@@ -71,7 +71,7 @@ The modifications proposed in this publication to increase input elasticity are 
 \end{equation}
 where $\mathrm{pe}(\cdot)$ is the 1D sine-cosine encoding and $\|$ denotes vector concatenation. Because this function is defined over the reals, it generalises without modification to any position-scale combination at inference, including configurations never seen during training. The ViT input is also modified accordingly. Instead of a full rasterised image, the model receives a list of cropped patches together with their corresponding coordinate tuples, which are fed into the positional encoding rather than looked up in a table.
 
-\textbf{Elastic training augmentations.} The baseline training regime follows DeiT~III~\cite{touvron2022deitiii}. To this, the publication adds the elasticity functions as augmentations during training. Patch scales are drawn uniformly from $[1, 3]$, i.e.\ each patch covers a random region of between $16\times16$ and $48\times48$ pixels, resampled to the $16\times16$ token size, and patch positions are randomly displaced with no upper bound on the shift magnitude. This forces the model to generalise across a wide distribution of patch configurations, rather than overfitting to the regular grid it would otherwise always see.
+\textbf{Elastic training augmentations.} The baseline training regime follows DeiT~III~\cite{touvron2022deitiii}. To this, the publication adds the elasticity functions as augmentations during training. Patch sizes are drawn uniformly between $16\times16$ and $48\times48$ pixels, resampled to the $16\times16$ token size, and patch positions are sampled uniformly throughout the image. This forces the model to generalise across a wide distribution of patch configurations, rather than overfitting to the regular grid it would otherwise always see.
 
 \textbf{PatchMix augmentation.} The standard CutMix augmentation, which mixes two images by replacing a rectangular region of one image with the corresponding region from another, is incompatible with variable-scale patch sampling. The mixing ratios used to blend the class labels assume a fixed spatial layout that no longer holds when patches can overlap or leave gaps. The publication introduces PatchMix, an alternative that performs mixing at the level of individual \emph{patches after sampling}. Patches from two images are randomly interleaved in the token sequence, and the label blending ratio is computed from the actual proportion of patches drawn from each image. Unlike the previously proposed TokenMix~\cite{liu2022tokenmix}, PatchMix does not assume grid-aligned sampling and is therefore fully compatible with the elastic augmentation regime (see Figure~\ref{fig:patchmix}).
 
@@ -100,8 +100,9 @@ Figure~\ref{fig:beyond-elasticity} shows the three single-perturbation elasticit
     grid style=dashed,
     scale only axis,
     height=3cm,
-    width=.85\linewidth,
-    legend style={at={(1.6,1.5)},anchor=north,/tikz/every even column/.append style={column sep=0.1cm},font=\tiny},
+    width=.75\linewidth,
+    legend to name=beyond-elasticity-legend,
+    legend style={/tikz/every even column/.append style={column sep=0.1cm},font=\tiny},
     legend cell align={left},
     legend columns=5
 ]
@@ -151,7 +152,7 @@ Figure~\ref{fig:beyond-elasticity} shows the three single-perturbation elasticit
     grid style=dashed,
     scale only axis,
     height=3cm,
-    width=.85\linewidth,
+    width=.75\linewidth,
     legend cell align={left}
 ]
     \addplot[color=red]
@@ -195,7 +196,7 @@ Figure~\ref{fig:beyond-elasticity} shows the three single-perturbation elasticit
     grid style=dashed,
     scale only axis,
     height=3cm,
-    width=.85\linewidth,
+    width=.75\linewidth,
     legend cell align={left}
 ]
     \addplot[color=red]
@@ -223,6 +224,8 @@ Figure~\ref{fig:beyond-elasticity} shows the three single-perturbation elasticit
 \caption{}
 \label{fig:beyond-shake}
 \end{subfigure}
+\par\medskip
+\ref{beyond-elasticity-legend}
 \end{small}
 \end{center}
 \caption[Elasticity curves for individual perturbations on ImageNet-1k]{\textbf{Elasticity under isolated perturbations} (ImageNet-1k top-1 accuracy). \textbf{(a)}~Scale elasticity: all baselines degrade sharply when patches deviate from scale~1, while our ElasticViT maintains near-constant accuracy across the measured spectrum and outperforms all baselines at extreme scales. \textbf{(b)}~Missing-data elasticity: ElasticViT surpasses MAE from 70\% dropout onward, despite never being trained with patch dropout. \textbf{(c)}~Positional elasticity: ElasticViT is nearly immune to patch shake and outperforms all but MAE at the largest perturbations. Adapted from~\pubcite{pardyl2023grids}.}
@@ -325,4 +328,4 @@ The publication ``Beyond Grids: Exploring Elastic Input Sampling for Vision Tran
 
 The robustness of ElasticViT across the three evaluated perturbation types, together with its gains from adaptive sampling at low patch counts, confirms Hypothesis~\ref{hyp:beyond} within the evaluated settings.
 
-I was the primary author of this paper, and contributed to the conception of the idea, as well as majority of the experimental design and implementation. Furthermore, I conducted more than half of the experiments presented in the paper. I have presented this research at the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV) 2025 held in Tucson, Arizona, USA. The code and data are available on my GitHub at \url{https://github.com/apardyl/beyondgrids}.
+I was the primary author of this paper, and contributed to the conception of the idea, as well as the majority of the experimental design and implementation. Furthermore, I conducted more than half of the experiments presented in the paper. I presented this research at the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV) 2025 held in Tucson, Arizona, USA. The code and data are available on my GitHub at \url{https://github.com/apardyl/beyondgrids}.

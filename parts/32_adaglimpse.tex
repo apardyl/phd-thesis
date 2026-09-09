@@ -13,7 +13,7 @@ It thereby investigates Hypothesis~\ref{hyp:adaglimpse}: an agent can learn to s
 \subsection{Adaptive glimpse sampling}
 \label{sec:adaglimpse-formulation}
 
-\textbf{Glimpse parameterisation.} Let $X$ be the scene to be explored, represented as a rectangle. A glimpse $G$ is a square region of $X$ captured by a camera with a fixed sensor resolution of $d_{\mathrm{cam}} \times d_{\mathrm{cam}}$ pixels. A glimpse is specified by its top-left corner $(x, y)$ and its \emph{scale} $z = (d - d_{\mathrm{min}}) / (d_{\mathrm{max}} - d_{\mathrm{min}})$, where $d$ is the physical size of the glimpse in the scene, and $d_{\mathrm{min}}$, $d_{\mathrm{max}}$ are the minimum and maximum camera field of view. Intuitively, scale $z = 0$ corresponds to maximum camera zoom (smallest, highest-detail glimpse) and $z = 1$ to the widest possible view (full-scene overview at lowest detail level). Glimpse coordinates $C = (x, y, z) \in [0, 1]^3$ form the continuous action space.
+\textbf{Glimpse parameterisation.} Let $X$ be the scene to be explored, represented as a rectangle. A glimpse $G$ is a square region of $X$ captured by a camera with a fixed sensor resolution of $d_{\mathrm{cam}} \times d_{\mathrm{cam}}$ pixels. A glimpse is specified by its normalised top-left coordinates $(x, y)$ and its \emph{scale} $z = (d - d_{\mathrm{min}}) / (d_{\mathrm{max}} - d_{\mathrm{min}})$, where $d$ is the physical size of the glimpse in the scene, and $d_{\mathrm{min}}$, $d_{\mathrm{max}}$ are the minimum and maximum camera field of view. Intuitively, scale $z = 0$ corresponds to maximum camera zoom (smallest, highest-detail glimpse) and $z = 1$ to the widest possible view (full-scene overview at lowest detail level). Glimpse coordinates $C = (x, y, z) \in [0, 1]^3$ form the continuous action space.
 
 \textbf{AVE as a Markov Decision Process (MDP).} The exploration process unfolds over at most $T$ steps. At step $t$, the agent captures glimpse $G_t$ at coordinates $C_t$ selected by the policy, yielding a $d_{\mathrm{cam}} \times d_{\mathrm{cam}}$ image patch (simulated by cropping from a high-resolution image and rescaling). The agent maintains a growing sequence of observed patches $G_1, \ldots, G_t$ and their coordinates $C_1, \ldots, C_t$. Exploration terminates when either the maximum step count is reached or a task-specific confidence threshold is exceeded (early stopping). Figure~\ref{fig:adaglimpse-teaser} illustrates the resulting coarse-to-fine exploration behaviour.
 
@@ -32,7 +32,7 @@ AdaGlimpse consists of two interacting components: a vision transformer backbone
 \begin{figure}[th]
     \centering
     \includegraphics[width=\linewidth]{papers_src/AdaGlimpse/figures/rlarch.pdf}
-    \caption[AdaGlimpse architecture overview]{\textbf{Architecture.} AdaGlimpse combines an ElasticViT encoder with a task-specific decoder (top) and a Soft Actor-Critic RL agent (bottom). At each step, the RL agent selects the position and scale of the next glimpse from the encoder's output, their coordinates, importance scores, and latent representations. Reproduced from~\pubcite{pardyl2024adaglimpse}.}
+    \caption[AdaGlimpse architecture overview]{\textbf{Architecture.} AdaGlimpse combines an ElasticViT encoder with a task-specific decoder (top) and a Soft Actor-Critic RL agent (bottom). At each step, the RL agent selects the position and scale of the next glimpse using the previously observed patches, their coordinates, importance scores, and encoder latent representations. Reproduced from~\pubcite{pardyl2024adaglimpse}.}
     \label{fig:adaglimpse-arch}
 \end{figure}
 
@@ -63,9 +63,10 @@ AdaGlimpse consists of two interacting components: a vision transformer backbone
     \label{tab:adaglimpse-reconstruction}
     \begin{center}
     \begin{small}
+    \setlength{\tabcolsep}{5.5pt}
     \begin{tabular}{l@{\hskip6pt}lllllr@{\hskip8pt}cr}
     \toprule
-    Method & IMNET & SUN360 & ADE20k & COCO & Image res. & Glimpses & Regime & Pixel \% \\
+    Method & IMNET & SUN360 & ADE20K & COCO & Image res. & Glimpses & Regime & Pixel \% \\
     \midrule
     AME & 30.3$^\dag$ & 29.8 & 30.8 & 32.5 & $128 \times 256$ & $8 \times 32^2$ & simple & 25.00 \\
     \textbf{AdaGlimpse (ours)} & \textbf{14.5} & \textbf{11.1}* & \textbf{14.0}* & \textbf{14.5}* & $224 \times 224$ & $12 \times 32^2$ & adaptive & 24.49 \\
@@ -239,4 +240,4 @@ The publication ``AdaGlimpse: Active Visual Exploration with Arbitrary Glimpse P
 
 The learned coarse-to-fine behaviour and the improvements in pixel efficiency across reconstruction, classification, and segmentation confirm Hypothesis~\ref{hyp:adaglimpse} within the evaluated settings.
 
-I was the primary author of this paper, and contributed to the conception of the idea, as well as majority of the experimental design and implementation. Furthermore, I conducted more than half of the experiments presented in the paper. I have presented this research at the European Conference on Computer Vision -- ECCV 2024, held in Milan, Italy. The code, data and further visualisations are available on my website at \url{https://io.pardyl.com/AdaGlimpse/}.
+I was the primary author of this paper, and contributed to the conception of the idea, as well as the majority of the experimental design and implementation. Furthermore, I conducted more than half of the experiments presented in the paper. I presented this research at the European Conference on Computer Vision -- ECCV 2024, held in Milan, Italy. The code, data and further visualisations are available on my website at \url{https://io.pardyl.com/AdaGlimpse/}.

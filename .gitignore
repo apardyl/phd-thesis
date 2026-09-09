@@ -51,6 +51,7 @@ _minted*
 *~
 .idea/
 audit/
+tmp/
 
 # Python (scripts/)
 __pycache__/

@@ -11,7 +11,7 @@ This chapter opens with a brief overview of other papers I co-authored during my
     \begin{quote}
     Visual foundation models recognise semantic content in images, but their ability to represent spatial relations between objects remains less well understood. The study introduces the Spatial Relation Recognition Task (SpaRRTa), a benchmark that evaluates this ability independently of semantic classification and precise geometric prediction. A controllable synthetic data pipeline generates photorealistic scenes with varied object arrangements and spatial annotations. The evaluation compares visual foundation models using different probing methods to assess how spatial information can be extracted from their representations. Results show that spatial relations are primarily encoded in patch-level features and can be obscured by global pooling, causing standard linear evaluation to underestimate spatial awareness. Relations defined relative to another object remain challenging across model families. These findings establish SpaRRTa as a diagnostic benchmark for distinguishing limitations of visual representations from limitations of the methods used to read out spatial information.
     \end{quote}
-    \item \otherpubentry{sroka2025ai}
+    \item {\emergencystretch=1em \otherpubentry{sroka2025ai}\par}
     
     Summary:
     \begin{quote}
@@ -33,7 +33,7 @@ This chapter opens with a brief overview of other papers I co-authored during my
 
     Summary:
     \begin{quote}
-    Patient-level diagnostics from lung computed tomography (CT) scans requires models that can operate with different amounts of annotation. The study introduces MilLung and AutoLung and compares them with existing DeepLung baseline to examine the effect of supervision on automated assessment. DeepLung uses nodule locations and malignancy annotations, MilLung combines nodule-level supervision with multiple instance learning, while AutoLung learns representations with an autoencoder and requires only patient-level malignancy labels. The evaluation uses LIDC-IDRI under two malignancy thresholds. At a threshold greater than three, the best MilLung variant matches DeepLung's mean area under the receiver operating characteristic curve of 0.83, while AutoLung reaches 0.80. AutoLung performs less well at the lower threshold, showing that the effect of reduced supervision depends on the task. The study clarifies the trade-off between annotation requirements and predictive performance when selecting a patient-level screening approach.
+    Patient-level diagnostics from lung computed tomography (CT) scans requires models that can operate with different amounts of annotation. The study introduces MilLung and AutoLung and compares them with the existing DeepLung baseline to examine the effect of supervision on automated assessment. DeepLung uses nodule locations and malignancy annotations, MilLung combines nodule-level supervision with multiple instance learning, while AutoLung learns representations with an autoencoder and requires only patient-level malignancy labels. The evaluation uses LIDC-IDRI under two malignancy thresholds. At a threshold greater than three, the best MilLung variant matches DeepLung's mean area under the receiver operating characteristic curve of 0.83, while AutoLung reaches 0.80. AutoLung performs less well at the lower threshold, showing that the effect of reduced supervision depends on the task. The study clarifies the trade-off between annotation requirements and predictive performance when selecting a patient-level screening approach.
     \end{quote}
 \end{itemize}
 
@@ -57,7 +57,7 @@ This chapter opens with a brief overview of other papers I co-authored during my
     
     Summary:
     \begin{quote}
-    Self-supervised visual representations support a range of downstream tasks, but their features can be difficult to interpret. This project aims to learn discrete, spatially grounded concepts corresponding to visual features such as object parts or texture patterns without manual concept annotations. Inspired by PDiscoFormer~\cite{aniraj2024pdiscoformer} and CFM~\cite{wittenmayer2026cfm}, the proposed approach extends the DINOv2 family~\cite{oquab2024dinov2} with an spatial concept learning pathway and a concept attribute quantisation stack to represent both general object characteristics and their variations. The resulting decoded concept embedding is intended to replace the cls token of a vision transformer in downstream tasks. The project will examine whether the learned concepts capture coherent visual features while retaining useful information for downstream. Its intended contribution is an interpretable vision foundation backbone that connects image-level representations to discrete concepts and their spatial locations.
+    Self-supervised visual representations support a range of downstream tasks, but their features can be difficult to interpret. This project aims to learn discrete, spatially grounded concepts corresponding to visual features such as object parts or texture patterns without manual concept annotations. Inspired by PDiscoFormer~\cite{aniraj2024pdiscoformer} and CFM~\cite{wittenmayer2026cfm}, the proposed approach extends the DINOv2 family~\cite{oquab2024dinov2} with a spatial concept learning pathway and a concept attribute quantisation stack to represent both general object characteristics and their variations. The resulting decoded concept embedding is intended to replace the \textsc{cls} token of a vision transformer in downstream tasks. The project will examine whether the learned concepts capture coherent visual features while retaining useful information for downstream tasks. Its intended contribution is an interpretable vision foundation backbone that connects image-level representations to discrete concepts and their spatial locations.
     \end{quote}
     
 \end{itemize}
@@ -74,17 +74,17 @@ This chapter opens with a brief overview of other papers I co-authored during my
 \subsection{As a principal investigator}
 \begin{itemize}
     \item \textbf{National Science Centre Preludium} ``Where to look next -- guiding active visual exploration with
-    internal model uncertainty'', 2024-2025, grant number: 2023/49/N/ST6/02465
-    \item \textbf{Foundation for Polish Science START scholarship}, 2026-2027, grant number: 59.2026
+    internal model uncertainty'', 2024--2025, grant number: 2023/49/N/ST6/02465
+    \item \textbf{Foundation for Polish Science START scholarship}, 2026--2027, grant number: 59.2026
 \end{itemize}
 
 \subsection{As a participant / co-investigator}
 \begin{itemize}
-    \item \textbf{National Science Centre Sonata Bis} ``Sustainable computer vision for autonomous machines'', 2024-2027, grant number: 2023/50/E/ST6/00469 (principal investigator: Bartosz Zieliński)
-    \item \textbf{Foundation for Polish Science Proof of Concept} ``Intelligent Fight Against Sepsis - Innovative Use of Artificial Intelligence in Rapid Microbiological Diagnosis of Sepsis'', 2024-2025, grant number: FENG.02.07-IP.05-0068/23 (principal investigator: Monika Brzychczy-Włoch)
-    \item \textbf{European Commission Horizon Europe} ``European Lighthouse of AI for Sustainability (ELIAS)'', 2024-2027, grant number: 101120237 (principal investigator: Massimiliano Pontil)
-    \item \textbf{Foundation for Polish Science Team-Net} ``Bio-inspired artificial neural networks'', 2022-2023, grant number: POIR.04.04.00-00-14DE/18-00 (Principal investigator: Jacek Tabor)
-    \item \textbf{National Centre for Research and Development Fast Track} ``X-rAI: Diagnostic viewer for computer-assisted radiology using Artificial Intelligence'', 2021-2023, grant number: POIR.01.01.01-\allowbreak 00-\allowbreak 1666/20 (principal investigator: Zbisław Tabor)
+    \item \textbf{National Science Centre Sonata Bis} ``Sustainable computer vision for autonomous machines'', 2024--2027, grant number: 2023/50/E/ST6/00469 (principal investigator: Bartosz Zieliński)
+    \item \textbf{Foundation for Polish Science Proof of Concept} ``Intelligent Fight Against Sepsis - Innovative Use of Artificial Intelligence in Rapid Microbiological Diagnosis of Sepsis'', 2024--2025, grant number: FENG.02.07-IP.05-0068/23 (principal investigator: Monika Brzychczy-Włoch)
+    \item \textbf{European Commission Horizon Europe} ``European Lighthouse of AI for Sustainability (ELIAS)'', 2024--2027, grant number: 101120237 (principal investigator: Massimiliano Pontil)
+    \item \textbf{Foundation for Polish Science Team-Net} ``Bio-inspired artificial neural networks'', 2022--2023, grant number: POIR.04.04.00-00-14DE/18-00 (principal investigator: Jacek Tabor)
+    \item \textbf{National Centre for Research and Development Fast Track} ``X-rAI: Diagnostic viewer for computer-assisted radiology using Artificial Intelligence'', 2021--2023, grant number: POIR.01.01.01-\allowbreak 00-\allowbreak 1666/20 (principal investigator: Zbisław Tabor)
 \end{itemize}
 
 \endgroup
@@ -97,7 +97,7 @@ This chapter opens with a brief overview of other papers I co-authored during my
     \item {International Journal of Computer Vision (IJCV) 2026}
     \item {IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI) 2026}
     \item {IEEE Robotics and Automation Letters (RA-L) 2026}
-    \item {CVPR 2025 Workshop on Computer Vision for Drug Discovery (CVDD) 2025}
+    \item {CVPR 2025 Workshop on Computer Vision for Drug Discovery (CVDD)}
     \item {IEEE/CVF Winter Conference on Applications of Computer Vision (WACV) 2025}
     \item {ACM International Conference on Knowledge Discovery and Data Mining (KDD) 2024}
     \item {IEEE/CVF Winter Conference on Applications of Computer Vision (WACV) 2024}
@@ -130,8 +130,8 @@ This chapter opens with a brief overview of other papers I co-authored during my
 
 \subsection{Acting as a PhD Student Representative}
 \begin{itemize}
-    \item Member of the Audit Committee of the PhD Student Association of the Jagiellonian University, 2025-2026
-    \item Member of the PhD Student Council of the Doctoral School of Exact and Natural Sciences of the Jagiellonian University, 2024-2026
-    \item PhD Student Representative to the Standing Rector's Committee on Statutory and Legal Affairs, 2022-2026
-    \item PhD Student Representative to the Council of the Faculty of Mathematics and Computer Science of the Jagiellonian University, 2025-2026
+    \item Member of the Audit Committee of the PhD Student Association of the Jagiellonian University, 2025--2026
+    \item Member of the PhD Student Council of the Doctoral School of Exact and Natural Sciences of the Jagiellonian University, 2024--2026
+    \item PhD Student Representative to the Standing Rector's Committee on Statutory and Legal Affairs, 2022--2026
+    \item PhD Student Representative to the Council of the Faculty of Mathematics and Computer Science of the Jagiellonian University, 2025--2026
 \end{itemize}
