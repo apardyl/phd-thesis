@@ -50,6 +50,7 @@ _minted*
 *.swp
 *~
 .idea/
+audit/
 
 # Python (scripts/)
 __pycache__/

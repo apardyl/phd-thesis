@@ -1,0 +1,38 @@
+% Cultural milestones; chronological spacing is schematic.
+% Figure labels use single spacing, independently of the thesis body text.
+\begingroup
+\linespread{1}\selectfont
+\begin{tikzpicture}[
+  titletext/.style={font=\bfseries},
+  subtitle/.style={font=\small\itshape, align=center},
+  date/.style={font=\small, text=black!70, align=center},
+  labeltext/.style={font=\small\bfseries, align=center, text width=3.4cm, inner sep=0pt},
+  detail/.style={font=\footnotesize, align=center, text width=3.4cm, inner sep=0pt},
+  imgnode/.style={inner sep=0pt, draw=black!35, line width=0.6pt},
+  timeline/.style={-{Latex[length=2mm,width=1.4mm]}, thick, black!55},
+  arr/.style={-{Latex[length=1.5mm,width=1mm]}, thick, steelblue31119180!70!black},
+]
+\node[titletext] at (5.85,0.30) {Cultural aspirations};
+\node[subtitle] at (5.85,-0.27) {imagining machines with human abilities};
+\draw[timeline] (-1.55,-1.35) -- (13.25,-1.35);
+\foreach \x/\era in {0/Antiquity,3.9/Eighteenth century,7.8/1920s,11.7/1950-70s} {
+  \node[date] at (\x,-0.99) {\era};
+  \fill[black!55] (\x,-1.35) circle[radius=1.6pt];
+}
+\foreach \x/\asset in {0/talos,3.9/automaton,7.8/metropolis,11.7/droids} {
+  \node[imgnode] (historyimage\asset) at (\x,-2.98) {\includegraphics[width=3.2cm]{img/main/three/renders/history_\asset.png}};
+}
+% Match Figure 1.2: 0.25 cm offset plus its text-node padding.
+\node[labeltext,anchor=north] (historylabel1) at ($(historyimagetalos.south)+(0,-0.38)$) {Automatons of\\bronze and magic};
+\node[labeltext,anchor=north,text width=3.8cm] (historylabel2) at ($(historyimageautomaton.south)+(0,-0.38)$) {Mechanical contraptions\\of Enlightenment};
+\node[labeltext,anchor=north] (historylabel3) at ($(historyimagemetropolis.south)+(0,-0.38)$) {Early robots in\\popular culture};
+\node[labeltext,anchor=north] (historylabel4) at ($(historyimagedroids.south)+(0,-0.38)$) {Electronic intelligent\\machines};
+% Anchor examples below the tallest heading, not at a fixed page coordinate.
+% The 0.25 cm group gap exceeds the whitespace between lines within a label.
+\node[fit=(historylabel1)(historylabel2)(historylabel3)(historylabel4),inner sep=0pt] (historylabels) {};
+\node[detail,anchor=north] (historydetail1) at ($(historylabel1.center |- historylabels.south)+(0,-0.25)$) {Talos};
+\node[detail,anchor=north] (historydetail2) at ($(historylabel2.center |- historylabels.south)+(0,-0.25)$) {Writing automata,\\Mechanical Turk};
+\node[detail,anchor=north] (historydetail3) at ($(historylabel3.center |- historylabels.south)+(0,-0.25)$) {\emph{R.U.R.,\\Metropolis}};
+\node[detail,anchor=north] (historydetail4) at ($(historylabel4.center |- historylabels.south)+(0,-0.25)$) {\emph{Forbidden Planet,\\Star Wars}};
+\end{tikzpicture}
+\endgroup

@@ -1,4 +1,7 @@
-\usetikzlibrary{bending}
+% Keep diagram labels single-spaced, independently of the thesis body.
+\begingroup
+\linespread{1}\selectfont
+\usetikzlibrary{bending}%
 \begin{tikzpicture}[
   imgnode/.style={inner sep=0pt, draw=black!35, line width=1.0pt},
   titletext/.style={font=\bfseries},
@@ -22,9 +25,9 @@
 % Zoom runs parallel to the lens direction, below the viewing cone.
 \draw[actionarr, <->] ($(ptz.center)+(-1.3,-0.62)$) -- node[actionlabel, below, sloped] {zoom} ($(ptz.center)+(-2.45,-0.3325)$);
 
-\node[titletext, above=1.0cm of ptz] (lefttitle) {Local scale exploration};
-\node[captiontext, below=0.15cm of lefttitle] (leftsubtitle) {where to look};
-\node[captiontext, below=0.35cm of ptz] (leftcap) {fixed position, redirects gaze};
+\node[titletext] (lefttitle) at ($(ptz.north)+(0,1.0)$) {Local scale exploration};
+\node[captiontext] (leftsubtitle) at ($(lefttitle.center)+(0,-0.57)$) {where to look};
+\node[captiontext, anchor=north] (leftcap) at ($(ptz.south)+(0,-0.25)$) {fixed position, redirects gaze};
 
 % ---------- right: global scale (UAV) ----------
 \node[imgnode, right=2.6cm of ptz] (uav) {\includegraphics[width=6.6cm]{img/main/three/renders/two_scales_uav.png}};
@@ -41,12 +44,14 @@
 \draw[actionarr] (axesorigin) -- node[actionlabel, below, pos=0.7] {y} ($(axesorigin)+(-1.35,-0.70)$);
 \fill[steelblue31119180!70!black] (axesorigin) circle[radius=1.2pt];
 
-\node[titletext, above=1.0cm of uav] (righttitle) {Global scale exploration};
-\node[captiontext, below=0.15cm of righttitle] (rightsubtitle) {where to move};
-\node[captiontext, below=0.35cm of uav] (rightcap) {physically relocates through 3D space};
+\node[titletext] (righttitle) at ($(uav.north)+(0,1.0)$) {Global scale exploration};
+\node[captiontext] (rightsubtitle) at ($(righttitle.center)+(0,-0.57)$) {where to move};
+\node[captiontext, anchor=north] (rightcap) at ($(uav.south)+(0,-0.25)$) {physically relocates through 3D space};
 
-% ---------- divider ----------
-\node[fill=black!45, inner sep=0pt, minimum width=0.4pt, minimum height=8.6cm, anchor=north,
-      right=1.3cm of ptz.east, yshift=0.55cm] {};
+% Match the divider to the visible panel content; avoid caption padding.
+\coordinate (divider) at ($(ptz.east)!0.5!(uav.west)$);
+\draw[black!45, line width=0.4pt]
+  (divider |- lefttitle.north) -- (divider |- leftcap.south);
 
-\end{tikzpicture}
+\end{tikzpicture}%
+\endgroup%

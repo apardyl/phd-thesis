@@ -1,3 +1,6 @@
+% Keep diagram labels single-spaced, independently of the thesis body.
+\begingroup
+\linespread{1}\selectfont
 % Drawing units resize the artwork only; text keeps its declared font size.
 \begin{tikzpicture}[x=0.8cm, y=0.8cm,
   panelbox/.style={draw=black!45, line width=1.0pt, rounded corners=1.5pt, minimum width=3.12cm, minimum height=3.12cm},
@@ -172,14 +175,15 @@
 \node[chapterlabel, above=0.08cm of h4] {Chapter 4};
 
 % ============ descriptions ============
-\node[desctext, below=0.24cm of p1] {exploration based on uncertainty reduction\\(a)};
-\node[desctext, below=0.24cm of p2] {free scale and position patch encoder\\(b)};
-\node[desctext, below=0.24cm of p3] {adaptive coarse-to-fine exploration\\(c)};
-\node[desctext, below=0.24cm of p4] {3D vision-language object navigation\\(d)};
+\node[desctext, below=0.24cm of p1] (desc1) {exploration based on uncertainty reduction\\(a)};
+\node[desctext, below=0.24cm of p2] (desc2) {free scale and position patch encoder\\(b)};
+\node[desctext, below=0.24cm of p3] (desc3) {adaptive coarse-to-fine exploration\\(c)};
+\node[desctext, below=0.24cm of p4] (desc4) {3D vision-language object navigation\\(d)};
 
 % ============ bottom scale band ============
 \node[fit=(p1)(p2)(p3), inner sep=0pt] (localfit) {};
-\coordinate (bandy) at ($(p1.south)+(0,-2.7)$);
+\node[fit=(desc1)(desc2)(desc3)(desc4), inner sep=0pt] (descriptions) {};
+\coordinate (bandy) at ($(descriptions.south)+(0,-0.4cm)$);
 \draw[black!85, thick] (localfit.west |- bandy) -- (localfit.east |- bandy);
 \node[scaletext, black!85, fill=white, inner sep=2pt] at ($(localfit.center |- bandy)$) {LOCAL SCALE};
 
@@ -196,3 +200,4 @@
       right=0.62cm of p3.east, yshift=0.08cm] {};
 
 \end{tikzpicture}
+\endgroup

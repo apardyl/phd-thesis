@@ -1,3 +1,6 @@
+% Keep diagram labels single-spaced, independently of the thesis body.
+\begingroup
+\linespread{1}\selectfont
 \begin{tikzpicture}[
   imgnode/.style={inner sep=0pt, draw=black!35, line width=1.0pt},
   boxnode/.style={draw=black!70, rounded corners=2pt, minimum height=0.8cm, minimum width=1.2cm, align=center, font=\small, fill=black!3, inner sep=4pt},
@@ -44,16 +47,16 @@
 
 \node[fit=(scene3p)(scene1p)(model2)(actA), inner sep=0pt] (rightgroup) {};
 \node[titletext, above=1cm of rightgroup] (righttitle) {Active embodied vision};
-\node[captiontext, text width=7.2cm, below=0.15cm of righttitle] (rightcap) {the agent acts to decide what to observe next};
+\node[captiontext, text width=7.2cm] (rightcap) at ($(righttitle.center)+(0,-0.57)$) {the agent acts to decide what to observe next};
 % Share text baselines across panels independently of their content heights.
 \node[titletext, anchor=base] (lefttitle) at (leftgroup.center |- righttitle.base) {Passive perception};
 \node[captiontext, anchor=base] (leftcap) at (leftgroup.center |- rightcap.base) {complete visual information provided};
 \node[captiontext, below=0.15cm of rightgroup] (rightcap2) {(observe $\to$ move $\to$ repeat)};
 
-% ---------- divider ----------
-% a genuinely thin rule (table-style), spanning from above the titles to below
-% both captions -- generous height since it must clear the (lower) right side.
-\node[fill=black!45, inner sep=0pt, minimum width=0.4pt, minimum height=5.5cm, anchor=north,
-      right=0.6cm of leftgroup.east, yshift=-.5cm] {};
+% Match the divider to the visible panel content; avoid caption padding.
+\coordinate (divider) at ($(leftgroup.east)!0.5!(scene3p.west)$);
+\draw[black!45, line width=0.4pt]
+  (divider |- righttitle.north) -- (divider |- rightcap2.south);
 
 \end{tikzpicture}
+\endgroup

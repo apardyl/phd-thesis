@@ -19,7 +19,15 @@ Movies such as Forbidden Planet (1956)~\cite{wilcox1956forbidden} and Star Wars 
 presented robots as beings with an almost human psychology and thinking capabilities, but clumsier and more limited in their actions, bringing the idea to the mainstream. By the mid-20th century, the dream of intelligent machines was also becoming a
 scientific research programme. At that time Alan Turing reframed the question of whether machines can think in operational terms~\cite{turing1950computing}. A few years later the founders of artificial intelligence proceeded from the optimistic premise that the
 essential features of intelligence could be described precisely enough to be
-simulated by a computer algorithm~\cite{mccarthy1955proposal}.
+simulated by a computer algorithm~\cite{mccarthy1955proposal}. Figure~\ref{fig:cultural-aspirations} illustrates this enduring cultural aspiration to create machines with human abilities.
+
+\begin{figure}[th]
+\centering
+\input{img/main/fig_cultural_aspirations.tex}
+\caption[Cultural aspirations for intelligent machines]{\textbf{Cultural aspirations for intelligent machines.}
+The idea of creating intelligent artificial beings dates back to antiquity. This figure traces the evolution of cultural depictions of intelligent machines through selected representative examples~\cite{mayor2018gods,voskuhl2013androids,lang1927metropolis,lucas1977starwars}. The illustrations are schematic.}
+\label{fig:cultural-aspirations}
+\end{figure}
 
 \subsection{The Moravec's paradox}
 
@@ -32,6 +40,17 @@ credited with starting the Cambrian expansion of animal life~\cite{parker2003bli
 primate cerebral cortex is dedicated to processing what we see~\cite{felleman1991distributed}. We are, as a consequence, expert visual explorers by nature, able to efficiently use our limited perceptual and computational resources in a complex and dynamic world. What our brains do
 almost subconsciously -- allocating gaze and gathering just enough visual evidence
 to act -- remains as of today one of the hardest open problems in artificial intelligence~\cite{dreyfus1992computers}.
+Figure~\ref{fig:moravec} illustrates the perceptual decisions hidden within an apparently simple everyday task.
+
+\begin{figure}[th]
+\centering
+\input{img/main/fig_moravec.tex}
+\caption[The hidden difficulty of everyday perception]{\textbf{The hidden difficulty of everyday perception.}
+Moravec's paradox contrasts artificial intelligence and robotics achievements in formal intellectual tasks with the difficulty of reproducing everyday perceptual competences~\cite{moravec1988mind}.
+In chess, the rules, objective, and relevant game state are available to the player.
+Finding a familiar person in a crowd requires acquiring missing visual evidence under occlusion and time constraints, recognising the person, and deciding when enough has been seen.}
+\label{fig:moravec}
+\end{figure}
 
 \subsection{The narrow window of perception}
 
@@ -46,7 +65,7 @@ On the local scale, we are experts at scanning our surroundings with our eyes, m
 On the global scale, we excel at exploring our environment by moving our body to different locations, navigating through complex scenes and avoiding obstacles without much effort~\cite{fajen2003behavioral}.
 The main motivation of this thesis is to enable machines to do the same: to \emph{learn to actively explore} their environment efficiently, perceiving only what they need in order to fulfil their goals.
 
-\begin{figure}[t]
+\begin{figure}[th]
 \centering
 \input{img/main/fig_passive_active.tex}
 \caption[Passive perception versus active embodied vision]{\textbf{Passive perception versus active embodied vision.} A passive perception system is handed a complete, static view of the scene to produce a prediction. An active embodied agent instead senses only a narrow window onto a scene it is surrounded by, and creates the loop by actively choosing where to move for the next observation.}
@@ -63,6 +82,7 @@ captured, remains an open problem~\cite{ramakrishnan2021exploration,bajcsy2018re
 still unsolved, and introduces the research direction pursued across the four publications that constitute this thesis.
 
 \section{A brief outline of the field}
+\label{sec:a-brief-outline-of-the-field}
 
 \subsection{From hand-crafted features to foundation models}
 
@@ -86,7 +106,15 @@ enabling training of models on vast amounts of unlabelled or loosely labelled da
 but also enabled the development of vision-language models~\cite{achiam2023gpt,team2023gemini}, which generalised and scaled up the ability of machines to transcribe images into text and vice versa in an unprecedented scale.
 
 This progress from the 1960s blocks world to today's foundation models is, by any measure, a triumph. Yet nearly all of these
-advances share a quiet assumption: that the model is handed all needed visual information at once as a complete, static, sufficiently high-resolution image.
+advances share a quiet assumption: that the model is handed all needed visual information at once as a complete, static, sufficiently high-resolution image. Figure~\ref{fig:technical-progress} summarises these advances in visual representation learning and parallel developments in embodied vision.
+
+\begin{figure}[th]
+\centering
+\input{img/main/fig_technical_progress.tex}
+\caption[Technical progress in visual learning]{\textbf{Technical progress in visual learning.}
+Selected milestones in visual representation learning~\cite{roberts1963machine,lecun2015deep,dosovitskiy2021image,radford2021learning} and parallel developments in embodied vision~\cite{nilsson1984shakey,aloimonos1988active,ballard1991animate,mnih2014recurrent,ramakrishnan2021exploration}, as described in Section~\ref{sec:a-brief-outline-of-the-field}. The illustrations are schematic.}
+\label{fig:technical-progress}
+\end{figure}
 
 \subsection{The passive-perception assumption}
 
@@ -150,10 +178,17 @@ This dissertation investigates how active visual exploration (AVE) can become mo
 
 \begin{enumerate}[label=\textbf{H\arabic*.},ref=H\arabic*]
     \item \label{hyp:ame} The uncertainty already encoded in a visual model's attention maps can be used to decide where to look next, without training a separate component for observation selection.
-    \item \label{hyp:beyond} A vision transformer can be made resilient to input patches sampled at varying positions and scales or providing incomplete coverage, allowing it to process observations that do not follow a rigid grid.
+    \item \label{hyp:beyond} A vision transformer can be made resilient to input patches sampled at varying positions, scales, or with incomplete coverage, allowing it to process observations that do not follow a rigid grid.
     \item \label{hyp:adaglimpse} An agent can learn to select both the position and scale of each observation in a continuous space, discovering an efficient coarse-to-fine exploration strategy that reduces the number of pixels it needs to observe.
     \item \label{hyp:flysearch} Current vision-language models can perform short-horizon visual navigation, but cannot reliably form and execute consistent multi-step search strategies in large, open, three-dimensional environments.
 \end{enumerate}
+
+\begin{figure}[t]
+\centering
+\input{img/main/fig_contributions.tex}
+\caption[The four contributions of this thesis]{\textbf{The four contributions of this thesis as a progression.} The first three papers generalise local-scale exploration, deciding where to look within a scene the agent can already sense, from a fixed grid (AME), to elastic patch geometry (Beyond Grids), to arbitrary continuous zoom and pan (AdaGlimpse). The fourth, FlySearch, turns to the complementary global-scale problem of deciding where to move through an open, three-dimensional world.}
+\label{fig:contributions}
+\end{figure}
 
 The first contribution, ``Active Visual Exploration Based on Attention-Map Entropy''~\pubcite{pardyl2023active}, investigates Hypothesis~\ref{hyp:ame} by asking how an agent should decide where to look
 next without the machinery of a separate decision network. It shows that the internal uncertainty of a transformer, read directly from the entropy of its
@@ -188,13 +223,6 @@ Taken together, these works trace an arc from deciding where to look within a si
 scene, through freeing the model from rigid sampling and matching real sensor geometry, to deciding where to move through an open, three-dimensional world. They constitute concrete steps in pursuit of the
 goal that gives this thesis its title: learning to explore, at both the local scale of gaze and
 the global scale of locomotion, towards efficient embodied vision. Figure~\ref{fig:contributions} summarises this progression.
-
-\begin{figure}[t]
-\centering
-\input{img/main/fig_contributions.tex}
-\caption[The four contributions of this thesis]{\textbf{The four contributions of this thesis as a progression.} The first three papers generalise local-scale exploration, deciding where to look within a scene the agent can already sense, from a fixed grid (AME), to elastic patch geometry (Beyond Grids), to arbitrary continuous zoom and pan (AdaGlimpse). The fourth, FlySearch, turns to the complementary global-scale problem of deciding where to move through an open, three-dimensional world.}
-\label{fig:contributions}
-\end{figure}
 
 Parts of this research were carried out within the National Science Centre Preludium grant \emph{Where to look next -- guiding active visual exploration with internal model uncertainty} (2024--2025), of which I was the principal investigator. My work was also recognised with the START scholarship of the Foundation for Polish Science (2026).
 
