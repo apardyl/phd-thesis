@@ -62,6 +62,10 @@
 \usepackage[final]{pdfpages}
 \let\CheckCommand\providecommand
 \usepackage{microtype}
+% Keep at least two paragraph lines together at page boundaries.
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
 \usepackage{tikz}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
