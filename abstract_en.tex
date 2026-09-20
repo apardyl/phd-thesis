@@ -1,0 +1,29 @@
+% Standalone English abstract. Compile with: latexmk -pdflua abstract_en.tex
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper,top=2.54cm,bottom=2.54cm,left=2.54cm,right=2.54cm]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{english}
+\setotherlanguage{polish}
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont{TeX Gyre Termes}
+\linespread{1.25}
+\usepackage[hidelinks]{hyperref}
+
+\title{Learning to look and search:\\Efficient visual exploration for embodied agents}
+\author{Adam Pardyl}
+\date{}
+
+\begin{document}
+
+\maketitle
+\pagestyle{empty}
+
+% The thesis source starts this front-matter item with \clearpage.
+% Suppress it here so the abstract follows the title immediately.
+\begingroup
+\let\clearpage\relax
+\input{parts/03_abstract_en}
+\endgroup
+
+\end{document}
