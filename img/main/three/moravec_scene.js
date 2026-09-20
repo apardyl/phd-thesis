@@ -38,6 +38,7 @@ function piece(kind,file,rank,color) {
     sphere(g,0,top+0.29,0,0.045,color);
   }
   if (kind === 'knight') {
+    if (rank === 7) g.rotation.y = Math.PI;
     box(g,0,top+0.08,0,0.14,0.34,0.18,color).rotation.x=-0.25;
     box(g,0,top+0.22,0.09,0.16,0.16,0.29,color);
     box(g,0,top+0.35,-0.035,0.12,0.10,0.06,color);
