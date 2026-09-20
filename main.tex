@@ -15,6 +15,7 @@
 \setmainfont{TeX Gyre Termes}
 \linespread{1.25}
 \usepackage{enumitem}
+\usepackage{needspace}
 \usepackage{calc}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl} % allow long URLs in the bibliography to break across lines
@@ -162,4 +163,9 @@ This chapter contains the publications described in the main thesis text, includ
 
 \includepdf[pages=-,addtotoc={1,section,2,FlySearch: Exploring how vision-language models explore,paper:flysearch}]{papers/FlySearch_comp.pdf}
 
+\newpage
+% Force a completely blank final page after the included publications.
+\null
+\thispagestyle{empty}
+\newpage
 \end{document}

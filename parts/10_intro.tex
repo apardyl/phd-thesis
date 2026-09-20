@@ -54,7 +54,7 @@ Finding a familiar person in a crowd requires acquiring missing visual evidence 
 \subsection{The narrow window of perception}
 
 Every agent that acts in the physical world, whether it is a human, an animal, or a machine, does so through a narrow window.
-An eagle circling above a meadow searching for prey, a person looking for a familiar face in a crowded corridor, or a robot inspecting a factory floor for defects,
+An eagle circling above a meadow searching for prey, a person looking for a familiar face in a crowded corridor, or a robot inspecting a factory floor for defects
 never perceives its surroundings all at once and in perfect detail. Instead, it is limited by its perceptual capabilities and environmental constraints. Furthermore,
 the environment is not static, but changes constantly, making a complete, up-to-date map difficult to maintain.
 Therefore, the agent must be able to reason based on partial information, while actively pointing its sensors toward the most informative regions to gather more data as needed.
@@ -67,7 +67,7 @@ The main motivation of this thesis is to enable machines to do the same: to \emp
 \begin{figure}[th]
 \centering
 \input{img/main/fig_passive_active.tex}
-\caption[Passive perception versus active embodied vision]{\textbf{Passive perception versus active embodied vision.} A passive perception system is handed a complete, static view of the scene to produce a prediction. An active embodied agent instead senses only a narrow window onto a scene it is surrounded by, and creates the loop by actively choosing where to move for the next observation.}
+\caption[Passive perception versus active embodied vision]{\textbf{Passive perception versus active embodied vision.} A passive perception system is handed a complete, static view of the scene to produce a prediction. An active embodied agent instead senses only a narrow view of the surrounding scene and closes the loop by actively choosing where to move for the next observation.}
 \label{fig:passive-active}
 \end{figure}
 
@@ -179,7 +179,7 @@ This dissertation investigates how active visual exploration (AVE) can become mo
     \item \label{hyp:ame} The uncertainty already encoded in a visual model's attention maps can be used to decide where to look next, without training a separate component for observation selection.
     \item \label{hyp:beyond} A vision transformer can be made resilient to input patches sampled at varying positions, scales, or with incomplete coverage, allowing it to process observations that do not follow a rigid grid.
     \item \label{hyp:adaglimpse} An agent can learn to select both the position and scale of each observation in a continuous space, discovering an efficient coarse-to-fine exploration strategy that reduces the number of pixels it needs~to~observe.
-    \item {\emergencystretch=2em \label{hyp:flysearch} Current vision-language models can perform short-horizon visual navigation, but cannot reliably form and execute consistent multi-step search strategies in large, open, three-dimensional~\mbox{environments}.\par}
+    \item {\raggedright \label{hyp:flysearch} Current vision-language models can perform short-horizon visual navigation, but cannot reliably form and execute consistent multi-step search strategies in large, open, \mbox{three-dimensional environments}.\par}
 \end{enumerate}
 
 \begin{figure}[t]
@@ -192,15 +192,15 @@ This dissertation investigates how active visual exploration (AVE) can become mo
 The first contribution, ``Active Visual Exploration Based on Attention-Map Entropy''~\pubcite{pardyl2023active}, investigates Hypothesis~\ref{hyp:ame} by asking how an agent should decide where to look
 next without the machinery of a separate decision network. It shows that the internal uncertainty of a transformer, read directly from the entropy of its
 attention maps, is itself an effective signal for selecting the most informative next glimpse, simplifying training while improving reconstruction,
-classification, and segmentation from partial observations, see Figure~\ref{fig:contributions}a. This work operates, however, within the familiar setting of glimpses drawn from a fixed grid.
+classification, and segmentation from partial observations (see Figure~\ref{fig:contributions}a). This work operates, however, within the familiar setting of glimpses drawn from a fixed grid.
 
 The second contribution, ``Beyond Grids: Exploring Elastic Input Sampling for Vision Transformers''~\pubcite{pardyl2023grids}, investigates Hypothesis~\ref{hyp:beyond} and addresses the constraint of fixed grid sampling.
 It formalises the notion of input \emph{elasticity}, the resilience of a model to patches of varying scale, position, and coverage, introduces a protocol to
-measure it, and proposes architectural and training modifications that let a vision transformer ingest patches sampled freely from an image. This turns the rigid grid into a continuous sampling space, see Figure~\ref{fig:contributions}b.
+measure it, and proposes architectural and training modifications that let a vision transformer ingest patches sampled freely from an image. This turns the rigid grid into a continuous sampling space (see Figure~\ref{fig:contributions}b).
 
 The third contribution, ``AdaGlimpse: Active Visual Exploration with Arbitrary Glimpse Position and Scale''~\pubcite{pardyl2024adaglimpse}, investigates Hypothesis~\ref{hyp:adaglimpse} and brings observation selection closer to the capabilities of real sensors. Building on an input-elastic transformer, it casts exploration as a Markov decision process and uses the Soft Actor-Critic
 reinforcement learning algorithm to select glimpses of arbitrary continuous position and scale, the degrees of freedom offered by
-motorised pan-tilt-zoom cameras, see Figure~\ref{fig:contributions}c. The resulting agent rapidly establishes a coarse awareness of a scene before zooming in on detail, matching or surpassing prior
+motorised pan-tilt-zoom cameras (see Figure~\ref{fig:contributions}c). The resulting agent rapidly establishes a coarse awareness of a scene before zooming in on detail, matching or surpassing prior
 methods while observing far fewer pixels.
 
 The first three papers progressively generalise \emph{local-scale} exploration: deciding
@@ -210,7 +210,7 @@ fourth contribution, ``FlySearch: Exploring how vision-language models explore''
 to move next in a large, open, three-dimensional world in order to find something. The environment
 is no longer a bounded scene from which glimpses can be sampled, but a vast outdoor search area
 that the agent, a simulated UAV, must physically traverse to acquire each new observation. FlySearch introduces a photorealistic benchmark for goal-driven object search in such
-environments and uses it to ask whether today's vision-language models can execute this kind of exploration, see Figure~\ref{fig:contributions}d. It finds that
+environments and uses it to ask whether today's vision-language models can execute this kind of exploration (see Figure~\ref{fig:contributions}d). It finds that
 state-of-the-art models fail to reliably solve even simple exploration tasks,
 with the gap to human performance widening sharply as tasks demand longer,
 consistent search strategies, and this gap persists even after fine-tuning. In

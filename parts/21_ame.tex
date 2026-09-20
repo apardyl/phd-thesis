@@ -27,7 +27,7 @@ As established in Section~\ref{sec:uncertainty-scope}, prior work on glimpse-bas
 
 This publication investigates Hypothesis~\ref{hyp:ame}: the uncertainty already encoded in a visual model's attention maps can be used to decide where to look next, without training a separate component for observation selection. A transformer-based masked autoencoder processing a partial view of a scene already produces a rich description of what it is uncertain about as the entropy of its self-attention maps. The question is if such a signal alone is sufficient to drive effective glimpse selection, and whether eliminating the second objective actually improves rather than harms performance (see Figure~\ref{fig:ame-teaser}).
 
-\subsection{Attention Map Entropy}
+\subsection{Attention-Map Entropy}
 
 \begin{figure}[th]
     \centering
@@ -189,12 +189,12 @@ Figure~\ref{fig:ame-steps} visualises the process step by step: as additional gl
 
 \paragraph{Semantic segmentation.} Semantic segmentation on ADE20K follows the same pattern: AME raises pixel accuracy from 47.9\% (AttSeg) and 52.4\% (GlAtEx) to 70.3\%. The attached publication text reports~the~full~table.
 
-\paragraph{Ablation studies.} Ablation studies confirm that the entropy-based rule is a reasonable heuristic, which is measurably better than naive alternatives. AME outperforms both uniformly random glimpse placement and a fixed, non-overlapping checkerboard pattern on both reconstruction and classification. A further ablation over which decoder layer the attention map is drawn from shows a consistent trend that entropy computed from deeper decoder layers, closer to the final output, yields better glimpse-selection decisions than entropy computed from shallow ones, see the attached publication text for more details.
+\paragraph{Ablation studies.} Ablation studies confirm that the entropy-based rule is a reasonable heuristic, which is measurably better than naive alternatives. AME outperforms both uniformly random glimpse placement and a fixed, non-overlapping checkerboard pattern on both reconstruction and classification. A further ablation over which decoder layer the attention map is drawn from shows a consistent trend that entropy computed from deeper decoder layers, closer to the final output, yields better glimpse-selection decisions than entropy computed from shallow ones. See the attached publication text for more details.
 
 \subsection{Contributions}
 \label{sec:contributions-ame}
 
-{\emergencystretch=2em The publication summarised in this chapter makes the following contributions to the field of \mbox{visual exploration}:\par}
+The publication summarised in this chapter makes the following contributions to visual exploration:
 
 \begin{itemize}
     \item It introduces Attention-Map Entropy (AME), a glimpse-selection mechanism that reuses the entropy of a transformer decoder's own self-attention maps as a measure of the model's uncertainty about each unseen region. This removes the need for any auxiliary loss function or dedicated decision network for active exploration, in contrast to all prior approaches to this problem.
