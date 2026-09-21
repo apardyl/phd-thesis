@@ -72,3 +72,4 @@ output/
 # Publication inputs and reproducible archival export instructions
 !papers/*.pdf
 !figures/**/*.pdf
+!thesis.pdf
