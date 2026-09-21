@@ -11,6 +11,10 @@ The main document is assembled from the chapters in `parts/`, figures in
 `figures/`, bibliography entries in `main.bib`, and the included publications
 in `papers/`.
 
+## Download
+
+[Download the thesis (PDF)](thesis.pdf?raw=1).
+
 ## Build
 
 Install a TeX Live distribution with LuaLaTeX and `latexmk`, then run the
