@@ -66,6 +66,7 @@ figures/img/main/three/node_modules/
 figures/img/main/three/package-lock.json
 contribution-statements/
 *.md
+!README.md
 output/
 
 # Publication inputs and reproducible archival export instructions

@@ -1,0 +1,29 @@
+Scope of the CC BY 4.0 licence
+===============================
+
+The CC BY 4.0 licence in LICENSE applies only to Adam Pardyl's original
+contributions to this repository, including original thesis prose, LaTeX
+source, original diagrams, and original supporting materials, unless a file
+states otherwise.
+
+The following material is excluded from that licence and remains subject to
+its own copyright, licence, permissions, or other applicable terms:
+
+* The full-text publications and supplementary material in `papers/`. These
+  works may have co-authors, publisher terms, or both.
+* Figures, tables, images, and other material reproduced or adapted from those
+  publications or any other third-party source. This includes the publication
+  assets in `figures/AME/`, `figures/BeyondGrids/`,
+  `figures/AdaGlimpse/`, and `figures/FlySearch/` where they are not original
+  thesis artwork.
+* The Jagiellonian University logo (`figures/img/main/uj-logo.pdf`) and any
+  other third-party names, logos, or trademarks.
+* Vendored Three.js files in `figures/img/main/three/vendor/`, which retain
+  their MIT licence and copyright notices.
+* Any datasets, screenshots, generated outputs, or visual assets for which
+  this repository does not hold copyright or a right to sublicense.
+
+Individual captions, source citations, embedded copyright notices, and the
+terms supplied with the relevant material identify provenance where known.
+Those terms control use of the excluded material. The CC BY 4.0 licence does
+not override them.
