@@ -1,24 +1,35 @@
 \makeatletter
 \begin{titlepage}
-\begin{center}
-    {\LARGE\bfseries Jagiellonian University} \\
-    
-    {\LARGE Doctoral School of Exact and Natural Sciences\\
-    Faculty of Mathematics and Computer Science} \vspace{2cm}
+\centering
+% Keep the cover's typography independent of the body line spacing.
+\linespread{1}\selectfont
+\vspace*{0.2cm}
 
-    \includegraphics[scale=0.22, trim=6cm 12cm 6cm 4cm, clip]{img/main/uj-logo.pdf} \vspace{2cm}
+{\fontsize{18}{22}\selectfont\bfseries Jagiellonian University\par}
+\vspace{0.35cm}
+{\fontsize{14}{18}\selectfont
+Doctoral School of Exact and Natural Sciences\\
+Faculty of Mathematics and Computer Science\par}
 
-    {\huge Ph.D. Thesis} \vspace{1cm}
+\vspace{2.0cm}
+\includegraphics[scale=0.20, trim=5.724cm 12cm 6.276cm 4cm, clip]{img/main/uj-logo.pdf}\par
+\vspace{2.2cm}
 
-    {\Huge\bfseries \@title} \vspace{1cm}
+{\fontsize{16}{20}\selectfont Ph.D. Thesis\par}
+\vspace{0.9cm}
 
-    {\huge\bfseries mgr \@author} \vspace{1cm}
+{\fontsize{23}{29}\selectfont\bfseries \@title\par}
+\vspace{1.1cm}
 
-    \vfill{}
+{\fontsize{18}{23}\selectfont\bfseries mgr \@author\par}
 
-    {\Large Under the supervision of\\dr hab. Bartosz Zieliński, prof. UJ} \vspace{1cm}
+\vfill
 
-    {\Large Kraków, \@date}
-\end{center}
+{\fontsize{12}{17}\selectfont Under the supervision of\\
+dr hab. Bartosz Zieliński, prof. UJ\par}
+\vspace{0.9cm}
+
+{\fontsize{12}{16}\selectfont Kraków, \@date\par}
+\vspace*{0.55cm}
 \end{titlepage}
 \makeatother

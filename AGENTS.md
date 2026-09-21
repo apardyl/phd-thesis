@@ -20,3 +20,12 @@ After bibliography or citation changes, let `latexmk` complete all BibTeX and
 LuaLaTeX passes. Check `main.log` for undefined citations or references, render
 the affected pages for visual inspection, and remove `tmp/` intermediates when
 finished.
+
+## PDF/A exports
+
+For PDF/A-2b thesis or standalone abstract exports, follow
+`docs/pdfa-workflow.md` and use the helpers in `scripts/pdfa/`. The workflow
+includes annotation preparation, known Ghostscript ligature-map repairs,
+veraPDF validation of the final bytes, and text/navigation/render comparisons.
+Keep original PDFs and published attachments unchanged. Do not treat a
+successful conversion or a PDF/A metadata declaration as proof of compliance.
