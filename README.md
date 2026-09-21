@@ -13,7 +13,7 @@ in `papers/`.
 
 ## Download
 
-[Download the thesis (PDF)](thesis.pdf?raw=1).
+[Read the thesis (PDF)](https://apardyl.github.io/phd-thesis/pdf/thesis.pdf).
 
 ## Build
 
