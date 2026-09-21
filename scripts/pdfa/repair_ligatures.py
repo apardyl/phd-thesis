@@ -1,10 +1,16 @@
 import argparse
+import difflib
+import hashlib
+import json
+import unicodedata
 from pathlib import Path
 from pypdf import PdfReader, PdfWriter
 from pypdf.generic import DecodedStreamObject,NameObject
 parser=argparse.ArgumentParser(description="Repair the observed Ghostscript 10.08.0 ffi/ffl mappings and verify text preservation.")
 parser.add_argument("source", type=Path)
 parser.add_argument("converted", type=Path)
+parser.add_argument("--reviewed-text-differences", type=Path,
+                    help="Explicitly reviewed extraction differences, bound to the source PDF hash")
 args=parser.parse_args()
 if args.source.resolve()==args.converted.resolve():
     parser.error("Source and converted PDF must be different files")
@@ -36,11 +42,31 @@ repaired=PdfReader(candidate)
 if len(source.pages)!=len(repaired.pages):
     candidate.unlink()
     raise SystemExit("Page count differs. Converted PDF left unchanged.")
-different=[i+1 for i,(a,b) in enumerate(zip(source.pages,repaired.pages))
-           if "".join(a.extract_text().split())!="".join(b.extract_text().split())]
-if different:
+def normalize(text):
+    return "".join(unicodedata.normalize("NFKC", text).split())
+differences=[]
+for i,(a,b) in enumerate(zip(source.pages,repaired.pages)):
+    x,y=normalize(a.extract_text()),normalize(b.extract_text())
+    if x!=y:
+        differences.append({"page":i+1,"diff":[
+            {"old":x[k:l],"new":y[m:n],"context":x[max(0,k-20):l+20]}
+            for op,k,l,m,n in difflib.SequenceMatcher(None,x,y,autojunk=False).get_opcodes()
+            if op!="equal"]})
+approved=False
+if args.reviewed_text_differences:
+    review=json.loads(args.reviewed_text_differences.read_text())
+    approved=(review.get("source_sha256")==hashlib.sha256(args.source.read_bytes()).hexdigest()
+              and review.get("differences")==differences)
+    if not approved:
+        candidate.unlink()
+        raise SystemExit("Review does not match the source hash and exact extraction differences.")
+if differences and not approved:
     candidate.unlink()
-    raise SystemExit(f"Text still differs on pages {different}. Converted PDF left unchanged. Investigate instead of applying more blind substitutions.")
+    raise SystemExit(f"Text still differs on pages {[d['page'] for d in differences]}. Converted PDF left unchanged. Investigate instead of applying more blind substitutions.")
 candidate.replace(args.converted)
 print("Repaired Unicode mappings:",counts)
-print("Every page matches the source text after whitespace normalization. Rerun veraPDF after this edit.")
+if differences:
+    print("Text matches except for explicitly reviewed extraction differences on pages:", [d['page'] for d in differences])
+else:
+    print("Every page matches the source text after Unicode and whitespace normalization.")
+print("Rerun veraPDF after this edit.")
