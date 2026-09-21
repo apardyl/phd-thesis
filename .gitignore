@@ -67,10 +67,9 @@ figures/img/main/three/package-lock.json
 contribution-statements/
 *.md
 !README.md
-output/**/*xml
-output/**/*json
+output/
 
 # Publication inputs and reproducible archival export instructions
 !papers/*.pdf
+!docs/pdf/*.pdf
 !figures/**/*.pdf
-!output/pdf/thesis.pdf
