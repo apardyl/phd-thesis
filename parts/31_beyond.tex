@@ -16,20 +16,20 @@ It thereby investigates Hypothesis~\ref{hyp:beyond}: a vision transformer can be
     \begin{small}
     \begin{tabular}{r@{\hspace{6pt}}c@{\hspace{4pt}}c@{\hspace{4pt}}c@{\hspace{4pt}}c}
         & 50\% & 75\% & 150\% & 200\% \\
-        Scale & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{papers_src/BeyondGrids/figures/elasticities/scale/50.png}}
-               & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{papers_src/BeyondGrids/figures/elasticities/scale/75.png}}
-               & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{papers_src/BeyondGrids/figures/elasticities/scale/150.png}}
-               & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{papers_src/BeyondGrids/figures/elasticities/scale/200.png}} \\[12pt]
+        Scale & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{figures/BeyondGrids/figures/elasticities/scale/50.png}}
+               & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{figures/BeyondGrids/figures/elasticities/scale/75.png}}
+               & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{figures/BeyondGrids/figures/elasticities/scale/150.png}}
+               & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{figures/BeyondGrids/figures/elasticities/scale/200.png}} \\[12pt]
         & 12.5\% & 25\% & 37.5\% & 50\% \\
-        Position & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{papers_src/BeyondGrids/figures/elasticities/position/12.5.png}}
-                  & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{papers_src/BeyondGrids/figures/elasticities/position/25.png}}
-                  & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{papers_src/BeyondGrids/figures/elasticities/position/37.5.png}}
-                  & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{papers_src/BeyondGrids/figures/elasticities/position/50.png}} \\[12pt]
+        Position & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{figures/BeyondGrids/figures/elasticities/position/12.5.png}}
+                  & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{figures/BeyondGrids/figures/elasticities/position/25.png}}
+                  & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{figures/BeyondGrids/figures/elasticities/position/37.5.png}}
+                  & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{figures/BeyondGrids/figures/elasticities/position/50.png}} \\[12pt]
         & 20\% & 40\% & 60\% & 80\% \\
-        Missing data & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{papers_src/BeyondGrids/figures/elasticities/dropout/20.png}}
-                      & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{papers_src/BeyondGrids/figures/elasticities/dropout/40.png}}
-                      & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{papers_src/BeyondGrids/figures/elasticities/dropout/60.png}}
-                      & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{papers_src/BeyondGrids/figures/elasticities/dropout/80.png}} \\
+        Missing data & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{figures/BeyondGrids/figures/elasticities/dropout/20.png}}
+                      & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{figures/BeyondGrids/figures/elasticities/dropout/40.png}}
+                      & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{figures/BeyondGrids/figures/elasticities/dropout/60.png}}
+                      & \raisebox{-.5\height}{\includegraphics[width=1.5cm]{figures/BeyondGrids/figures/elasticities/dropout/80.png}} \\
     \end{tabular}
     \end{small}
     \caption[The three types of input elasticity evaluated in Beyond Grids]{\textbf{Elasticity perturbations.} Each row illustrates one type of perturbation applied to an example image at increasing intensity. \emph{Scale}: patches are sampled at sizes ranging from 50\% to 200\% of the native $16\times16$ size (undersampling introduces gaps while oversampling introduces overlap). \emph{Position}: patches are displaced from their grid positions by up to 50\% of the patch size (patch shake). \emph{Missing data}: an increasing fraction of patches is dropped from the input. Adapted from~\pubcite{pardyl2023grids}.}
@@ -57,7 +57,7 @@ where $\mathcal{E}_{\mathrm{scale}(s_1,s_2)}$ samples each patch's scale indepen
 
 \begin{figure}[th]
     \centering
-    \includegraphics[width=.75\linewidth]{papers_src/BeyondGrids/figures/patchmix/patchmix.png}
+    \includegraphics[width=.75\linewidth]{figures/BeyondGrids/figures/patchmix/patchmix.png}
     \caption[PatchMix augmentation compared to CutMix and TokenMix]{\textbf{PatchMix.} Unlike CutMix, which replaces a rectangular region of one image with another, PatchMix operates on individually sampled patches and mixes them at the token level. Unlike TokenMix, it does not assume grid-aligned patches, making it compatible with elastic sampling. Reproduced from~\pubcite{pardyl2023grids}.}
     \label{fig:patchmix}
 \end{figure}
@@ -241,11 +241,11 @@ Under standard conditions (centre of each curve, scale~1, no dropout, no shake),
 \begin{tikzpicture}[node distance=0.3cm, auto]
 \tikzstyle{pict} = [inner xsep=4px]
 \tikzstyle{arrow} = [thick,->,>=latex]
-\node [pict] (input) {\includegraphics[width=2cm]{papers_src/BeyondGrids/figures/edge/edges1.png}};
+\node [pict] (input) {\includegraphics[width=2cm]{figures/BeyondGrids/figures/edge/edges1.png}};
 \node [above=2pt of input, font=\scriptsize\scshape] {Input};
-\node [pict, right=1cm of input] (central) {\includegraphics[width=2cm]{papers_src/BeyondGrids/figures/edge/central.png}};
+\node [pict, right=1cm of input] (central) {\includegraphics[width=2cm]{figures/BeyondGrids/figures/edge/central.png}};
 \node [above=2pt of central, font=\scriptsize\scshape] {CENTRAL};
-\node [pict, below=0.5cm of central] (edge) {\includegraphics[width=2cm]{papers_src/BeyondGrids/figures/edge/edges3.png}};
+\node [pict, below=0.5cm of central] (edge) {\includegraphics[width=2cm]{figures/BeyondGrids/figures/edge/edges3.png}};
 \node [above=2pt of edge, font=\scriptsize\scshape] {EDGE};
 \draw [arrow] (input) -- (central);
 \draw [arrow] (input) -- (edge);

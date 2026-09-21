@@ -19,7 +19,7 @@ It thereby investigates Hypothesis~\ref{hyp:adaglimpse}: an agent can learn to s
 
 \begin{figure}[th]
     \centering
-    \includegraphics[width=0.9\linewidth]{papers_src/AdaGlimpse/figures/rlglimpse.pdf}
+    \includegraphics[width=0.9\linewidth]{figures/AdaGlimpse/figures/rlglimpse.pdf}
     \caption[AdaGlimpse: coarse-to-fine glimpse selection]{\textbf{AdaGlimpse in action.} The agent first captures a wide, low-resolution view of the entire scene (scale~$\approx 1$). Since no confident prediction can be made from this overview alone, it selects a second, smaller glimpse at a higher zoom level focusing on the most informative region. This coarse-to-fine process continues until a class probability exceeds a confidence threshold. Reproduced from~\pubcite{pardyl2024adaglimpse}.}
     \label{fig:adaglimpse-teaser}
 \end{figure}
@@ -31,7 +31,7 @@ AdaGlimpse consists of two interacting components: a vision transformer backbone
 
 \begin{figure}[th]
     \centering
-    \includegraphics[width=\linewidth]{papers_src/AdaGlimpse/figures/rlarch.pdf}
+    \includegraphics[width=\linewidth]{figures/AdaGlimpse/figures/rlarch.pdf}
     \caption[AdaGlimpse architecture overview]{\textbf{Architecture.} AdaGlimpse combines an ElasticViT encoder with a task-specific decoder (top) and a Soft Actor-Critic RL agent (bottom). At each step, the RL agent selects the position and scale of the next glimpse using the previously observed patches, their coordinates, importance scores, and encoder latent representations. Reproduced from~\pubcite{pardyl2024adaglimpse}.}
     \label{fig:adaglimpse-arch}
 \end{figure}
@@ -44,7 +44,7 @@ AdaGlimpse consists of two interacting components: a vision transformer backbone
 
 \begin{figure}[th]
     \centering
-    \includegraphics[width=0.75\linewidth]{papers_src/AdaGlimpse/figures/rlrl.pdf}
+    \includegraphics[width=0.75\linewidth]{figures/AdaGlimpse/figures/rlrl.pdf}
     \caption[AdaGlimpse RL agent: actor and critic]{\textbf{RL agent.} The actor selects the next glimpse position and scale $(x, y, z)$ from state $s_t = (\widehat{G}_t, \widehat{C}_t, \widehat{I}_t, \widehat{H}_t)$, while the critic estimates the expected cumulative reward $Q(s_t, a_t)$ for that action. Actor and critic share the same input encoding architecture but have separate parameters. Reproduced from~\pubcite{pardyl2024adaglimpse}.}
     \label{fig:adaglimpse-rl}
 \end{figure}
@@ -205,8 +205,8 @@ coordinates {
     \begin{center}
     \begin{small}
     \begin{tabular}{r@{\hskip2pt}c@{\hskip2pt}c@{\hskip2pt}c@{\hskip2pt}c@{\hskip2pt}c@{\hskip2pt}|@{\hskip2pt}c@{\hskip2pt}c}
-    A) & \tabfigure{width=\smallerimg}{papers_src/AdaGlimpse/figures/cls_im/4/601_1_0.png} & \tabfigure{width=\smallerimg}{papers_src/AdaGlimpse/figures/cls_im/4/601_2_0.png} & \tabfigure{width=\smallerimg}{papers_src/AdaGlimpse/figures/cls_im/4/601_3_0.png} & \tabfigure{width=\smallerimg}{papers_src/AdaGlimpse/figures/cls_im/4/601_4_0.png} & \tabfigure{width=\smallerimg}{papers_src/AdaGlimpse/figures/cls_im/4/601_5_0.png} & \tabfigure{width=\smallerimg}{papers_src/AdaGlimpse/figures/cls_im/2/140_1_0.png} & \tabfigure{width=\smallerimg}{papers_src/AdaGlimpse/figures/cls_im/2/140_2_0.png} \\[19pt]
-    B) & \tabfigure{width=\smallerimg}{papers_src/AdaGlimpse/figures/cls_im/4/601_1_1.png} & \tabfigure{width=\smallerimg}{papers_src/AdaGlimpse/figures/cls_im/4/601_2_1.png} & \tabfigure{width=\smallerimg}{papers_src/AdaGlimpse/figures/cls_im/4/601_3_1.png} & \tabfigure{width=\smallerimg}{papers_src/AdaGlimpse/figures/cls_im/4/601_4_1.png} & \tabfigure{width=\smallerimg}{papers_src/AdaGlimpse/figures/cls_im/4/601_5_1.png} & \tabfigure{width=\smallerimg}{papers_src/AdaGlimpse/figures/cls_im/2/140_1_1.png} & \tabfigure{width=\smallerimg}{papers_src/AdaGlimpse/figures/cls_im/2/140_2_1.png} \\[19pt]
+    A) & \tabfigure{width=\smallerimg}{figures/AdaGlimpse/figures/cls_im/4/601_1_0.png} & \tabfigure{width=\smallerimg}{figures/AdaGlimpse/figures/cls_im/4/601_2_0.png} & \tabfigure{width=\smallerimg}{figures/AdaGlimpse/figures/cls_im/4/601_3_0.png} & \tabfigure{width=\smallerimg}{figures/AdaGlimpse/figures/cls_im/4/601_4_0.png} & \tabfigure{width=\smallerimg}{figures/AdaGlimpse/figures/cls_im/4/601_5_0.png} & \tabfigure{width=\smallerimg}{figures/AdaGlimpse/figures/cls_im/2/140_1_0.png} & \tabfigure{width=\smallerimg}{figures/AdaGlimpse/figures/cls_im/2/140_2_0.png} \\[19pt]
+    B) & \tabfigure{width=\smallerimg}{figures/AdaGlimpse/figures/cls_im/4/601_1_1.png} & \tabfigure{width=\smallerimg}{figures/AdaGlimpse/figures/cls_im/4/601_2_1.png} & \tabfigure{width=\smallerimg}{figures/AdaGlimpse/figures/cls_im/4/601_3_1.png} & \tabfigure{width=\smallerimg}{figures/AdaGlimpse/figures/cls_im/4/601_4_1.png} & \tabfigure{width=\smallerimg}{figures/AdaGlimpse/figures/cls_im/4/601_5_1.png} & \tabfigure{width=\smallerimg}{figures/AdaGlimpse/figures/cls_im/2/140_1_1.png} & \tabfigure{width=\smallerimg}{figures/AdaGlimpse/figures/cls_im/2/140_2_1.png} \\[19pt]
     C) & snail & hopper & agama & hopper & {\color{forestgreen4416044}mantis} & weevil & {\color{forestgreen4416044}bee eater} \\[2pt]
     D) & 22\% & 33\% & 49\% & 36\% & {\color{forestgreen4416044}76\%} & 26\% & {\color{forestgreen4416044}88\%}
     \end{tabular}

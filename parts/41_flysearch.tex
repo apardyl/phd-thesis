@@ -28,7 +28,7 @@ An episode is considered successful if, at the moment the agent signals \texttt{
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=\linewidth, trim={.7cm .2cm .7cm .2cm}, clip]{papers_src/FlySearch/figs/teaser/avebench.pdf}
+    \includegraphics[width=\linewidth, trim={.7cm .2cm .7cm .2cm}, clip]{figures/FlySearch/figs/teaser/avebench.pdf}
     \caption[FlySearch task overview]{\textbf{\flysearch{}} evaluates exploration capabilities of vision-language models in a realistic outdoor setting. The agent controls a UAV by observing images captured from successive positions and providing text commands describing the next movement. To complete each scenario, the model must locate an object specified in natural language and signal success with a \texttt{FOUND} command. Reproduced from~\pubcite{pardyl2025flysearch}.}
     \label{fig:flysearch-teaser}
 \end{figure}
@@ -37,7 +37,7 @@ An episode is considered successful if, at the moment the agent signals \texttt{
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=\linewidth]{papers_src/FlySearch/figs/arch/avebencharch.pdf}
+    \includegraphics[width=\linewidth]{figures/FlySearch/figs/arch/avebencharch.pdf}
     \caption[FlySearch evaluation pipeline]{\textbf{Evaluation pipeline.} \flysearch{} consists of three main components: the Unreal Engine 5 simulator that renders near-photorealistic views of the open-world map, the evaluation controller that manages communication between the VLM and the simulator, and the scenario generator that procedurally creates new evaluation scenarios. Reproduced from~\pubcite{pardyl2025flysearch}.}
     \label{fig:flysearch-pipeline}
 \end{figure}
@@ -48,26 +48,26 @@ An episode is considered successful if, at the moment the agent signals \texttt{
     \centering
     \begin{subfigure}[b]{0.48\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{papers_src/FlySearch/figs/samples/forest3.jpg}
+        \includegraphics[width=\linewidth]{figures/FlySearch/figs/samples/forest3.jpg}
         \vspace{-10pt}
 
         \begin{tabular}{@{}ccc@{}}
-            \includegraphics[width=0.29\linewidth]{papers_src/FlySearch/figs/samples/20.jpg} &
-            \includegraphics[width=0.29\linewidth]{papers_src/FlySearch/figs/samples/17.jpg} &
-            \includegraphics[width=0.29\linewidth]{papers_src/FlySearch/figs/samples/19.jpg}
+            \includegraphics[width=0.29\linewidth]{figures/FlySearch/figs/samples/20.jpg} &
+            \includegraphics[width=0.29\linewidth]{figures/FlySearch/figs/samples/17.jpg} &
+            \includegraphics[width=0.29\linewidth]{figures/FlySearch/figs/samples/19.jpg}
         \end{tabular}
         \caption{Forest environment.}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{papers_src/FlySearch/figs/samples/HighresScreenshot00000.jpg}
+        \includegraphics[width=\linewidth]{figures/FlySearch/figs/samples/HighresScreenshot00000.jpg}
         \vspace{-10pt}
 
         \begin{tabular}{@{}ccc@{}}
-            \includegraphics[width=0.29\linewidth]{papers_src/FlySearch/figs/samples/6.jpg} &
-            \includegraphics[width=0.29\linewidth]{papers_src/FlySearch/figs/samples/8.jpg} &
-            \includegraphics[width=0.29\linewidth]{papers_src/FlySearch/figs/samples/9.jpg}
+            \includegraphics[width=0.29\linewidth]{figures/FlySearch/figs/samples/6.jpg} &
+            \includegraphics[width=0.29\linewidth]{figures/FlySearch/figs/samples/8.jpg} &
+            \includegraphics[width=0.29\linewidth]{figures/FlySearch/figs/samples/9.jpg}
         \end{tabular}
         \caption{City environment.}
     \end{subfigure}
@@ -135,9 +135,9 @@ This collapse cannot be attributed solely to the harder detection conditions. Th
 \begin{small}
 \begin{tabular}{c@{\hskip4pt}c@{\hskip4pt}c}
 Step 1 & Step 2 & Step 3 \\[2pt]
-\tabfigure{width=0.28\linewidth}{papers_src/FlySearch/figs/sample-trajectory-imgs/0.png} &
-\tabfigure{width=0.28\linewidth}{papers_src/FlySearch/figs/sample-trajectory-imgs/1.png} &
-\tabfigure{width=0.28\linewidth}{papers_src/FlySearch/figs/sample-trajectory-imgs/2.png} \\[8pt]
+\tabfigure{width=0.28\linewidth}{figures/FlySearch/figs/sample-trajectory-imgs/0.png} &
+\tabfigure{width=0.28\linewidth}{figures/FlySearch/figs/sample-trajectory-imgs/1.png} &
+\tabfigure{width=0.28\linewidth}{figures/FlySearch/figs/sample-trajectory-imgs/2.png} \\[8pt]
 \multicolumn{1}{c}{\small\texttt{MOVE(0, 0, -64)}} &
 \multicolumn{1}{c}{\small\texttt{MOVE(5, 0, 0)}} &
 \multicolumn{1}{c}{\small\texttt{FOUND}}

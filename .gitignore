@@ -62,11 +62,12 @@ venv/
 papers/*.md
 
 # Node tooling (Three.js render pipeline for figures)
-img/main/three/node_modules/
-img/main/three/package-lock.json
+figures/img/main/three/node_modules/
+figures/img/main/three/package-lock.json
 contribution-statements/
 *.md
 output/
 
 # Publication inputs and reproducible archival export instructions
 !papers/*.pdf
+!figures/**/*.pdf
